@@ -11,7 +11,7 @@ import AdmissionEnquiry from "./pages/AdmissionEnquiry.jsx";
 import Feesubmission from "./pages/Feesubmission.jsx";
 import Login from "./pages/Login.jsx";
 import Adminlayout from "./pages/Mainadminlayout.jsx";
-import Dashboard from "./components/Dahboard.jsx";
+import Dashboard from "./components/Mainadmin/Dahboard.jsx";
 import CreateBranch from "./components/Mainadmin/Branches/CreateBranch.jsx";
 import UpdateBranch from "./components/Mainadmin/Branches/UpdateBranch.jsx";
 import DeleteBranch from "./components/Mainadmin/Branches/DeleteBranch.jsx";
