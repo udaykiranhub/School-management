@@ -5,11 +5,14 @@ const database = require("./config/database");
 require("dotenv").config();
 const app = express();
 const router = require("./routers/route");
-
+const branchRoutes=require("./routers/BranchRoutes")
+const protect= require("./middleware/Authtoken")
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", router);
+app.use("/api/branch",protect.authMiddleware,branchRoutes)
+
 
 database().then(
   app.listen(process.env.PORT, () => {

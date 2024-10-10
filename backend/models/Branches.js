@@ -7,14 +7,26 @@ const branchSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    address: {
+    // Replace 'address' with specific fields
+    street: {
+      type: String,
+      required: true,
+    },
+    colony: {
+      type: String,
+      required: true,
+    },
+    villageTown: {
+      type: String, // renamed village/town to be a single field
+      required: true,
+    },
+    phone: {
       type: String,
       required: true,
     },
     branchAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     academicYears: [
       {
