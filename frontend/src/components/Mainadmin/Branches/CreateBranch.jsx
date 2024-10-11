@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import Allapi from "../../../common";
+import "react-toastify/dist/ReactToastify.css";
+import Allapi from "../../../common/index";
+import { Link } from "react-router-dom";
 
 const CreateBranch = () => {
   const [name, setName] = useState("");
@@ -112,6 +113,12 @@ const CreateBranch = () => {
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Phone Number"
           />
+          <Link
+            to={"/admin/branch/view"}
+            className="bg-blue-500 text-white p-4 rounded hover:bg-blue-700 hover:text-white"
+          >
+            view all Branches
+          </Link>
         </div>
 
         <button

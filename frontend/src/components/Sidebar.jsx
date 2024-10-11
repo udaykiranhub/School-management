@@ -54,10 +54,10 @@ const Sidebar = () => {
         {/* Dashboard Link */}
         <Link
           to="/admin"
-          className={`flex items-center p-2 my-4 rounded bg-blue-700 text-white${
-            location.pathname === "/admin"
-              ? "bg-blue-700 text-white"
-              : "bg-red-400 text-white"
+          className={`flex items-center w-full p-2 my-4 rounded ${
+            activeMenu === "dashboard"
+              ? "bg-blue-700"
+              : "bg-red-400 text-white hover:bg-blue-700"
           }`}
           onClick={() => handleMenuClick("dashboard")}
         >
@@ -82,7 +82,7 @@ const Sidebar = () => {
             <div className="flex flex-col  gap-5 ml-2 ">
               <Link
                 to={"/admin/branch/create"}
-                className={` text-white p-3 hover:text-black  hover:bg-slate-500 ${
+                className={` text-white p-3 hover:text-black  flex items-start hover:bg-slate-500  ${
                   activeSubmenu === "create"
                     ? " bg-slate-300 rounded text-black p-3"
                     : ""
@@ -91,31 +91,10 @@ const Sidebar = () => {
               >
                 Create Branch
               </Link>
-              <Link
-                to={"/admin/branch/update"}
-                className={` text-white p-3 hover:text-black  hover:bg-slate-500  ${
-                  activeSubmenu === "update"
-                    ? "bg-slate-300 rounded text-black p-3"
-                    : ""
-                }`}
-                onClick={() => handleSubmenuClick("update")}
-              >
-                Update Branch
-              </Link>
-              <Link
-                to={"/admin/branch/delete"}
-                className={` text-white p-3 hover:text-black  hover:bg-slate-500 ${
-                  activeSubmenu === "delete"
-                    ? "bg-slate-300 rounded text-black p-3"
-                    : ""
-                }`}
-                onClick={() => handleSubmenuClick("delete")}
-              >
-                Delete Branch
-              </Link>
+
               <Link
                 to={"/admin/branch/view"}
-                className={` text-white p-3 hover:text-black  hover:bg-slate-500  ${
+                className={` text-white p-3 hover:text-black  flex items-start  hover:bg-slate-500  ${
                   activeSubmenu === "view-all"
                     ? "bg-slate-300 rounded text-black p-3"
                     : ""
@@ -144,43 +123,10 @@ const Sidebar = () => {
           {activeMenu === "academic" && (
             <div className="flex flex-col ml-5 gap-5">
               <Link
-                to={"admin/Badmin/create"}
-                className={`text-white p-3 hover:text-black  hover:bg-slate-500 "${
-                  activeSubmenu === "academic-create"
-                    ? "bg-slate-300 rounded text-black p-3"
-                    : ""
-                }`}
-                onClick={() => handleSubmenuClick("academic-create")}
-              >
-                Create Branch Admin
-              </Link>
-              <Link
-                to="/academic/update"
-                className={`text-white p-3 hover:text-black  hover:bg-slate-500  ${
-                  activeSubmenu === "academic-update"
-                    ? "bg-slate-300 rounded text-black p-3"
-                    : ""
-                }`}
-                onClick={() => handleSubmenuClick("academic-update")}
-              >
-                Update Branch Admin
-              </Link>
-              <Link
-                to="/academic/delete"
-                className={`text-white p-3 hover:text-black  hover:bg-slate-500  ${
-                  activeSubmenu === "academic-delete"
-                    ? "bg-slate-300 rounded text-black p-3"
-                    : ""
-                }`}
-                onClick={() => handleSubmenuClick("academic-delete")}
-              >
-                Delete Branch Admin
-              </Link>
-              <Link
-                to="/academic/view-all"
-                className={`text-white p-3 hover:text-black  hover:bg-slate-500  ${
+                to="/admin/admins/view-all-admins"
+                className={`text-white p-3 hover:text-white  hover:bg-slate-700  ${
                   activeSubmenu === "academic-view-all"
-                    ? "bg-slate-300 rounded text-black p-3"
+                    ? " rounded text-black p-3"
                     : ""
                 }`}
                 onClick={() => handleSubmenuClick("academic-view-all")}

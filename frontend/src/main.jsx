@@ -16,6 +16,7 @@ import CreateBranch from "./components/Mainadmin/Branches/CreateBranch.jsx";
 import UpdateBranch from "./components/Mainadmin/Branches/UpdateBranch.jsx";
 import DeleteBranch from "./components/Mainadmin/Branches/DeleteBranch.jsx";
 import ViewBranches from "./components/Mainadmin/Branches/ViewBranches.jsx";
+import ViewBadmin from "./components/Mainadmin/BranchAdmin/ViewBadmin.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -64,17 +65,19 @@ const Router = createBrowserRouter([
                 path: "create",
                 element: <CreateBranch />,
               },
-              {
-                path: "update",
-                element: <UpdateBranch />,
-              },
-              {
-                path: "delete",
-                element: <DeleteBranch />,
-              },
+
               {
                 path: "view",
                 element: <ViewBranches />,
+              },
+            ],
+          },
+          {
+            path: "admins",
+            children: [
+              {
+                path: "view-all-admins",
+                element: <ViewBadmin />,
               },
             ],
           },
@@ -85,7 +88,8 @@ const Router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={Router} />
     <ToastContainer />
+
+    <RouterProvider router={Router} />
   </React.StrictMode>
 );
