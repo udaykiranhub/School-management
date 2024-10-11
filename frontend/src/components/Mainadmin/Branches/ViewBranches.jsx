@@ -110,7 +110,7 @@ const ViewBranches = () => {
                   className="flex items-center text-blue-500 hover:text-blue-700"
                 >
                   <FiEdit className="mr-2" />
-                  Edit
+                  
                 </button>
 
                 <button
@@ -118,7 +118,7 @@ const ViewBranches = () => {
                   className="flex items-center text-red-500 hover:text-red-700"
                 >
                   <FiTrash className="mr-2" />
-                  Delete
+                  
                 </button>
               </div>
             </div>
