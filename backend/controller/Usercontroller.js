@@ -23,27 +23,6 @@ exports.registerMainAdmin = async (req, res) => {
   }
 };
 
-// Register Branch Admin
-exports.registerBranchAdmin = async (req, res) => {
-  try {
-    const { name, username, password, branchId } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      name,
-      username,
-      password: hashedPassword,
-      role: "BranchAdmin",
-      branch: branchId,
-    });
-    await user.save();
-    res
-      .status(201)
-      .json({ success: true, message: "Branch Admin registered successfully" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
 // Login
 exports.login = async (req, res) => {
   try {
@@ -78,17 +57,41 @@ exports.login = async (req, res) => {
 
 // Delete Branch Admin
 exports.deleteBranchAdmin = async (req, res) => {
+  const adminId = req.params.adminId;
+
   try {
-    const { id } = req.params;
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
+    // Find and delete the admin by ID
+    const admin = await User.findById(adminId);
+    if (!admin || admin.role !== "BranchAdmin") {
       return res
         .status(404)
-        .json({ success: false, message: "Branch Admin not found" });
+        .json({
+          success: false,
+          message: "Admin not found or is not a branch admin",
+        });
     }
-    res.json({ success: true, message: "Branch Admin deleted successfully" });
+
+    // Remove the branchAdmin reference from the branch
+    if (admin.branch) {
+      await Branch.findByIdAndUpdate(admin.branch, {
+        $unset: { branchAdmin: "" },
+      });
+    }
+
+    // Delete the admin
+    await User.findByIdAndDelete(adminId);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Branch admin deleted successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Error deleting branch admin:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Server error while deleting branch admin",
+      });
   }
 };
 
@@ -147,3 +150,43 @@ exports.updateBranchAdmin = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.assignBranchAdmin = async (req, res) => {
+  const { name, username, password, branchId } = req.body;
+
+  try {
+    // Hash the password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new branch admin
+    const branchAdmin = await User.create({
+      name,
+      username,
+      password: hashedPassword,
+      role: "BranchAdmin",
+      branch: branchId,
+    });
+
+    // Update branch with admin reference
+    await Branch.findByIdAndUpdate(branchId, { branchAdmin: branchAdmin._id });
+
+    res.status(201).json({
+      success: true,
+      message: "Branch admin assigned successfully",
+      data: branchAdmin,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Get all branch admins
+exports.getAllBranchAdmins = async (req, res) => {
+  try {
+    const admins = await User.find({ role: "BranchAdmin" }).populate("branch");
+    res.status(200).json({ success: true, admins });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+3;

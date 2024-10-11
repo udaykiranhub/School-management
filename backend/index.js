@@ -5,21 +5,21 @@ const database = require("./config/database");
 require("dotenv").config();
 const app = express();
 const router = require("./routers/route");
-const branchRoutes=require("./routers/BranchRoutes")
-const protect= require("./middleware/Authtoken")
+const branchRoutes = require("./routers/BranchRoutes");
+const protect = require("./middleware/Authtoken");
+const userRoutes = require("./routers/UserRoutes");
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", router);
-app.use("/api/branch",protect.authMiddleware,branchRoutes)
-
+app.use("/api/branch", protect.authMiddleware, branchRoutes);
+app.use("/api/branch", protect.authMiddleware, userRoutes);
 
 database().then(
   app.listen(process.env.PORT, () => {
     console.log("server is running");
   })
 );
-
 
 // const token = localStorage.getItem('token');
 // if (token) {
@@ -31,7 +31,7 @@ database().then(
 //     },
 //     body: JSON.stringify({ /* your request payload */ }),
 //   });
-  
+
 //   const data = await response.json();
 //   console.log(data);
 // }
