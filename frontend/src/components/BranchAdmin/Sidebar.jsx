@@ -44,7 +44,7 @@ const BranchAdminSidebar = () => {
         {/* Dashboard Link */}
         <Link
           to="/branch-admin"
-          className={`flex items-center p-2 rounded hover:bg-gray-700 ${
+          className={`flex items-center p-2 rounded hover:bg-gray-700  ${
             location.pathname === "/branch-admin" ? "bg-gray-700" : ""
           }`}
         >
@@ -56,7 +56,7 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("classes")}
-            className={`flex items-center w-full p-2 rounded text-black hover:bg-gray-700 hover:text-slate-300${
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
               activeMenu === "classes" ? "bg-gray-700 text-black" : "text-black"
             }`}
           >
@@ -94,7 +94,7 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("sections")}
-            className={`flex items-center w-full p-2 rounded text-black hover:bg-gray-700 hover:text-slate-300 ${
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
               activeMenu === "sections" ? "bg-gray-700 text-white" : ""
             }`}
           >
@@ -132,7 +132,7 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("academic-year")}
-            className={`flex items-center w-full p-2 rounded text-black hover:bg-gray-700 hover:text-slate-300 ${
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
               activeMenu === "academic-year" ? "bg-gray-700 text-white" : ""
             }`}
           >

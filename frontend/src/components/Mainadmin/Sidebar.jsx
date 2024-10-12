@@ -121,17 +121,17 @@ const Sidebar = () => {
             Branch Admin
           </button>
           {activeMenu === "academic" && (
-            <div className="flex flex-col ml-5 gap-5">
+            <div className="flex flex-col  ml-2 gap-5">
               <Link
                 to="/admin/admins/view-all-admins"
-                className={`text-white p-3 hover:text-white  hover:bg-slate-700  ${
+                className={`text-white p-3 hover:text-white flex  items-start   hover:bg-slate-700  ${
                   activeSubmenu === "academic-view-all"
                     ? " rounded text-black p-3"
                     : ""
                 }`}
                 onClick={() => handleSubmenuClick("academic-view-all")}
               >
-                View All Branch Admins
+                View All Branch  Admins
               </Link>
             </div>
           )}

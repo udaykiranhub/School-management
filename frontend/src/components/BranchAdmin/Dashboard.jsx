@@ -4,21 +4,19 @@ import Allapi from "../../common";
 import {
   FaBell,
   FaSearch,
-  FaUserGraduate,
-  FaChalkboardTeacher,
-  FaMoneyBill,
-  FaBuilding,
 } from "react-icons/fa";
 
 const BranchAdminDashboard = () => {
   const curr_user = JSON.parse(localStorage.getItem("userData"));
   const [branchdet, setBranchdet] = useState(null);
+
   useEffect(() => {
-    fetchBranchById(curr_user.branch);
+    if (curr_user?.branch) {
+      fetchBranchById(curr_user.branch);
+    }
   }, []);
 
   const fetchBranchById = async (id) => {
-    console.log("id is", id);
     try {
       const response = await fetch(Allapi.getBranchById.url(id), {
         method: Allapi.getBranchById.method,
@@ -29,11 +27,10 @@ const BranchAdminDashboard = () => {
       });
 
       const res = await response.json();
-      console.log("data is", res);
       if (res.success) {
         setBranchdet(res.data);
-        console.log("res.data is", res.data.name);
-        console.log("branch data is", branchdet);
+        console.log(branchdet);
+        // console.log("Branch data fetched successfully:", res.data);
       } else {
         toast.error("Failed to fetch branch details");
       }
@@ -70,13 +67,31 @@ const BranchAdminDashboard = () => {
         <main className="flex-1 p-6">
           {/* Welcome Section */}
           <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-2xl font-semibold">
-              Welcome, {curr_user.name} Sir!--
-            </h2>
-            <p className="text-gray-600">
-              Here,s an overview of your branch,s activities and statistics.
-            </p>
-          </div>
+  <h2 className="text-2xl font-semibold text-blue-800">
+    Welcome, {curr_user?.name} Sir!
+  </h2>
+  <p className="text-gray-600">
+    Here's an overview of your branch's activities and statistics.
+  </p>
+
+  {/* Branch Details */}
+  {branchdet && (
+    <div className="mt-4">
+      <h3 className="text-xl font-semibold text-gray-900">Branch Details</h3>
+      <p className="text-gray-800">
+        <strong>Branch Name:</strong> {branchdet.name}
+      </p>
+      <p className="text-gray-800">
+        <strong>Phone:</strong> {branchdet.phone}
+      </p>
+      <p className="text-gray-800">
+        <strong>Address:</strong>{" "}
+        {`${branchdet.street}, ${branchdet.colony}, ${branchdet.villageTown}`}
+      </p>
+    </div>
+  )}
+</div>
+
 
           {/* Branch Stats Widgets */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -130,7 +145,9 @@ const BranchAdminDashboard = () => {
         {/* Footer */}
         <footer className="bg-white p-4 shadow text-center">
           <p className="text-gray-600">
-            &copy; 2024 Vidya Nidhi School - [Branch Name]. All rights reserved.
+            &copy; 2024 Vidya Nidhi School -{" "}
+            {branchdet ? branchdet.name : "Loading..."} Branch. All rights
+            reserved.
           </p>
         </footer>
       </div>
