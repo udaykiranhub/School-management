@@ -42,17 +42,17 @@ const Allapi = {
     url: (adminId) => `${backapi}/api/branch/del-admin/${adminId}`,
     method: "DELETE",
   },
-  getBranchAdmin:{
+  getBranchAdmin: {
     url: (adminId) => `${backapi}/api/branch/admin/${adminId}`,
     method: "GET",
-
-
   },
-  editBranchAdmin:{
+  editBranchAdmin: {
     url: (adminId) => `${backapi}/api/branch/edit-admin/${adminId}`,
     method: "PUT",
-
-
+  },
+  getBranchById: {
+    url: (branchId) => `${backapi}/api/branch/get-branch/${branchId}`,
+    method: "GET",
   },
 };
 export default Allapi;

@@ -3,9 +3,9 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Addadmin from "../components/Addadmin";
+
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Mainadmin/Sidebar";
+import Sidebar from "../components/BranchAdmin/Sidebar";
 import { Link } from "react-router-dom";
 import {
   FaHome,
@@ -23,18 +23,16 @@ import {
 } from "react-icons/fa";
 import Header from "../components/Header";
 import Login from "./Login";
-const Adminlayout = () => {
+const BranchAdminlayout = () => {
   const navigate = useNavigate();
   const [adminhandle, setadminhandle] = useState(false);
   const token = localStorage.getItem("token");
-  const location = useLocation();
   const curr_user = JSON.parse(localStorage.getItem("userData"));
-
+  const location = useLocation();
   const [admdata, setadmdata] = useState();
   const admindata = JSON.parse(localStorage.getItem("userData"));
   console.log("stored user dta", admindata);
   const { name, username, role } = admindata;
-  console.log("role is", curr_user);
 
   function onclose() {
     setadminhandle((prev) => !prev);
@@ -50,14 +48,14 @@ const Adminlayout = () => {
     <>
       {curr_user ? (
         <>
-          {curr_user.role == "MainAdmin" ? (
+          {curr_user.role == "BranchAdmin" ? (
             <>
-              <div className="w-full  bg-slate-700  flex  ">
+              <div className="w-full  bg-slate-700  flex ">
                 <div className="">
                   <Sidebar />
                 </div>
                 <div>
-                  <main className=" min-w-[83vw]">
+                  <main className="min-w-[83vw]  ">
                     <Outlet />
                   </main>
                 </div>
@@ -65,12 +63,13 @@ const Adminlayout = () => {
             </>
           ) : (
             <>
-              <div>You are Not Authorized</div>
+              <div>You Are Not Authorized</div>
             </>
           )}
         </>
       ) : (
         <>
+          {" "}
           {alert("you need to login")}
           <Login />
         </>
@@ -79,4 +78,4 @@ const Adminlayout = () => {
   );
 };
 
-export default Adminlayout;
+export default BranchAdminlayout;

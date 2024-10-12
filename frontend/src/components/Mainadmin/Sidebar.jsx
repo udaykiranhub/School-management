@@ -40,7 +40,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="hidden  sidebar min-w-[260px] h-screen bg-blue-950 text-white flex-col gap-2 items-center justify-start md:flex">
+    <aside className="hidden  sidebar min-w-[260px] h-[112vh] bg-blue-950 text-white flex-col gap-2 items-center justify-start md:flex">
       <div className="flex items-center justify-center h-20 border-b border-blue-700">
         <img
           src="/path-to-logo.png"
@@ -82,7 +82,7 @@ const Sidebar = () => {
             <div className="flex flex-col  gap-5 ml-2 ">
               <Link
                 to={"/admin/branch/create"}
-                className={` text-white p-3 hover:text-black  flex items-start hover:bg-slate-500  ${
+                className={` text-white  p-3 hover:text-black  flex items-start hover:bg-slate-500  ${
                   activeSubmenu === "create"
                     ? " bg-slate-300 rounded text-black p-3"
                     : ""

@@ -113,3 +113,24 @@ exports.updateBranch = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+//getbranchby id
+
+// Get Branch by ID Controller Function
+exports.getBranchById = async (req, res) => {
+  const branchId = req.params.branchId;
+
+  try {
+    const branch = await Branch.findById(branchId);
+    if (!branch) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Branch not found" });
+    }
+
+    res.status(200).json({ success: true, data: branch });
+  } catch (error) {
+    console.error("Error fetching branch:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch branch" });
+  }
+};

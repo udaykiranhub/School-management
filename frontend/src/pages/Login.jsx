@@ -51,8 +51,14 @@ const Login = () => {
         // localStorage.setItem("expiryTime", expiryTime);
         localStorage.setItem("userData", JSON.stringify(res.data)); // Save user data in localStorage
 
-        console.log("res is", res.data);
-        navigate("/admin", { state: { data: res.data } });
+        console.log("role is", res.data.role);
+        if (res.data.role === "MainAdmin") {
+          navigate("/admin");
+        } else if (res.data.role === "BranchAdmin") {
+          navigate("/branch-admin");
+        } else {
+          alert("invalid credentials");
+        }
 
         console.log("res is", res.data);
 

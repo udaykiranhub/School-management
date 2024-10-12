@@ -17,8 +17,9 @@ import UpdateBranch from "./components/Mainadmin/Branches/UpdateBranch.jsx";
 import DeleteBranch from "./components/Mainadmin/Branches/DeleteBranch.jsx";
 import ViewBranches from "./components/Mainadmin/Branches/ViewBranches.jsx";
 import ViewBadmin from "./components/Mainadmin/BranchAdmin/ViewBadmin.jsx";
-
+import BranchAdminlayout from "./pages/BranchAdminLayout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Bdashboard from "./components/BranchAdmin/Dashboard.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -80,6 +81,16 @@ const Router = createBrowserRouter([
                 element: <ViewBadmin />,
               },
             ],
+          },
+        ],
+      },
+      {
+        path: "/branch-admin",
+        element: <BranchAdminlayout />,
+        children: [
+          {
+            path: "",
+            element: <Bdashboard />,
           },
         ],
       },
