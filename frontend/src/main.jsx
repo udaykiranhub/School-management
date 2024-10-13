@@ -20,6 +20,7 @@ import ViewBadmin from "./components/Mainadmin/BranchAdmin/ViewBadmin.jsx";
 import BranchAdminlayout from "./pages/BranchAdminLayout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Bdashboard from "./components/BranchAdmin/Dashboard.jsx";
+import Add from "./components/BranchAdmin/AcademicYears/Add.jsx";
 
 
 const Router = createBrowserRouter([
@@ -81,6 +82,7 @@ const Router = createBrowserRouter([
                 path: "view-all-admins",
                 element: <ViewBadmin />,
               },
+
             ],
           },
         ],
@@ -92,6 +94,21 @@ const Router = createBrowserRouter([
           {
             path: "",
             element: <Bdashboard />,
+          },
+          {
+            path: "academic-year",
+
+            children: [
+              {
+                path: "add",
+                element: <Add />,
+              },
+
+              {
+                path: "view",
+                element: <ViewBranches />,
+              },
+            ],
           },
         ],
       },

@@ -59,7 +59,7 @@ const BranchAdminlayout = () => {
             <>
               <div className="w-full  bg-slate-700  flex ">
                 <div className="">
-                  <Sidebar />
+                  <Sidebar ishidden={false} />
                 </div>
                 <div>
                   <main className="min-w-[83vw]  ">
