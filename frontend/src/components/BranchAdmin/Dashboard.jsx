@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Allapi from "../../common";
-import {
-  FaBell,
-  FaSearch,
-} from "react-icons/fa";
+import { FaBell, FaSearch } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 const BranchAdminDashboard = () => {
-  const curr_user = JSON.parse(localStorage.getItem("userData"));
   const [branchdet, setBranchdet] = useState(null);
+  const token = localStorage.getItem("token");
+  const [c_user, setc_user] = useState(null);
 
   useEffect(() => {
-    if (curr_user?.branch) {
-      fetchBranchById(curr_user.branch);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        setc_user(decoded);
+        // Set decoded user only once
+        fetchBranchById(decoded?.branch);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
     }
-  }, []);
+  }, [token]);
 
   const fetchBranchById = async (id) => {
     try {
@@ -27,9 +34,10 @@ const BranchAdminDashboard = () => {
       });
 
       const res = await response.json();
+      console.log("response is", res);
       if (res.success) {
         setBranchdet(res.data);
-        console.log(branchdet);
+        console.log("branchdet is", branchdet);
         // console.log("Branch data fetched successfully:", res.data);
       } else {
         toast.error("Failed to fetch branch details");
@@ -67,31 +75,32 @@ const BranchAdminDashboard = () => {
         <main className="flex-1 p-6">
           {/* Welcome Section */}
           <div className="bg-white p-6 rounded-lg shadow mb-6">
-  <h2 className="text-2xl font-semibold text-blue-800">
-    Welcome, {curr_user?.name} Sir!
-  </h2>
-  <p className="text-gray-600">
-    Here's an overview of your branch's activities and statistics.
-  </p>
+            <h2 className="text-2xl font-semibold text-blue-800">
+              Welcome, {c_user?.name} Sir!
+            </h2>
+            <p className="text-gray-600">
+              Here's an overview of your branch's activities and statistics.
+            </p>
 
-  {/* Branch Details */}
-  {branchdet && (
-    <div className="mt-4">
-      <h3 className="text-xl font-semibold text-gray-900">Branch Details</h3>
-      <p className="text-gray-800">
-        <strong>Branch Name:</strong> {branchdet.name}
-      </p>
-      <p className="text-gray-800">
-        <strong>Phone:</strong> {branchdet.phone}
-      </p>
-      <p className="text-gray-800">
-        <strong>Address:</strong>{" "}
-        {`${branchdet.street}, ${branchdet.colony}, ${branchdet.villageTown}`}
-      </p>
-    </div>
-  )}
-</div>
-
+            {/* Branch Details */}
+            {branchdet && (
+              <div className="mt-4">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Branch Details
+                </h3>
+                <p className="text-gray-800">
+                  <strong>Branch Name:</strong> {branchdet.name}
+                </p>
+                <p className="text-gray-800">
+                  <strong>Phone:</strong> {branchdet.phone}
+                </p>
+                <p className="text-gray-800">
+                  <strong>Address:</strong>{" "}
+                  {`${branchdet.street}, ${branchdet.colony}, ${branchdet.villageTown}`}
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Branch Stats Widgets */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { mycon } from "../../store/Mycontext";
+import { useContext } from "react";
+import { jwtDecode } from "jwt-decode";
+
 import {
   FaHome,
   FaUserGraduate,
@@ -16,7 +20,20 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = () => {
-  const curr_user = JSON.parse(localStorage.getItem("userData"));
+  const token = localStorage.getItem("token");
+  const [c_user, setc_user] = useState(null);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        setc_user(decoded); // Set decoded user only once
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -47,7 +64,7 @@ const Dashboard = () => {
           {/* Welcome Section */}
           <div className="bg-white p-6 rounded-lg shadow mb-6">
             <h2 className="text-2xl font-semibold">
-              Welcome, {curr_user.name}
+              Welcome, {c_user ? c_user.name : "....loading"}
             </h2>
             <p className="text-gray-600">
               Here's a quick overview of the school.

@@ -24,6 +24,7 @@ const BranchAdminSidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("expiryTime");
+    localStorage.removeItem("userData");
 
     toast.error("Logged out Successfully");
     navigate("/login");

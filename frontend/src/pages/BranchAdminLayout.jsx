@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/BranchAdmin/Sidebar";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 import {
   FaHome,
   FaUserGraduate,
@@ -25,15 +27,20 @@ import Header from "../components/Header";
 import Login from "./Login";
 const BranchAdminlayout = () => {
   const navigate = useNavigate();
-  const [adminhandle, setadminhandle] = useState(false);
   const token = localStorage.getItem("token");
-  const curr_user = JSON.parse(localStorage.getItem("userData"));
-  const location = useLocation();
-  const [admdata, setadmdata] = useState();
-  const admindata = JSON.parse(localStorage.getItem("userData"));
-  console.log("stored user dta", admindata);
-  const { name, username, role } = admindata;
+  const [c_user, setc_user] = useState(null);
 
+  useEffect(() => {
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        setc_user(decoded); // Set decoded user only once
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
   function onclose() {
     setadminhandle((prev) => !prev);
   }
@@ -46,9 +53,9 @@ const BranchAdminlayout = () => {
 
   return (
     <>
-      {curr_user ? (
+      {c_user ? (
         <>
-          {curr_user.role == "BranchAdmin" ? (
+          {c_user.role == "BranchAdmin" ? (
             <>
               <div className="w-full  bg-slate-700  flex ">
                 <div className="">
@@ -69,8 +76,6 @@ const BranchAdminlayout = () => {
         </>
       ) : (
         <>
-          {" "}
-          {alert("you need to login")}
           <Login />
         </>
       )}

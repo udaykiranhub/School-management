@@ -17,6 +17,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("expiryTime");
+    localStorage.removeItem("userData");
 
     toast.error("Logged out Succesfully");
     navigate("/login");
@@ -131,7 +132,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => handleSubmenuClick("academic-view-all")}
               >
-                View All Branch  Admins
+                View All Branch Admins
               </Link>
             </div>
           )}

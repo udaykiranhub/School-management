@@ -40,9 +40,14 @@ exports.login = async (req, res) => {
         .json({ success: false, error: true, message: "password mismatch" });
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      {
+        id: user._id,
+        role: user.role,
+        name: user.name,
+        branch: user.branch ? user.branch : null,
+      },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "2h" }
     );
     res.json({
       data: user,
@@ -63,12 +68,10 @@ exports.deleteBranchAdmin = async (req, res) => {
     // Find and delete the admin by ID
     const admin = await User.findById(adminId);
     if (!admin || admin.role !== "BranchAdmin") {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Admin not found or is not a branch admin",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found or is not a branch admin",
+      });
     }
 
     // Remove the branchAdmin reference from the branch
@@ -86,12 +89,10 @@ exports.deleteBranchAdmin = async (req, res) => {
       .json({ success: true, message: "Branch admin deleted successfully" });
   } catch (error) {
     console.error("Error deleting branch admin:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error while deleting branch admin",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error while deleting branch admin",
+    });
   }
 };
 
@@ -247,7 +248,10 @@ exports.getBranchAdmin = async (req, res) => {
 
   try {
     // Find the user where the role is 'BranchAdmin' and the branch matches the branchId
-    const branchAdmin = await User.findOne({ role: "BranchAdmin", _id: adminId });
+    const branchAdmin = await User.findOne({
+      role: "BranchAdmin",
+      _id: adminId,
+    });
 
     if (!branchAdmin) {
       return res.status(404).json({
@@ -265,6 +269,3 @@ exports.getBranchAdmin = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
-

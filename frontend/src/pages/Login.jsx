@@ -12,6 +12,7 @@ import { DivideIcon } from "@heroicons/react/24/outline";
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [c_user, setc_user] = useState(null);
   const [logdata, setlogdata] = useState({
     username: "",
     password: "",
@@ -42,31 +43,38 @@ const Login = () => {
         }),
       });
       const res = await logres.json();
+      console.log("response is ", res.data._id);
       if (res.success) {
         // Save token to local storage
         const token = res.token;
-        console.log("token gen  is", token);
-        const expiryTime = new Date().getTime() + 3600 * 1000; // Set expiry time to 1 hour from now
-        localStorage.setItem("token", token);
-        // localStorage.setItem("expiryTime", expiryTime);
-        localStorage.setItem("userData", JSON.stringify(res.data)); // Save user data in localStorage
+        console.log("Generated token:", token);
 
-        console.log("role is", res.data.role);
+        localStorage.setItem("token", token); // Consistent token key
+        // localStorage.setItem(
+        //   "userData",
+        //   JSON.stringify({
+        //     name: res.data.name,
+        //     role: res.data.role,
+        //     username: res.data.username,
+        //     branch: res.data.branch || null,
+        //   })
+        // );
+
+        // Navigate based on role
         if (res.data.role === "MainAdmin") {
           navigate("/admin");
         } else if (res.data.role === "BranchAdmin") {
           navigate("/branch-admin");
         } else {
-          alert("invalid credentials");
+          alert("Invalid credentials");
         }
-
-        console.log("res is", res.data);
 
         toast.success(res.message);
       } else {
         toast.error(res.message);
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error("An error occurred during login.");
     }
   }

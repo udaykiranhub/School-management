@@ -7,6 +7,8 @@ import Addadmin from "../components/Addadmin";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Mainadmin/Sidebar";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 import {
   FaHome,
   FaUserGraduate,
@@ -27,14 +29,19 @@ const Adminlayout = () => {
   const navigate = useNavigate();
   const [adminhandle, setadminhandle] = useState(false);
   const token = localStorage.getItem("token");
-  const location = useLocation();
-  const curr_user = JSON.parse(localStorage.getItem("userData"));
+  const [c_user, setc_user] = useState(null);
 
-  const [admdata, setadmdata] = useState();
-  const admindata = JSON.parse(localStorage.getItem("userData"));
-  console.log("stored user dta", admindata);
-  const { name, username, role } = admindata;
-  console.log("role is", curr_user);
+  useEffect(() => {
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        setc_user(decoded); // Set decoded user only once
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
 
   function onclose() {
     setadminhandle((prev) => !prev);
@@ -48,9 +55,9 @@ const Adminlayout = () => {
 
   return (
     <>
-      {curr_user ? (
+      {c_user ? (
         <>
-          {curr_user.role == "MainAdmin" ? (
+          {c_user.role == "MainAdmin" ? (
             <>
               <div className="w-full  bg-slate-700  flex  ">
                 <div className="">
@@ -71,7 +78,6 @@ const Adminlayout = () => {
         </>
       ) : (
         <>
-          {alert("you need to login")}
           <Login />
         </>
       )}
