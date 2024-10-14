@@ -1,5 +1,6 @@
 // import { getBranchAdmin } from "../../../backend/controller/Usercontroller";
 
+
 const backapi = "http://localhost:3490";
 
 const Allapi = {
@@ -63,5 +64,13 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/academic/view/${branchId}`,
     method: "GET",
   },
+  deleteAcademicYear:{
+    url:(academicId)=>`${backapi}/api/academic/delete/${academicId}`,
+    method:"DELETE"
+  },
+  editAcademicYear:{
+    url:(academicId)=>`${backapi}/api/academic/edit/${academicId}`,
+    method:"PUT"
+  }
 };
 export default Allapi;

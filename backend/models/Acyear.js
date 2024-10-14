@@ -5,6 +5,7 @@ const academicYearSchema = new mongoose.Schema(
     year: {
       type: String,
       required: true,
+      unique:true
       // example: "2024-2025"
     },
     startDate: {

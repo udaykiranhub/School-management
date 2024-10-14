@@ -1,15 +1,18 @@
-// components/ViewAcademicYears.js
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // If using React Router for navigation
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
-import { useContext } from "react";
 import { mycon } from "../../../store/Mycontext";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import EditAcademicYearModal from "./EditAcademicYear"; // Import the modal component
+import "./animation.css"; // Custom CSS for animations
 
 const ViewAcademicYears = () => {
   const { c_branch, branchdet } = useContext(mycon);
-
   const [academicYears, setAcademicYears] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
 
   useEffect(() => {
     const fetchAcademicYears = async () => {
@@ -26,11 +29,12 @@ const ViewAcademicYears = () => {
         }
 
         const res = await response.json();
-        console.log("academic years is", res.data);
         setAcademicYears(res.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching academic years:", error);
         toast.error("Failed to fetch academic years");
+        setIsLoading(false);
       }
     };
 
@@ -48,9 +52,8 @@ const ViewAcademicYears = () => {
         });
 
         const data = await response.json();
-        if (response.ok) {
+        if (data.success) {
           toast.success("Academic year deleted successfully");
-          // Update the list of academic years after deletion
           setAcademicYears(academicYears.filter((year) => year._id !== id));
         } else {
           toast.error(data.message || "Failed to delete academic year");
@@ -62,66 +65,83 @@ const ViewAcademicYears = () => {
     }
   };
 
+  const openEditModal = (year) => {
+    setSelectedAcademicYear(year);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedAcademicYear(null);
+  };
+
   return (
-    <div className=" relative bg-white p-6 rounded shadow-lg">
-      <h2 className="text-xl font-bold mb-4">
-        Academic Years for Branch
-        <div className="font-bold capitalize text-2xl">
-          {branchdet ? branchdet.name : "Loading"}
-        </div>
+    <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-7xl mx-auto my-8">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">
+        Academic Years for {branchdet ? branchdet.name : "Loading..."} Branch
       </h2>
       <Link
         to="/branch-admin/academic-year/add"
-        className=" absolute top-5 right-5 bg-red-400 p-3 text-white hover:text-white hover:bg-red-700"
+        className="absolute top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all"
       >
         Add Academic Year
       </Link>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border-gray-300 shadow-md rounded mb-4">
-          <thead>
-            <tr>
-              <th className="border-b-2 p-3">#</th>
-              <th className="border-b-2 p-3">Academic Year</th>
-              <th className="border-b-2 p-3">Start Date</th>
-              <th className="border-b-2 p-3">End Date</th>
-              <th className="border-b-2 p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {academicYears.map((year, index) => (
-              <tr key={year._id}>
-                <td className="border-b p-3">{index + 1}</td>
-                <td className="border-b p-3">
-                  {year.year}{" "}
-                  <button className="bg-blue-500 text-white p-3 m-2 hover:bg-blue-700">
-                    Add classes
-                  </button>
-                </td>
-                <td className="border-b p-3">
-                  {new Date(year.startDate).toLocaleDateString()}
-                </td>
-                <td className="border-b p-3">
-                  {new Date(year.endDate).toLocaleDateString()}
-                </td>
-                <td className="border-b p-3">
-                  <Link
-                    to={`/edit-academic-year/${year._id}`} // Replace with your edit academic year route
-                    className="text-blue-500 mr-2"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(year._id)}
-                    className="text-red-500"
-                  >
-                    Delete
-                  </button>
-                </td>
+
+      {isLoading ? (
+        <div className="text-center text-gray-500">Loading...</div>
+      ) : (
+        <div className={`overflow-x-auto animate-slide-down`}>
+          <table className="min-w-full bg-white border border-gray-200 shadow-md rounded mb-6">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border-b-2 p-3 text-gray-800">#</th>
+                <th className="border-b-2 p-3 text-gray-800">Academic Year</th>
+                <th className="border-b-2 p-3 text-gray-800">Start Date</th>
+                <th className="border-b-2 p-3 text-gray-800">End Date</th>
+                <th className="border-b-2 p-3 text-gray-800">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {academicYears.length > 0 ? (
+                academicYears.map((year, index) => (
+                  <tr key={year._id} className="hover:bg-gray-50 transition-all">
+                    <td className="border-b p-3 text-center text-gray-800">{index + 1}</td>
+                    <td className="border-b p-3 text-gray-800">{year.year}</td>
+                    <td className="border-b p-3 text-gray-800">{new Date(year.startDate).toLocaleDateString()}</td>
+                    <td className="border-b p-3 text-gray-800">{new Date(year.endDate).toLocaleDateString()}</td>
+                    <td className="border-b p-3 text-center">
+                      <button
+                        onClick={() => openEditModal(year)}
+                        className="text-blue-500 hover:text-blue-700 mr-2"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(year._id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center p-3 text-gray-500">No academic years found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {selectedAcademicYear && (
+        <EditAcademicYearModal
+          isOpen={isModalOpen}
+          onClose={closeEditModal}
+          academicYear={selectedAcademicYear}
+          setAcademicYears={setAcademicYears} // Pass the state setter function
+        />
+      )}
     </div>
   );
 };

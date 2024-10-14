@@ -1,6 +1,6 @@
 const Branch = require("../models/Branches");
 const users = require("../models/users");
-
+const AcademicYear= require("../models/Acyear");
 // Create Branch
 exports.createBranch = async (req, res) => {
   try {
@@ -39,23 +39,31 @@ exports.deleteBranch = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Branch not found" });
     }
+
+    // Delete branch admin if exists
     if (branch.branchAdmin) {
       await users.findByIdAndDelete(branch.branchAdmin);
-    } // Delete the branch
-    await Branch.findByIdAndDelete(branchId);
+    }
 
-    // Optionally, delete associated academic years and classes if required
-    // await AcademicYear.deleteMany({ branch: branchId });
+    // Delete associated academic years
+    await AcademicYear.deleteMany({ branch: branchId });
+
+    // Optionally, delete associated classes if you have classes linked to academic years
+    // const academicYearIds = branch.academicYears; // If you store academic years in the branch schema
     // await Class.deleteMany({ academicYear: { $in: academicYearIds } });
+
+    // Finally, delete the branch
+    await Branch.findByIdAndDelete(branchId);
 
     res.status(200).json({
       success: true,
-      message: "Branch  and admin deleted successfully",
+      message: "Branch, admin, and academic years deleted successfully",
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Get All Branches
 exports.getBranches = async (req, res) => {
