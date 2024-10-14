@@ -43,8 +43,9 @@ const Login = () => {
         }),
       });
       const res = await logres.json();
-      console.log("response is ", res.data._id);
       if (res.success) {
+        console.log("response is ", res.data._id);
+
         // Save token to local storage
         const token = res.token;
         console.log("Generated token:", token);

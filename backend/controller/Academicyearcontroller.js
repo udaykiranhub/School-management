@@ -1,15 +1,19 @@
 const AcademicYear = require("../models/Acyear");
 const Branch = require("../models/Branches");
+const mongoose = require("mongoose");
 
 // Create Academic Year
 exports.createAcademicYear = async (req, res) => {
+  const branchId = req.params.branchId;
+  const { year, startDate, endDate } = req.body;
   try {
-    const { startYear, endYear, branchId } = req.body;
     const academicYear = new AcademicYear({
-      startYear,
-      endYear,
-      branch: branchId,
+      year,
+      startDate,
+      endDate,
+      branch: new mongoose.Types.ObjectId(branchId),
     });
+
     await academicYear.save();
 
     const branch = await Branch.findById(branchId);
@@ -42,5 +46,24 @@ exports.deleteAcademicYear = async (req, res) => {
       .json({ success: true, message: "Academic Year deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//get all academic years of corresponding branch
+exports.getAcademicYears = async (req, res) => {
+  try {
+    const { branchId } = req.params;
+    const academicYears = await AcademicYear.find({ branch: branchId });
+    res.status(200).json({
+      success: true,
+      error: false,
+      message: "successfully fetched all Academic years",
+      data: academicYears,
+    });
+  } catch (error) {
+    console.error("Error fetching academic years:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch academic years" });
   }
 };

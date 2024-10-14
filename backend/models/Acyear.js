@@ -2,14 +2,20 @@ const mongoose = require("mongoose");
 
 const academicYearSchema = new mongoose.Schema(
   {
-    startYear: {
-      type: Number,
+    year: {
+      type: String,
+      required: true,
+      // example: "2024-2025"
+    },
+    startDate: {
+      type: Date,
       required: true,
     },
-    endYear: {
-      type: Number,
+    endDate: {
+      type: Date,
       required: true,
     },
+
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",

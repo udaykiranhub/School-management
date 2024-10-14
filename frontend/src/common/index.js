@@ -54,5 +54,14 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/branch/get-branch/${branchId}`,
     method: "GET",
   },
+
+  addAcademicYear: {
+    url: (branchId) => `${backapi}/api/academic/add/${branchId}`,
+    method: "POST",
+  },
+  getAcademicYears: {
+    url: (branchId) => `${backapi}/api/academic/view/${branchId}`,
+    method: "GET",
+  },
 };
 export default Allapi;

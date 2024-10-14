@@ -8,12 +8,14 @@ const router = require("./routers/route");
 const branchRoutes = require("./routers/BranchRoutes");
 const protect = require("./middleware/Authtoken");
 const userRoutes = require("./routers/UserRoutes");
+const acdemicRoutes = require("./routers/AcademicRoutes");
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", router);
 app.use("/api/branch", protect.authMiddleware, branchRoutes);
 app.use("/api/branch", protect.authMiddleware, userRoutes);
+app.use("/api/academic", protect.authMiddleware, acdemicRoutes);
 
 database().then(
   app.listen(process.env.PORT, () => {

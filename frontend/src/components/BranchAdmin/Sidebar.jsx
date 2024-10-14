@@ -53,6 +53,37 @@ const BranchAdminSidebar = () => {
           Dashboard
         </Link>
 
+        {/* Academic Year Management */}
+        <div>
+          <button
+            onClick={() => handleMenuClick("academic-year")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+              activeMenu === "academic-year" ? "bg-gray-700 text-white" : ""
+            }`}
+          >
+            <FaCalendarAlt className="mr-3" />
+            Academic Year
+          </button>
+          {activeMenu === "academic-year" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to="/branch-admin/academic-year/add"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Add Academic Year
+              </Link>
+              <Link
+                to="/branch-admin/academic-year/view"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                view All Academic Years
+              </Link>
+            </div>
+          )}
+        </div>
+
         {/* Class Management */}
         <div>
           <button
@@ -124,37 +155,6 @@ const BranchAdminSidebar = () => {
               >
                 <FaTrashAlt className="mr-2" />
                 Delete Section
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* Academic Year Management */}
-        <div>
-          <button
-            onClick={() => handleMenuClick("academic-year")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "academic-year" ? "bg-gray-700 text-white" : ""
-            }`}
-          >
-            <FaCalendarAlt className="mr-3" />
-            Academic Year
-          </button>
-          {activeMenu === "academic-year" && (
-            <div className="flex flex-col pl-6 mt-2 space-y-2">
-              <Link
-                to="/branch-admin/academic-year/add"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Add Academic Year
-              </Link>
-              <Link
-                to="/branch-admin/academic-year/update"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaEdit className="mr-2" />
-                Update Academic Year
               </Link>
             </div>
           )}
