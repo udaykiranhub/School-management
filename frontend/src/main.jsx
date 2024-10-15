@@ -5,6 +5,7 @@ import "./index.css";
 import { ToastContainer } from "react-toastify";
 import React from "react";
 import Home from "./pages/Home.jsx";
+import ViewAll from "./components/BranchAdmin/Classes/ViewAll.jsx"
 import Aboutus from "./pages/Aboutus.jsx";
 import Contactus from "./pages/Contactus.jsx";
 import AdmissionEnquiry from "./pages/AdmissionEnquiry.jsx";
@@ -95,6 +96,10 @@ const Router = createBrowserRouter([
           {
             path: "",
             element: <Bdashboard />,
+          },
+          {
+            path:"class/view-all",
+            element:<ViewAll/>
           },
           {
             path: "academic-year",

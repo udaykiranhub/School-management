@@ -5,8 +5,8 @@ const academicYearSchema = new mongoose.Schema(
     year: {
       type: String,
       required: true,
-      unique:true
-      // example: "2024-2025"
+      unique: true,
+      match: /^\d{4}-\d{4}$/, // Ensure the format is like "2024-2025"
     },
     startDate: {
       type: Date,
@@ -16,7 +16,6 @@ const academicYearSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",

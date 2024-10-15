@@ -171,6 +171,7 @@ import "./animation.css";
 const ViewAcademicYears = () => {
   const { c_branch, branchdet, setBranchdet, c_acad, setc_acad } =
     useContext(mycon);
+    // console.log(c_branch, branchdet, setBranchdet, c_acad, setc_acad)
   const [academicYears, setAcademicYears] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -203,7 +204,7 @@ const ViewAcademicYears = () => {
     };
 
     fetchAcademicYears();
-  }, [c_branch, c_acad]);
+  }, [c_branch, c_acad,selectedAcademicYear]);
 
   const handleDelete = async (id, bid) => {
     console.log("c_branch is now", bid);
@@ -212,6 +213,7 @@ const ViewAcademicYears = () => {
         const response = await fetch(Allapi.deleteAcademicYear.url(bid, id), {
           method: Allapi.deleteAcademicYear.method,
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
@@ -226,6 +228,7 @@ const ViewAcademicYears = () => {
           // setAcademicYears(updatedyears);
           updatedyears[0] ? setc_acad(updatedyears[0]) : "";
         } else {
+          
           toast.error(data.message || "Failed to delete academic year");
         }
       } catch (error) {
@@ -292,6 +295,12 @@ const ViewAcademicYears = () => {
                             Add classes
                           </Link>
                           <button
+                            onClick={() => openEditModal(year)}
+                            className="text-blue-500 hover:text-blue-700 mr-2"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
                             onClick={() => {
                               handleDelete(year._id, c_branch);
                             }}
@@ -302,12 +311,12 @@ const ViewAcademicYears = () => {
                         </>
                       ) : (
                         <>
-                          <button
+                          {/* <button
                             onClick={() => openEditModal(year)}
                             className="text-blue-500 hover:text-blue-700 mr-2"
                           >
                             <FaEdit />
-                          </button>
+                          </button> */}
                           <button
                             onClick={() => handleDelete(year._id, c_branch)}
                             className="text-red-500 hover:text-red-700"

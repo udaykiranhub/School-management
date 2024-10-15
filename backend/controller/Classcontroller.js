@@ -1,75 +1,107 @@
 const Class = require("../models/Classes");
 const AcademicYear = require("../models/Acyear");
 
-// Add Class to Academic Year
-exports.addClass = async (req, res) => {
+// Create Class
+exports.createClass = async (req, res) => {
   try {
-    const { name, section, academicYearId } = req.body;
-    const newClass = new Class({ name, section, academicYear: academicYearId });
+    const { name,academicYear, subjects } = req.body;
+
+    const newClass = new Class({
+      name,
+      academicYear,
+      subjects,
+    });
+    // Save the new class
     await newClass.save();
+console.log("create class")
 
-    const academicYear = await AcademicYear.findById(academicYearId);
-    academicYear.classes.push(newClass._id);
-    await academicYear.save();
 
-    res
-      .status(201)
-      .json({ success: true, message: "Class added successfully", newClass });
+    // Add the class to the academic year's classes array
+    await AcademicYear.findByIdAndUpdate(academicYear, {
+      $push: { classes: newClass._id },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Class created successfully",
+      data: newClass,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    if (error.code === 11000) {
+      res.status(400).json({
+        success: false,
+        message: "Class name must be unique",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to create class",
+        error: error.message,
+      });
+    }
   }
 };
 
+// Get All Classes
+exports.getAllClasses = async (req, res) => {
+  try {
+    const classes = await Class.find()
+      // .populate("sections") // Populate section details
+      // .populate("academicYear"); // Populate academic year
+
+    res.status(200).json({
+      success: true,
+      data: classes,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve classes",
+      error: error.message,
+    });
+  }
+};
+
+
+// Delete Class
 exports.deleteClass = async (req, res) => {
   try {
-    const { classId } = req.params;
+    const { id } = req.params;
 
-    // Delete the class
-    await Class.findByIdAndDelete(classId);
+    // Find the class by id
+    const classData = await Class.findById(id);
+    if (!classData) {
+      return res.status(404).json({
+        success: false,
+        message: "Class not found",
+      });
+    }
 
-    res
-      .status(200)
-      .json({ success: true, message: "Class deleted successfully" });
+    // Check if the sections array is empty
+    if (classData.sections.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot delete class because it has sections. Remove all sections before deleting the class.",
+      });
+    }
+
+    // Remove the class reference from the academic year
+    await AcademicYear.findByIdAndUpdate(classData.academicYear, {
+      $pull: { classes: classData._id },
+    });
+
+    // Proceed with class deletion
+    await Class.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Class deleted successfully",
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Add Section to Class
-exports.addSection = async (req, res) => {
-  try {
-    const { classId } = req.params;
-    const { sectionName } = req.body;
-
-    const classObj = await Class.findById(classId);
-
-    classObj.sections.push({ name: sectionName });
-    await classObj.save();
-
-    res
-      .status(200)
-      .json({ success: true, message: "Section added successfully" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Delete Section from Class
-exports.deleteSection = async (req, res) => {
-  try {
-    const { classId, sectionName } = req.params;
-
-    const classObj = await Class.findById(classId);
-
-    classObj.sections = classObj.sections.filter(
-      (section) => section.name !== sectionName
-    );
-    await classObj.save();
-
-    res
-      .status(200)
-      .json({ success: true, message: "Section deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete class",
+      error: error.message,
+    });
   }
 };

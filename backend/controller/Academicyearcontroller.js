@@ -118,6 +118,14 @@ exports.deleteAcademicYear = async (req, res) => {
       });
     }
 
+    // Check if the classes array is empty
+    if (academicYear.classes.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot delete academic year with associated classes.",
+      });
+    }
+
     // Delete the academic year from the AcademicYear collection
     await AcademicYear.findByIdAndDelete(academicYearId);
 
@@ -128,7 +136,6 @@ exports.deleteAcademicYear = async (req, res) => {
       branch.academicYears = branch.academicYears
         .filter((year) => year.toString() !== academicYearId)
         .sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-      // Map sorted array back to ObjectIds
 
       await branch.save();
     }
@@ -142,13 +149,14 @@ exports.deleteAcademicYear = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Academic Year and associated classes deleted successfully",
+      message: "Academic Year deleted successfully",
       sortedYears,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Get All Academic Years for a Branch
 exports.getAcademicYears = async (req, res) => {

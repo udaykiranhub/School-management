@@ -71,5 +71,18 @@ const Allapi = {
     url: (academicId) => `${backapi}/api/academic/edit/${academicId}`,
     method: "PUT",
   },
+  addClass:{
+    url: `${backapi}/api/classes/create-class`,
+    method:"POST",
+  },
+  getClasses:{
+    url:`${backapi}/api/classes/get-classes`,
+    method:"GET"
+  },
+  deleteClass:{
+    url: (classId) => `${backapi}/api/classes/delete-class/${classId}`,
+    method:"DELETE",
+  }
 };
+
 export default Allapi;

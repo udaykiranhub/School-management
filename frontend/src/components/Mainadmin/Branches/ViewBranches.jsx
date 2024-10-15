@@ -68,6 +68,7 @@ const ViewBranches = () => {
         // alert("Branch deleted successfully");
         toast.success("branch deleted successfully");
       } else {
+        toast.error(res.message);
         console.error("Failed to delete branch");
       }
     } catch (error) {
