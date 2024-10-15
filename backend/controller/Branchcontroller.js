@@ -1,6 +1,6 @@
 const Branch = require("../models/Branches");
 const users = require("../models/users");
-const AcademicYear= require("../models/Acyear");
+const AcademicYear = require("../models/Acyear");
 // Create Branch
 exports.createBranch = async (req, res) => {
   try {
@@ -63,7 +63,6 @@ exports.deleteBranch = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // Get All Branches
 exports.getBranches = async (req, res) => {

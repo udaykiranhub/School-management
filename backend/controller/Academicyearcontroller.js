@@ -3,7 +3,6 @@ const Branch = require("../models/Branches");
 const mongoose = require("mongoose");
 const Class = require("../models/Classes");
 
-// Create Academic Year
 exports.createAcademicYear = async (req, res) => {
   const branchId = req.params.branchId;
   const { year, startDate, endDate } = req.body;
@@ -11,25 +10,57 @@ exports.createAcademicYear = async (req, res) => {
   try {
     const branch = await Branch.findById(branchId);
     if (!branch) {
-      return res.status(404).json({ success: false, message: "Branch not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Branch not found" });
     }
 
+    // Check if the academic year already exists
+    const existingAcademicYear = await AcademicYear.findOne({ year });
+    if (existingAcademicYear) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Academic year already exists" });
+    }
+
+    // Create and save the new academic year
     const academicYear = new AcademicYear({
       year,
       startDate,
       endDate,
       branch: new mongoose.Types.ObjectId(branchId),
     });
-
     await academicYear.save();
 
+    // Insert into the branch's academicYears array and sort by startDate in descending order
     branch.academicYears.push(academicYear._id);
+
+    // Retrieve the full academic year documents from the database
+    const academicYearDocs = await AcademicYear.find({
+      _id: { $in: branch.academicYears },
+    });
+
+    // Sort the academic year documents by start date in descending order (latest first)
+    academicYearDocs.sort(
+      (a, b) => new Date(b.startDate) - new Date(a.startDate)
+    );
+
+    // Update the branch's academicYears array with sorted IDs
+    branch.academicYears = academicYearDocs.map((doc) => doc._id);
+
+    // Save the updated branch
     await branch.save();
+
+    // Sort the AcademicYear collection by startDate in descending order
+    const sortedAcademicYears = await AcademicYear.find({
+      branch: branchId,
+    }).sort({ startDate: -1 });
 
     res.status(201).json({
       success: true,
       message: "Academic Year created successfully",
       academicYear,
+      sortedAcademicYears, // Return sorted academic years if needed in response
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -71,11 +102,14 @@ exports.editAcademicYear = async (req, res) => {
   }
 };
 
-// Delete Academic Year
 exports.deleteAcademicYear = async (req, res) => {
   try {
     const { branchId, academicYearId } = req.params;
 
+    console.log("branch id is back ", branchId);
+    console.log("Academic id in back is", academicYearId);
+
+    // Check if the academic year exists
     const academicYear = await AcademicYear.findById(academicYearId);
     if (!academicYear) {
       return res.status(404).json({
@@ -84,23 +118,32 @@ exports.deleteAcademicYear = async (req, res) => {
       });
     }
 
+    // Delete the academic year from the AcademicYear collection
     await AcademicYear.findByIdAndDelete(academicYearId);
 
-    // Remove academic year from branch's academicYears array
+    // Remove the academic year from the branch's academicYears array and re-sort
     const branch = await Branch.findById(branchId);
     if (branch) {
-      branch.academicYears = branch.academicYears.filter(
-        (year) => year.toString() !== academicYearId
-      );
+      // Filter out the deleted academic year and then re-map the sorted ids back to ObjectIds
+      branch.academicYears = branch.academicYears
+        .filter((year) => year.toString() !== academicYearId)
+        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+      // Map sorted array back to ObjectIds
+
       await branch.save();
     }
 
-    // Optionally, delete associated classes
+    // Delete all classes associated with the deleted academic year
     await Class.deleteMany({ academicYear: academicYearId });
+    const academicYears = await AcademicYear.find({ branch: branchId });
+    const sortedYears = academicYears.sort(
+      (a, b) => new Date(b.startDate) - new Date(a.startDate)
+    );
 
     res.status(200).json({
       success: true,
       message: "Academic Year and associated classes deleted successfully",
+      sortedYears,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -121,10 +164,13 @@ exports.getAcademicYears = async (req, res) => {
     }
 
     const academicYears = await AcademicYear.find({ branch: branchId });
+    const sortedYears = academicYears.sort(
+      (a, b) => new Date(b.startDate) - new Date(a.startDate)
+    );
     res.status(200).json({
       success: true,
       message: "Successfully fetched all Academic Years",
-      data: academicYears,
+      data: sortedYears,
     });
   } catch (error) {
     res.status(500).json({

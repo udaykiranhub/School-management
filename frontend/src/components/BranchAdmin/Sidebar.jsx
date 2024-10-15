@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { mycon } from "../../store/Mycontext";
+import { useContext } from "react";
 import {
   FaHome,
   FaChalkboardTeacher,
@@ -16,6 +18,14 @@ const BranchAdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState("");
+  const { branchdet, c_acad } = useContext(mycon);
+  console.log("sidebar branchdet is", branchdet);
+  console.log("c_acad is", c_acad);
+  const c_acid = branchdet
+    ? branchdet.academicYears
+      ? branchdet.academicYears[0]
+      : ""
+    : "";
 
   const handleMenuClick = (menu) => {
     setActiveMenu(activeMenu === menu ? "" : menu);
@@ -98,7 +108,9 @@ const BranchAdminSidebar = () => {
           {activeMenu === "classes" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to="/branch-admin/class/add"
+                to={`/branch-admin/academic-year/add-class/${
+                  c_acid ? c_acid : ""
+                }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />

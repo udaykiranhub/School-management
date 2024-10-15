@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Allapi from "../../../common";
 import { mycon } from "../../../store/Mycontext";
 import { useContext } from "react";
@@ -10,7 +10,7 @@ const AddAcademicYear = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const { c_branch, branchdet } = useContext(mycon);
+  const { c_branch, branchdet, setc_acad } = useContext(mycon);
 
   useEffect(() => {
     // Trigger the slide-down animation when the component mounts
@@ -36,10 +36,13 @@ const AddAcademicYear = () => {
 
       const res = await response.json();
       if (res.success) {
-        toast.success("Academic year added successfully");
         setYear("");
         setStartDate("");
         setEndDate("");
+        if (res.sortedAcademicYears) {
+          setc_acad(res.sortedAcademicYears[0]);
+        }
+        toast.success("Acdemic Year Added");
       } else {
         toast.error(res.message || "Failed to add academic year");
       }
@@ -58,6 +61,8 @@ const AddAcademicYear = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         {branchdet ? `${branchdet.name} Branch` : "Loading..."}
       </h2>
+      <ToastContainer />
+
       <Link
         to="/branch-admin/academic-year/view"
         className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all"

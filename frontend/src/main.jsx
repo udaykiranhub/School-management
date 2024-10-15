@@ -22,6 +22,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Bdashboard from "./components/BranchAdmin/Dashboard.jsx";
 import Add from "./components/BranchAdmin/AcademicYears/Add.jsx";
 import ViewAcademicYears from "./components/BranchAdmin/AcademicYears/view-all.jsx";
+import AddClass from "./components/BranchAdmin/Classes/AddClass.jsx";
+import AddAcademicYear from "./components/BranchAdmin/AcademicYears/Add.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -106,6 +108,14 @@ const Router = createBrowserRouter([
               {
                 path: "view",
                 element: <ViewAcademicYears />,
+              },
+              {
+                path: "add-class/",
+                element: <AddAcademicYear />,
+              },
+              {
+                path: "add-class/:acid",
+                element: <AddClass />,
               },
             ],
           },

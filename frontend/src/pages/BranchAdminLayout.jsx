@@ -33,6 +33,7 @@ const BranchAdminlayout = () => {
   const [c_user, setc_user] = useState(null);
   const [c_branch, setc_branch] = useState(null);
   const [branchdet, setBranchdet] = useState(null);
+  const [c_acad, setc_acad] = useState(null);
 
   useEffect(() => {
     if (token) {
@@ -45,7 +46,7 @@ const BranchAdminlayout = () => {
           fetchBranchById(decoded.branch);
         }
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Error decoding token:", error); 
       }
     }
   }, [token]);
@@ -85,7 +86,7 @@ const BranchAdminlayout = () => {
   };
 
   return (
-    <mycon.Provider value={{ c_branch, branchdet }}>
+    <mycon.Provider value={{ c_branch, branchdet, c_acad, setc_acad }}>
       <>
         {c_user ? (
           <>
