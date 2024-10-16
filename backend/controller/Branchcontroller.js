@@ -65,7 +65,6 @@ exports.deleteBranch = async (req, res) => {
   }
 };
 
-
 // Get All Branches
 exports.getBranches = async (req, res) => {
   try {

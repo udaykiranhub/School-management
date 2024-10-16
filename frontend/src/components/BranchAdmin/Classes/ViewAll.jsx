@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Allapi from "../../../common/index";
-import { FaTrash, FaPlusCircle } from 'react-icons/fa'; // Icons for buttons
+import { FaTrash, FaPlusCircle } from "react-icons/fa"; // Icons for buttons
 
 const ViewAllClasses = () => {
   const [classes, setClasses] = useState([]);
@@ -20,6 +20,7 @@ const ViewAllClasses = () => {
 
       const result = await response.json();
       if (result.success) {
+        console.log(result.data, "are the classes");
         setClasses(result.data);
       } else {
         toast.error(result.message || "Failed to fetch classes");
@@ -31,26 +32,28 @@ const ViewAllClasses = () => {
   };
 
   const handleDelete = async (classId) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(Allapi.deleteClass.url(classId), {
-        method: Allapi.deleteClass.method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+    if (window.confirm("Are you sure you want to delete this class?")) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(Allapi.deleteClass.url(classId), {
+          method: Allapi.deleteClass.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-      const result = await response.json();
-      if (result.success) {
-        toast.success("Class deleted successfully");
-        fetchClasses(); // Refresh the class list
-      } else {
-        toast.error(result.message || "Failed to delete class");
+        const result = await response.json();
+        if (result.success) {
+          toast.success("Class deleted successfully");
+          fetchClasses(); // Refresh the class list
+        } else {
+          toast.error(result.message || "Failed to delete class");
+        }
+      } catch (error) {
+        console.error("Error deleting class:", error);
+        toast.error("Error deleting class");
       }
-    } catch (error) {
-      console.error("Error deleting class:", error);
-      toast.error("Error deleting class");
     }
   };
 
@@ -60,7 +63,9 @@ const ViewAllClasses = () => {
 
   return (
     <div className="mt-16 p-8 max-w-4xl mx-auto bg-white shadow-lg rounded-2xl">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">All Classes</h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        All Classes
+      </h2>
 
       {classes.length === 0 ? (
         <p className="text-gray-600 text-center">No classes found.</p>
@@ -76,13 +81,17 @@ const ViewAllClasses = () => {
           <tbody>
             {classes.map((classItem) => (
               <tr key={classItem._id} className="hover:bg-gray-100 transition">
-                <td className="border px-4 py-2 text-gray-700">{classItem.name}</td>
                 <td className="border px-4 py-2 text-gray-700">
-                  {classItem.subjects.length > 0 ? classItem.subjects.join(', ') : "No subjects assigned"}
+                  {classItem.name}
+                </td>
+                <td className="border px-4 py-2 text-gray-700">
+                  {classItem.subjects.length > 0
+                    ? classItem.subjects.join(", ")
+                    : "No subjects assigned"}
                 </td>
                 <td className="border px-4 py-2 flex space-x-2">
                   <Link
-                    to={`/branch-admin/class/add-section/${classItem._id}`} // Link to add section route for this class
+                    to={`/branch-admin/academic-year/add-section/${classItem._id}`} // Link to add section route for this class
                     className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition flex items-center"
                   >
                     <FaPlusCircle />

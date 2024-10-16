@@ -5,7 +5,7 @@ import "./index.css";
 import { ToastContainer } from "react-toastify";
 import React from "react";
 import Home from "./pages/Home.jsx";
-import ViewAll from "./components/BranchAdmin/Classes/ViewAll.jsx"
+import ViewAll from "./components/BranchAdmin/Classes/ViewAll.jsx";
 import Aboutus from "./pages/Aboutus.jsx";
 import Contactus from "./pages/Contactus.jsx";
 import AdmissionEnquiry from "./pages/AdmissionEnquiry.jsx";
@@ -25,6 +25,7 @@ import Add from "./components/BranchAdmin/AcademicYears/Add.jsx";
 import ViewAcademicYears from "./components/BranchAdmin/AcademicYears/view-all.jsx";
 import AddClass from "./components/BranchAdmin/Classes/AddClass.jsx";
 import AddAcademicYear from "./components/BranchAdmin/AcademicYears/Add.jsx";
+import Addsection from "./components/BranchAdmin/Sections/Addsection.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -98,8 +99,8 @@ const Router = createBrowserRouter([
             element: <Bdashboard />,
           },
           {
-            path:"class/view-all",
-            element:<ViewAll/>
+            path: "class/view-all",
+            element: <ViewAll />,
           },
           {
             path: "academic-year",
@@ -121,6 +122,10 @@ const Router = createBrowserRouter([
               {
                 path: "add-class/:acid",
                 element: <AddClass />,
+              },
+              {
+                path: "add-section/:classId",
+                element: <Addsection />,
               },
             ],
           },

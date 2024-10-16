@@ -64,25 +64,47 @@ const Allapi = {
     method: "GET",
   },
   deleteAcademicYear: {
-    url: (branchid,academicId) => `${backapi}/api/academic/delete/${branchid}/${academicId}`,
+    url: (branchid, academicId) =>
+      `${backapi}/api/academic/delete/${branchid}/${academicId}`,
     method: "DELETE",
   },
   editAcademicYear: {
     url: (academicId) => `${backapi}/api/academic/edit/${academicId}`,
     method: "PUT",
   },
-  addClass:{
+  addClass: {
     url: `${backapi}/api/classes/create-class`,
-    method:"POST",
+    method: "POST",
   },
-  getClasses:{
-    url:`${backapi}/api/classes/get-classes`,
-    method:"GET"
+  getClasses: {
+    url: `${backapi}/api/classes/get-classes`,
+    method: "GET",
   },
-  deleteClass:{
+  deleteClass: {
     url: (classId) => `${backapi}/api/classes/delete-class/${classId}`,
-    method:"DELETE",
-  }
+    method: "DELETE",
+  },
+  getClassDetails: {
+    url: (classId) => `${backapi}/api/classes/get-class/${classId}`,
+    method: "GET",
+  },
+  addSection: {
+    url: (classId) => `${backapi}/api/sections/addsection/${classId}`,
+    method: "POST",
+  },
+  getSections: {
+    url: (classId) => `${backapi}/api/sections/getallsections/${classId}`,
+    method: "GET",
+  },
+  updateSection: {
+    url: (secId) => `${backapi}/api/sections/update/${secId}`,
+    method: "PUT",
+  },
+  deleteSection: {
+    url: (classId, sectionId) =>
+      `${backapi}/api/sections/delete/${classId}/${sectionId}`,
+    method: "DELETE",
+  },
 };
 
 export default Allapi;

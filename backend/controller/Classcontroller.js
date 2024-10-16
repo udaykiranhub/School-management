@@ -1,10 +1,11 @@
 const Class = require("../models/Classes");
 const AcademicYear = require("../models/Acyear");
+const mongoose = require("mongoose");
 
 // Create Class
 exports.createClass = async (req, res) => {
   try {
-    const { name,academicYear, subjects } = req.body;
+    const { name, academicYear, subjects } = req.body;
 
     const newClass = new Class({
       name,
@@ -13,8 +14,7 @@ exports.createClass = async (req, res) => {
     });
     // Save the new class
     await newClass.save();
-console.log("create class")
-
+    console.log("create class");
 
     // Add the class to the academic year's classes array
     await AcademicYear.findByIdAndUpdate(academicYear, {
@@ -45,9 +45,9 @@ console.log("create class")
 // Get All Classes
 exports.getAllClasses = async (req, res) => {
   try {
-    const classes = await Class.find()
-      // .populate("sections") // Populate section details
-      // .populate("academicYear"); // Populate academic year
+    const classes = await Class.find();
+    // .populate("sections") // Populate section details
+    // .populate("academicYear"); // Populate academic year
 
     res.status(200).json({
       success: true,
@@ -61,7 +61,6 @@ exports.getAllClasses = async (req, res) => {
     });
   }
 };
-
 
 // Delete Class
 exports.deleteClass = async (req, res) => {
@@ -81,7 +80,8 @@ exports.deleteClass = async (req, res) => {
     if (classData.sections.length > 0) {
       return res.status(400).json({
         success: false,
-        message: "Cannot delete class because it has sections. Remove all sections before deleting the class.",
+        message:
+          "Cannot delete class because it has sections. Remove all sections before deleting the class.",
       });
     }
 
@@ -103,5 +103,23 @@ exports.deleteClass = async (req, res) => {
       message: "Failed to delete class",
       error: error.message,
     });
+  }
+};
+
+//getclass by id
+exports.getClassDetails = async (req, res) => {
+  const { classId } = req.params;
+  // classId = new mongoose.Types.ObjectId(classId);
+  try {
+    const classData = await Class.findById(classId);
+    if (!classData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Class not found" });
+    }
+    res.json({ success: true, data: classData });
+  } catch (error) {
+    console.error("Error fetching class details:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

@@ -1,20 +1,32 @@
 import React, { useState } from "react";
-import { useParams, useNavigate,Link } from "react-router-dom"; // Import useNavigate for navigation
+import { useParams, useNavigate, Link } from "react-router-dom"; // Import useNavigate for navigation
 import { toast } from "react-toastify";
 
-import { FaPlusCircle, FaTrash } from 'react-icons/fa'; // Icons for buttons
-import Allapi from "../../../common/index"; 
-import './AddClassForm.css'; 
-
+import { FaPlusCircle, FaTrash } from "react-icons/fa"; // Icons for buttons
+import Allapi from "../../../common/index";
+import "./AddClassForm.css";
+import { mycon } from "../../../store/Mycontext";
+import { useContext } from "react";
 const AddClassForm = () => {
   const { acid } = useParams();
   const navigate = useNavigate(); // Initialize navigate
   const [className, setClassName] = useState("");
   const [subjects, setSubjects] = useState([""]);
+  const { branchdet } = useContext(mycon);
 
   const classOptions = [
-    "LKG", "UKG", "First", "Second", "Third", "Fourth", 
-    "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"
+    "LKG",
+    "UKG",
+    "First",
+    "Second",
+    "Third",
+    "Fourth",
+    "Fifth",
+    "Sixth",
+    "Seventh",
+    "Eighth",
+    "Ninth",
+    "Tenth",
   ];
 
   const handleSubmit = async (e) => {
@@ -76,20 +88,25 @@ const AddClassForm = () => {
   return (
     <div className="hidden md:block mt-16 form-container zoom-in-animation p-8 max-w-2xl mx-auto bg-white shadow-lg rounded-2xl">
       <div className="flex justify-between mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">
+          {branchdet ? branchdet.name : "loading"} Branch
+        </h1>
+
         <h2 className="text-3xl font-bold text-gray-800">Create New Class</h2>
-       <Link
-        to={`/branch-admin/class/view-all`}>
-        <button
-          // onClick={handleViewAllClasses}
-          className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1"
+        <Link to={`/branch-admin/class/view-all`}>
+          <button
+            // onClick={handleViewAllClasses}
+            className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1"
           >
-          <span>View All Classes</span>
-        </button>
-          </Link>
+            <span>View All Classes</span>
+          </button>
+        </Link>
       </div>
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2 text-lg">Select Class</label>
+          <label className="block text-gray-700 font-semibold mb-2 text-lg">
+            Select Class
+          </label>
           <select
             value={className}
             onChange={(e) => setClassName(e.target.value)}
@@ -106,7 +123,9 @@ const AddClassForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2 text-lg">Subjects</label>
+          <label className="block text-gray-700 font-semibold mb-2 text-lg">
+            Subjects
+          </label>
           {subjects.map((subject, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
@@ -114,7 +133,7 @@ const AddClassForm = () => {
                 value={subject}
                 onChange={(e) => handleSubjectsChange(index, e.target.value)}
                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder={`Subject ${index + 1}`}
+                placeholder={`Enter Subject ${index + 1}`}
               />
               {subjects.length > 1 && (
                 <button

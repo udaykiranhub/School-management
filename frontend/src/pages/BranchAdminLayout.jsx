@@ -46,7 +46,7 @@ const BranchAdminlayout = () => {
           fetchBranchById(decoded.branch);
         }
       } catch (error) {
-        console.error("Error decoding token:", error); 
+        console.error("Error decoding token:", error);
       }
     }
   }, [token]);
