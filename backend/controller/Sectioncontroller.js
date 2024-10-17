@@ -116,3 +116,28 @@ exports.getAllSections = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+exports.getSectionsByClass = async (req, res) => {
+  const { className } = req.params;
+
+  try {
+    // Find the class by name
+    const classData = await Class.findOne({ name: className }).populate(
+      "sections"
+    );
+
+    if (!classData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Class not found" });
+    }
+
+    // Return sections from the found class
+    res.status(200).json({ success: true, data: classData.sections });
+  } catch (error) {
+    console.error("Error fetching sections:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching sections" });
+  }
+};

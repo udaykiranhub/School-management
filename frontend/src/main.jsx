@@ -26,6 +26,7 @@ import ViewAcademicYears from "./components/BranchAdmin/AcademicYears/view-all.j
 import AddClass from "./components/BranchAdmin/Classes/AddClass.jsx";
 import AddAcademicYear from "./components/BranchAdmin/AcademicYears/Add.jsx";
 import Addsection from "./components/BranchAdmin/Sections/Addsection.jsx";
+import ViewSections from "./components/BranchAdmin/Sections/Viewsec.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -126,6 +127,10 @@ const Router = createBrowserRouter([
               {
                 path: "add-section/:classId",
                 element: <Addsection />,
+              },
+              {
+                path: "view-sections",
+                element: <ViewSections />,
               },
             ],
           },

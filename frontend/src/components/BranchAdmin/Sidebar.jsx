@@ -143,25 +143,11 @@ const BranchAdminSidebar = () => {
           {activeMenu === "sections" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to="/branch-admin/section/add"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Add Section
-              </Link>
-              <Link
-                to="/branch-admin/section/update"
+                to="/branch-admin/academic-year/view-sections"
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
-                Update Section
-              </Link>
-              <Link
-                to="/branch-admin/section/delete"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaTrashAlt className="mr-2" />
-                Delete Section
+                View-sections
               </Link>
             </div>
           )}

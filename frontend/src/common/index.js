@@ -105,6 +105,10 @@ const Allapi = {
       `${backapi}/api/sections/delete/${classId}/${sectionId}`,
     method: "DELETE",
   },
+  getSectionsByClass: {
+    url: (className) => `${backapi}/api/sections/getall/${className}`,
+    method: "GET",
+  },
 };
 
 export default Allapi;
