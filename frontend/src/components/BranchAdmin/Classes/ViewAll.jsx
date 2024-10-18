@@ -82,13 +82,24 @@ const ViewAllClasses = () => {
           <tbody>
             {classes.map((classItem) => (
               <tr key={classItem._id} className="hover:bg-gray-100 transition">
+                <td className="border px-4 py-2 text-gray-700">{classItem.name}</td>
                 <td className="border px-4 py-2 text-gray-700">
-                  {classItem.name}
-                </td>
-                <td className="border px-4 py-2 text-gray-700">
-                  {classItem.subjects.length > 0
-                    ? classItem.subjects.join(", ")
-                    : "No subjects assigned"}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Display main subjects in the first column */}
+                    <div>
+                      <strong>Main Subjects:</strong>{" "}
+                      {classItem.subjects?.mainSubjects?.length > 0
+                        ? classItem.subjects.mainSubjects.join(", ")
+                        : "No main subjects assigned"}
+                    </div>
+                    {/* Display additional subjects in the second column */}
+                    <div>
+                      <strong>Additional Subjects:</strong>{" "}
+                      {classItem.subjects?.additionalSubjects?.length > 0
+                        ? classItem.subjects.additionalSubjects.join(", ")
+                        : "No additional subjects assigned"}
+                    </div>
+                  </div>
                 </td>
                 <td className="border px-4 py-2 flex space-x-2">
                   <Link

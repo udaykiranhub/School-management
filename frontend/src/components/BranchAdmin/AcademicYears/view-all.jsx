@@ -176,6 +176,30 @@ const ViewAcademicYears = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
+  const fetchBranchById = async (id) => {
+    try {
+      const response = await fetch(Allapi.getBranchById.url(id), {
+        method: Allapi.getBranchById.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+      console.log("response is", res);
+      if (res.success) {
+        setBranchdet(res.data);
+        console.log("branchdet in ADD JSX   is", branchdet);
+        // console.log("Branch data fetched successfully:", res.data);
+      } else {
+        toast.error("Failed to fetch branch details");
+      }
+    } catch (error) {
+      console.error("Error fetching branch by ID:", error);
+      toast.error("Error occurred while fetching branch details");
+    }
+  };
 
   useEffect(() => {
     const fetchAcademicYears = async () => {
@@ -223,6 +247,7 @@ const ViewAcademicYears = () => {
           toast.success("Academic year deleted successfully");
           const updatedyears = data.sortedYears;
           setAcademicYears(updatedyears);
+          fetchBranchById(bid);
 
           // const updatedyears = academicYears.filter((year) => year._id !== id);
           // setAcademicYears(updatedyears);

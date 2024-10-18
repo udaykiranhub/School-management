@@ -20,9 +20,11 @@ import { mycon } from "../../../store/Mycontext";
 // ];
 
 const ViewSections = () => {
-  const { c_acad, branchdet } = useContext(mycon);
-  console.log("branchdet in viewsec is", branchdet);
-  const curr_acad = branchdet ? branchdet.academicYears[0] : "";
+  const {  branchdet } = useContext(mycon);
+  // console.log("branchdet in viewsec is", branchdet);
+  // const curr_acad = branchdet ? branchdet.academicYears[0] : "";
+  // console.log(curr_acad)
+
   const [selectedClass, setSelectedClass] = useState("");
   const [sections, setSections] = useState([]);
   const [editSection, setEditSection] = useState(null);
@@ -77,11 +79,26 @@ const ViewSections = () => {
     }
   };
 
+  useEffect(() => {
+    // Check if branchdet and academicYears are available before fetching classes
+    if (branchdet && branchdet.academicYears && branchdet.academicYears.length > 0) {
+      const currentAcademicYear = branchdet.academicYears[0];
+      fetchClasses(currentAcademicYear);  // Fetch classes based on current academic year
+    } else {
+      console.log("Branch details or academic years not available yet.");
+    }
+  }, [branchdet]);  // This will re-run only when branchdet changes
+  
   // Fetch sections when selected class changes
   useEffect(() => {
     console.log("branchdet is iseeffect", branchdet);
-    fetchClasses(branchdet ? branchdet.academicYears[0] : null);
 
+    if (branchdet && branchdet.academicYears && branchdet.academicYears.length > 0) {
+      const currentAcademicYear = branchdet.academicYears[0];
+      fetchClasses(currentAcademicYear);  // Fetch classes based on current academic year
+    } else {
+      console.log("Branch details or academic years not available yet.");
+    }
     if (selectedClass) {
       fetchSections(selectedClass);
     }

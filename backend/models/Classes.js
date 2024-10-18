@@ -17,12 +17,20 @@ const classSchema = new mongoose.Schema(
       ref: "AcademicYear",
       required: true,
     },
-    subjects: [
-      {
-        type: String, // Array of subject names as strings
-        required: true,
-      },
-    ],
+    subjects: {
+      mainSubjects: [
+        {
+          type: String, // Array of main subject names as strings
+          required: true,
+        },
+      ],
+      additionalSubjects: [
+        {
+          type: String, // Array of additional subject names as strings
+          required: false, // Additional subjects are optional
+        },
+      ],
+    },
   },
   { timestamps: true }
 );

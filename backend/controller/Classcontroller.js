@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 // Create Class
 exports.createClass = async (req, res) => {
   try {
-    const { name, academicYear, subjects } = req.body;
+    const { name, academicYear, mainSubjects, additionalSubjects } = req.body;
 
     // Check if a class with the same name already exists in the given academic year
     const existingClass = await Class.findOne({
@@ -20,17 +20,20 @@ exports.createClass = async (req, res) => {
       });
     }
 
-    // Create a new class
+    // Create a new class with separate main and additional subjects
     const newClass = new Class({
       name,
       academicYear,
-      subjects,
+      subjects: {
+        mainSubjects,
+        additionalSubjects, // It is okay if additionalSubjects is empty or undefined
+      },
     });
 
     // Save the new class
     await newClass.save();
 
-    // Add the class to the academic year's classes arrayS
+    // Add the class to the academic year's classes array
     await AcademicYear.findByIdAndUpdate(academicYear, {
       $push: { classes: newClass._id },
     });

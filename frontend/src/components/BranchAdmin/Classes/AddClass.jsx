@@ -1,34 +1,22 @@
-import React, { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom"; // Import useNavigate for navigation
+import React, { useState, useContext } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { FaPlusCircle, FaTrash } from "react-icons/fa"; // Icons for buttons
+import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import Allapi from "../../../common/index";
 import "./AddClassForm.css";
 import { mycon } from "../../../store/Mycontext";
-import { useContext } from "react";
+
 const AddClassForm = () => {
   const { acid } = useParams();
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
   const [className, setClassName] = useState("");
-  const [subjects, setSubjects] = useState([""]);
+  const [mainSubjects, setMainSubjects] = useState([""]);
+  const [additionalSubjects, setAdditionalSubjects] = useState([""]);
   const { branchdet } = useContext(mycon);
 
   const classOptions = [
-    "LKG",
-    "UKG",
-    "1-st Class",
-    "Second",
-    "Third",
-    "Fourth",
-    "Fifth",
-    "Sixth",
-    "Seventh",
-    "Eighth",
-    "Ninth",
-    "Tenth",
-    "inter",
-    "Degree",
+    "LKG", "UKG", "1-st Class", "Second", "Third", "Fourth", "Fifth", "Sixth", 
+    "Seventh", "Eighth", "Ninth", "Tenth", "inter", "Degree",
   ];
 
   const handleSubmit = async (e) => {
@@ -37,7 +25,8 @@ const AddClassForm = () => {
     const classData = {
       name: className,
       academicYear: acid,
-      subjects,
+      mainSubjects,
+      additionalSubjects,
     };
 
     const token = localStorage.getItem("token");
@@ -57,7 +46,8 @@ const AddClassForm = () => {
       if (result.success) {
         toast.success("Class created successfully");
         setClassName("");
-        setSubjects([""]);
+        setMainSubjects([""]);
+        setAdditionalSubjects([""]);
       } else {
         toast.error(result.message || "Failed to create class");
       }
@@ -67,25 +57,35 @@ const AddClassForm = () => {
     }
   };
 
-  const handleSubjectsChange = (index, value) => {
-    const updatedSubjects = [...subjects];
-    updatedSubjects[index] = value;
-    setSubjects(updatedSubjects);
+  const handleMainSubjectsChange = (index, value) => {
+    const updatedMainSubjects = [...mainSubjects];
+    updatedMainSubjects[index] = value;
+    setMainSubjects(updatedMainSubjects);
   };
 
-  const addSubjectField = () => {
-    setSubjects([...subjects, ""]);
+  const handleAdditionalSubjectsChange = (index, value) => {
+    const updatedAdditionalSubjects = [...additionalSubjects];
+    updatedAdditionalSubjects[index] = value;
+    setAdditionalSubjects(updatedAdditionalSubjects);
   };
 
-  const removeSubjectField = (index) => {
-    const updatedSubjects = subjects.filter((_, i) => i !== index);
-    setSubjects(updatedSubjects);
+  const addMainSubjectField = () => {
+    setMainSubjects([...mainSubjects, ""]);
   };
 
-  // Function to navigate to the 'View All Classes' page
-  // const handleViewAllClasses = () => {
-  //   navigate('/class/view-all'); // Adjust the path to your actual route
-  // };
+  const addAdditionalSubjectField = () => {
+    setAdditionalSubjects([...additionalSubjects, ""]);
+  };
+
+  const removeMainSubjectField = (index) => {
+    const updatedMainSubjects = mainSubjects.filter((_, i) => i !== index);
+    setMainSubjects(updatedMainSubjects);
+  };
+
+  const removeAdditionalSubjectField = (index) => {
+    const updatedAdditionalSubjects = additionalSubjects.filter((_, i) => i !== index);
+    setAdditionalSubjects(updatedAdditionalSubjects);
+  };
 
   return (
     <div className="hidden md:block mt-16 form-container zoom-in-animation p-8 max-w-2xl mx-auto bg-white shadow-lg rounded-2xl">
@@ -93,17 +93,13 @@ const AddClassForm = () => {
         <h1 className="text-3xl font-bold text-gray-800">
           {branchdet ? branchdet.name : "loading"} Branch
         </h1>
-
         <h2 className="text-3xl font-bold text-gray-800">Create New Class</h2>
         <Link
           to={`/branch-admin/class/view-all/${
             branchdet ? branchdet.academicYears[0] : ""
           }`}
         >
-          <button
-            // onClick={handleViewAllClasses}
-            className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1"
-          >
+          <button className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1">
             <span>View All Classes</span>
           </button>
         </Link>
@@ -128,23 +124,24 @@ const AddClassForm = () => {
           </select>
         </div>
 
+        {/* Main Subjects Section */}
         <div className="mb-4">
           <label className="block text-gray-700 font-semibold mb-2 text-lg">
-            Subjects
+            Main Subjects
           </label>
-          {subjects.map((subject, index) => (
+          {mainSubjects.map((subject, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
                 type="text"
                 value={subject}
-                onChange={(e) => handleSubjectsChange(index, e.target.value)}
+                onChange={(e) => handleMainSubjectsChange(index, e.target.value)}
                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder={`Enter Subject ${index + 1}`}
+                placeholder={`Enter Main Subject ${index + 1}`}
               />
-              {subjects.length > 1 && (
+              {mainSubjects.length > 1 && (
                 <button
                   type="button"
-                  onClick={() => removeSubjectField(index)}
+                  onClick={() => removeMainSubjectField(index)}
                   className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-600 transition flex items-center space-x-1"
                 >
                   <FaTrash />
@@ -155,16 +152,53 @@ const AddClassForm = () => {
           ))}
           <button
             type="button"
-            onClick={addSubjectField}
+            onClick={addMainSubjectField}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-2"
           >
             <FaPlusCircle />
-            <span>Add Subject</span>
+            <span>Add Main Subject</span>
           </button>
         </div>
+
+        {/* Additional Subjects Section */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-semibold mb-2 text-lg">
+            Additional Subjects
+          </label>
+          {additionalSubjects.map((subject, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-2">
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => handleAdditionalSubjectsChange(index, e.target.value)}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                placeholder={`Enter Additional Subject ${index + 1}`}
+              />
+              {additionalSubjects.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeAdditionalSubjectField(index)}
+                  className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-600 transition flex items-center space-x-1"
+                >
+                  <FaTrash />
+                  <span>Remove</span>
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addAdditionalSubjectField}
+            className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-2"
+          >
+            <FaPlusCircle />
+            <span>Add Additional Subject</span>
+          </button>
+        </div>
+
         <button
           type="submit"
-          className="w-full p-4 bg-gradient-to-r from-blue-700 to-pink-600 text-gray-900  rounded-lg hover:from-pink-500 hover:to-blue-700 transition text-lg font-semibold"
+          className="w-full p-4 bg-gradient-to-r from-blue-700 to-pink-600 text-gray-900 rounded-lg hover:from-pink-500 hover:to-blue-700 transition text-lg font-semibold"
         >
           Create Class
         </button>
