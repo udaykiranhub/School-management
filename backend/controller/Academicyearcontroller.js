@@ -8,6 +8,7 @@ exports.createAcademicYear = async (req, res) => {
   const { year, startDate, endDate } = req.body;
 
   try {
+    // Check if the branch exists
     const branch = await Branch.findById(branchId);
     if (!branch) {
       return res
@@ -15,12 +16,16 @@ exports.createAcademicYear = async (req, res) => {
         .json({ success: false, message: "Branch not found" });
     }
 
-    // Check if the academic year already exists
-    const existingAcademicYear = await AcademicYear.findOne({ year });
+    // Check if the academic year already exists for this branch
+    const existingAcademicYear = await AcademicYear.findOne({
+      year,
+      branch: branchId, // Check the branch-specific academic year
+    });
+
     if (existingAcademicYear) {
       return res
         .status(400)
-        .json({ success: false, message: "Academic year already exists" });
+        .json({ success: false, message: "Academic year already exists for this branch" });
     }
 
     // Create and save the new academic year
@@ -66,6 +71,7 @@ exports.createAcademicYear = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Edit Academic Year
 exports.editAcademicYear = async (req, res) => {

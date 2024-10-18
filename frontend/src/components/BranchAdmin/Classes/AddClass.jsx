@@ -93,7 +93,7 @@ const AddClassForm = () => {
         </h1>
 
         <h2 className="text-3xl font-bold text-gray-800">Create New Class</h2>
-        <Link to={`/branch-admin/class/view-all`}>
+        <Link to={`/branch-admin/class/view-all/${acid}`}>
           <button
             // onClick={handleViewAllClasses}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1"

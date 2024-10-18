@@ -5,7 +5,6 @@ const classSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      // unique: true, // Class name must be unique
     },
     sections: [
       {

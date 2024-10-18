@@ -7,14 +7,28 @@ exports.createClass = async (req, res) => {
   try {
     const { name, academicYear, subjects } = req.body;
 
+    // Check if a class with the same name already exists in the given academic year
+    const existingClass = await Class.findOne({
+      name,
+      academicYear,
+    });
+
+    if (existingClass) {
+      return res.status(400).json({
+        success: false,
+        message: "Class with the same name already exists for this academic year",
+      });
+    }
+
+    // Create a new class
     const newClass = new Class({
       name,
       academicYear,
       subjects,
     });
+
     // Save the new class
     await newClass.save();
-    console.log("create class");
 
     // Add the class to the academic year's classes array
     await AcademicYear.findByIdAndUpdate(academicYear, {
@@ -27,15 +41,14 @@ exports.createClass = async (req, res) => {
       data: newClass,
     });
   } catch (error) {
-   
-      res.status(500).json({
-        success: false,
-        message: "Failed to create class",
-        error: error,
-      });
-    
+    res.status(500).json({
+      success: false,
+      message: "Failed to create class",
+      error: error.message,
+    });
   }
 };
+
 
 // Get All Classes
 exports.getAllClasses = async (req, res) => {
