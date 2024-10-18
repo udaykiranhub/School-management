@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaTrash, FaEdit, FaUserPlus, FaSave } from "react-icons/fa";
 import Allapi from "../../../common";
+import { mycon } from "../../../store/Mycontext";
 
 // const classOptions = [
 //   "LKG",
@@ -19,16 +20,19 @@ import Allapi from "../../../common";
 // ];
 
 const ViewSections = () => {
+  const { c_acad, branchdet } = useContext(mycon);
+  console.log("branchdet in viewsec is", branchdet);
+  const curr_acad = branchdet ? branchdet.academicYears[0] : "";
   const [selectedClass, setSelectedClass] = useState("");
   const [sections, setSections] = useState([]);
   const [editSection, setEditSection] = useState(null);
   const [editSectionName, setEditSectionName] = useState("");
   const [classes, setClasses] = useState([]);
 
-  const fetchClasses = async () => {
+  const fetchClasses = async (curr_acad) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(Allapi.getClasses.url, {
+      const response = await fetch(Allapi.getClasses.url(curr_acad), {
         method: Allapi.getClasses.method,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,6 +42,7 @@ const ViewSections = () => {
       console.log("hai");
       const result = await response.json();
       if (result.success) {
+        console.log("c_ad is", curr_acad);
         console.log(result.data, "are the classes");
         setClasses(result.data);
       } else {
@@ -74,7 +79,8 @@ const ViewSections = () => {
 
   // Fetch sections when selected class changes
   useEffect(() => {
-    fetchClasses();
+    console.log("branchdet is iseeffect", branchdet);
+    fetchClasses(branchdet ? branchdet.academicYears[0] : null);
 
     if (selectedClass) {
       fetchSections(selectedClass);

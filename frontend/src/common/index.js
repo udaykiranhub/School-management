@@ -77,7 +77,7 @@ const Allapi = {
     method: "POST",
   },
   getClasses: {
-    url: `${backapi}/api/classes/get-classes`,
+    url: (curr_acad) => `${backapi}/api/classes/get-classes/${curr_acad}`,
     method: "GET",
   },
   deleteClass: {

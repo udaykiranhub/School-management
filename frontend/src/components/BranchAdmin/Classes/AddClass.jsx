@@ -17,7 +17,7 @@ const AddClassForm = () => {
   const classOptions = [
     "LKG",
     "UKG",
-    "First",
+    "1-st Class",
     "Second",
     "Third",
     "Fourth",
@@ -27,6 +27,8 @@ const AddClassForm = () => {
     "Eighth",
     "Ninth",
     "Tenth",
+    "inter",
+    "Degree",
   ];
 
   const handleSubmit = async (e) => {
@@ -93,7 +95,11 @@ const AddClassForm = () => {
         </h1>
 
         <h2 className="text-3xl font-bold text-gray-800">Create New Class</h2>
-        <Link to={`/branch-admin/class/view-all`}>
+        <Link
+          to={`/branch-admin/class/view-all/${
+            branchdet ? branchdet.academicYears[0] : ""
+          }`}
+        >
           <button
             // onClick={handleViewAllClasses}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-600 transition flex items-center space-x-1"

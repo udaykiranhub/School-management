@@ -86,7 +86,9 @@ const BranchAdminlayout = () => {
   };
 
   return (
-    <mycon.Provider value={{ c_branch, branchdet, c_acad, setc_acad }}>
+    <mycon.Provider
+      value={{ c_branch, branchdet, c_acad, setc_acad, setBranchdet }}
+    >
       <>
         {c_user ? (
           <>
