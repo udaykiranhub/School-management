@@ -27,27 +27,35 @@ exports.createClass = async (req, res) => {
       data: newClass,
     });
   } catch (error) {
-    if (error.code === 11000) {
-      res.status(400).json({
-        success: false,
-        message: "Class name must be unique",
-      });
-    } else {
+   
       res.status(500).json({
         success: false,
         message: "Failed to create class",
-        error: error.message,
+        error: error,
       });
-    }
+    
   }
 };
 
 // Get All Classes
 exports.getAllClasses = async (req, res) => {
   try {
-    const classes = await Class.find();
-    // .populate("sections") // Populate section details
-    // .populate("academicYear"); // Populate academic year
+    // Get the academicYear ID from the query parameters
+    const { academicYear } = req.query;
+
+    // Define the query object
+    const query = {};
+
+    // If academicYear is provided, add it to the query
+    if (academicYear) {
+      query.academicYear = academicYear;
+    }
+
+    // Fetch the classes, optionally filtering by academicYear
+    const classes = await Class.find(query)
+      // Uncomment the lines below if you need to populate related fields
+      // .populate("sections") // Populate section details
+      // .populate("academicYear"); // Populate academic year details
 
     res.status(200).json({
       success: true,

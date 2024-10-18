@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Allapi from "../../../common/index";
 import { FaTrash, FaPlusCircle } from "react-icons/fa"; // Icons for buttons
 
 const ViewAllClasses = () => {
   const [classes, setClasses] = useState([]);
+  const { acid } = useParams(); // Get academicYearId from route parameters
 
   const fetchClasses = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(Allapi.getClasses.url, {
+      const response = await fetch(`${Allapi.getClasses.url}?academicYear=${acid}`, {
         method: Allapi.getClasses.method,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,7 +60,7 @@ const ViewAllClasses = () => {
 
   useEffect(() => {
     fetchClasses();
-  }, []);
+  }, [acid]); // Fetch classes when academicYearId changes
 
   return (
     <div className="mt-16 p-8 max-w-4xl mx-auto bg-white shadow-lg rounded-2xl">

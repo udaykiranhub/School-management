@@ -18,7 +18,7 @@ const ViewBranches = () => {
 
   useEffect(() => {
     fetchBranches();
-  }, [branches]);
+  }, [branches,showAdminModal]);
 
   // Fetch branches from the API
   const fetchBranches = async () => {

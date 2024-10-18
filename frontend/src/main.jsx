@@ -100,8 +100,12 @@ const Router = createBrowserRouter([
             element: <Bdashboard />,
           },
           {
-            path: "class/view-all",
+            path: "class/view-all/:acid",
             element: <ViewAll />,
+          },
+          {
+            path: "class/view-all",
+            element: <Add />,
           },
           {
             path: "academic-year",

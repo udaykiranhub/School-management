@@ -119,7 +119,11 @@ const BranchAdminSidebar = () => {
                 Add Class
               </Link>
               <Link
-                to="/branch-admin/class/view-all"
+                to={`/branch-admin/class/view-all/${
+                  branchdet.academicYears.length <= 0
+                    ? ""
+                    : branchdet.academicYears[0]
+                }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
