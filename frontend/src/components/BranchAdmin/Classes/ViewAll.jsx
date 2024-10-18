@@ -11,7 +11,7 @@ const ViewAllClasses = () => {
   const fetchClasses = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${Allapi.getClasses.url}?academicYear=${acid}`, {
+      const response = await fetch(Allapi.getClasses.url(acid), {
         method: Allapi.getClasses.method,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const ViewAllClasses = () => {
   };
 
   useEffect(() => {
-    fetchClasses();
+    fetchClasses(acid);
   }, [acid]); // Fetch classes when academicYearId changes
 
   return (

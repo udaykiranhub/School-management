@@ -10,12 +10,37 @@ const AddAcademicYear = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const { c_branch, branchdet, setc_acad } = useContext(mycon);
+  const { c_branch, branchdet, setc_acad, setBranchdet } = useContext(mycon);
 
   useEffect(() => {
     // Trigger the slide-down animation when the component mounts
     setTimeout(() => setIsVisible(true), 100);
   }, []);
+
+  const fetchBranchById = async (id) => {
+    try {
+      const response = await fetch(Allapi.getBranchById.url(id), {
+        method: Allapi.getBranchById.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+      console.log("response is", res);
+      if (res.success) {
+        setBranchdet(res.data);
+        console.log("branchdet in ADD JSX   is", branchdet);
+        // console.log("Branch data fetched successfully:", res.data);
+      } else {
+        toast.error("Failed to fetch branch details");
+      }
+    } catch (error) {
+      console.error("Error fetching branch by ID:", error);
+      toast.error("Error occurred while fetching branch details");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +64,7 @@ const AddAcademicYear = () => {
         setYear("");
         setStartDate("");
         setEndDate("");
+        fetchBranchById(c_branch);
         if (res.sortedAcademicYears) {
           setc_acad(res.sortedAcademicYears[0]);
         }

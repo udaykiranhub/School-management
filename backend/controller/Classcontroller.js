@@ -30,7 +30,7 @@ exports.createClass = async (req, res) => {
     // Save the new class
     await newClass.save();
 
-    // Add the class to the academic year's classes array
+    // Add the class to the academic year's classes arrayS
     await AcademicYear.findByIdAndUpdate(academicYear, {
       $push: { classes: newClass._id },
     });
@@ -54,21 +54,17 @@ exports.createClass = async (req, res) => {
 exports.getAllClasses = async (req, res) => {
   try {
     // Get the academicYear ID from the query parameters
-    const { academicYear } = req.query;
-
+    const { acadId } = req.params;
+    console.log("academic id is", acadId);
     // Define the query object
-    const query = {};
 
     // If academicYear is provided, add it to the query
-    if (academicYear) {
-      query.academicYear = academicYear;
-    }
 
     // Fetch the classes, optionally filtering by academicYear
-    const classes = await Class.find(query)
-      // Uncomment the lines below if you need to populate related fields
-      // .populate("sections") // Populate section details
-      // .populate("academicYear"); // Populate academic year details
+    const classes = await Class.find({ academicYear: acadId });
+    // Uncomment the lines below if you need to populate related fields
+    // .populate("sections") // Populate section details
+    // .populate("academicYear"); // Populate academic year details
 
     res.status(200).json({
       success: true,
