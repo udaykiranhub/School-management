@@ -157,10 +157,17 @@ const AddFeeType = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+  // Fetch token from local storage
+  const token = localStorage.getItem("token");
+
   // Fetch all fee types from the server
   const fetchFeeTypes = async () => {
     try {
-      const response = await fetch(Allapi.getAllFeeTypes.url);
+      const response = await fetch(Allapi.getAllFeeTypes.url, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass token in the request
+        },
+      });
       const data = await response.json();
       if (data.success) {
         setFeeTypes(data.feeTypes);
@@ -188,6 +195,7 @@ const AddFeeType = () => {
         method: Allapi.AddFeeType.method,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Pass token in the request
         },
         body: JSON.stringify({ type: newFeeType, terms }),
       });
@@ -226,6 +234,7 @@ const AddFeeType = () => {
         method: Allapi.updateFeeType.method,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Pass token in the request
         },
         body: JSON.stringify({ type: newFeeType, terms }),
       });
@@ -267,6 +276,9 @@ const AddFeeType = () => {
       try {
         const response = await fetch(Allapi.deleteFeeType.url(feeTypeId), {
           method: Allapi.deleteFeeType.method,
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass token in the request
+          },
         });
         const data = await response.json();
         if (data.success) {
@@ -349,7 +361,7 @@ const AddFeeType = () => {
             </thead>
             <tbody>
               {feeTypes.map((fee, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+                <tr key={index} className="hover:bg-gray-50 text-gray-700">
                   <td className="border px-4 py-2">{fee.type}</td>
                   <td className="border px-4 py-2">{fee.terms}</td>
                   <td className="border px-4 py-2 flex space-x-2">
@@ -375,5 +387,6 @@ const AddFeeType = () => {
     </div>
   );
 };
+
 
 export default AddFeeType;

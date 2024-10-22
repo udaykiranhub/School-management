@@ -123,13 +123,22 @@ const Allapi = {
     method: "GET",
   },
   updateFeeType: {
-    url: `${backapi}/api/Fee-types/update/`,
+    url: (feeTypeId)=>`${backapi}/api/Fee-types/update/${feeTypeId}`,
     method: "PUT",
   },
   deleteFeeType: {
-    url: `${backapi}/api/Fee-types/delete/`,
+    url:(feeTypeId)=>`${backapi}/api/Fee-types/delete/${feeTypeId}`,
     method: "DELETE",
   },
+  addFeeStructure:{
+    url: (sectionId) => `${backapi}/api/Fee-types/fees-section/${sectionId}`,
+    method: "POST",
+  },
+  deleteFeeStructure:{
+    url: (sectionId,feeId) => `${backapi}/api/Fee-types/fees-section/${sectionId}/del/${feeId}`,
+    method: "POST",
+
+  }
 };
 
 export default Allapi;

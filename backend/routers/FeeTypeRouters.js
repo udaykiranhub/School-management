@@ -4,12 +4,15 @@ const {
   getAllFeeTypes,
   updateFeeType,
   deleteFeeType,
+  addFeeToSection,
+  removeFeeFromSection
 } = require("../controller/FeeTypeController");
 
 const router = express.Router();
-router.post("/add", addFeeType);
-router.get("/allfeetypes", getAllFeeTypes);
-router.put("/update", updateFeeType);
-router.delete("/delete", deleteFeeType);
-
+router.post("/add",addFeeType);
+router.get("/allfeetypes",getAllFeeTypes);
+router.put("/update/:feeTypeId",updateFeeType);
+router.delete("/delete/:feeTypeId",deleteFeeType);
+router.post("/fees-section/:sectionId",addFeeToSection);
+router.delete("/fee-section/:sectionId/del/:feeId", removeFeeFromSection);
 module.exports = router;
