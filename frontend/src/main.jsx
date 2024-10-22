@@ -27,6 +27,7 @@ import AddClass from "./components/BranchAdmin/Classes/AddClass.jsx";
 import AddAcademicYear from "./components/BranchAdmin/AcademicYears/Add.jsx";
 import Addsection from "./components/BranchAdmin/Sections/Addsection.jsx";
 import ViewSections from "./components/BranchAdmin/Sections/Viewsec.jsx";
+import AddFeeType from "./components/BranchAdmin/FeeTypes/AddFeeTypes.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -137,6 +138,10 @@ const Router = createBrowserRouter([
                 element: <ViewSections />,
               },
             ],
+          },
+          {
+            path: "fee-type",
+            element: <AddFeeType />,
           },
         ],
       },

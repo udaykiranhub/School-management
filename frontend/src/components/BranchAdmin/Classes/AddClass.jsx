@@ -8,15 +8,27 @@ import { mycon } from "../../../store/Mycontext";
 
 const AddClassForm = () => {
   const { acid } = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [className, setClassName] = useState("");
   const [mainSubjects, setMainSubjects] = useState([""]);
   const [additionalSubjects, setAdditionalSubjects] = useState([""]);
   const { branchdet } = useContext(mycon);
 
   const classOptions = [
-    "LKG", "UKG", "1-st Class", "Second", "Third", "Fourth", "Fifth", "Sixth", 
-    "Seventh", "Eighth", "Ninth", "Tenth", "inter", "Degree",
+    "LKG",
+    "UKG",
+    "1-st Class",
+    "Second",
+    "Third",
+    "Fourth",
+    "Fifth",
+    "Sixth",
+    "Seventh",
+    "Eighth",
+    "Ninth",
+    "Tenth",
+    "inter",
+    "Degree",
   ];
 
   const handleSubmit = async (e) => {
@@ -45,6 +57,7 @@ const AddClassForm = () => {
 
       if (result.success) {
         toast.success("Class created successfully");
+        console.log("new class det is", result.data);
         setClassName("");
         setMainSubjects([""]);
         setAdditionalSubjects([""]);
@@ -83,7 +96,9 @@ const AddClassForm = () => {
   };
 
   const removeAdditionalSubjectField = (index) => {
-    const updatedAdditionalSubjects = additionalSubjects.filter((_, i) => i !== index);
+    const updatedAdditionalSubjects = additionalSubjects.filter(
+      (_, i) => i !== index
+    );
     setAdditionalSubjects(updatedAdditionalSubjects);
   };
 
@@ -134,7 +149,9 @@ const AddClassForm = () => {
               <input
                 type="text"
                 value={subject}
-                onChange={(e) => handleMainSubjectsChange(index, e.target.value)}
+                onChange={(e) =>
+                  handleMainSubjectsChange(index, e.target.value)
+                }
                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 placeholder={`Enter Main Subject ${index + 1}`}
               />
@@ -170,7 +187,9 @@ const AddClassForm = () => {
               <input
                 type="text"
                 value={subject}
-                onChange={(e) => handleAdditionalSubjectsChange(index, e.target.value)}
+                onChange={(e) =>
+                  handleAdditionalSubjectsChange(index, e.target.value)
+                }
                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 placeholder={`Enter Additional Subject ${index + 1}`}
               />

@@ -11,5 +11,5 @@ router.post("/addsection/:classId", addSection);
 router.get("/getallsections/:classId", getAllSections);
 router.put("/update/:secId", updateSection);
 router.delete("/delete/:classId/:sectionId", deleteSection);
-router.get("/getall/:className", getSectionsByClass);
+router.get("/getall/:className/:acadId", getSectionsByClass);
 module.exports = router;

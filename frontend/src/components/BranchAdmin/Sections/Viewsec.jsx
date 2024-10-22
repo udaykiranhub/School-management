@@ -20,7 +20,7 @@ import { mycon } from "../../../store/Mycontext";
 // ];
 
 const ViewSections = () => {
-  const {  branchdet } = useContext(mycon);
+  const { branchdet } = useContext(mycon);
   // console.log("branchdet in viewsec is", branchdet);
   // const curr_acad = branchdet ? branchdet.academicYears[0] : "";
   // console.log(curr_acad)
@@ -57,16 +57,19 @@ const ViewSections = () => {
   };
 
   // Fetch sections for the selected class
-  const fetchSections = async (className) => {
+  const fetchSections = async (className, curr_acad) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(Allapi.getSectionsByClass.url(className), {
-        method: Allapi.getSectionsByClass.method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        Allapi.getSectionsByClass.url(className, curr_acad),
+        {
+          method: Allapi.getSectionsByClass.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const result = await response.json();
       if (result.success) {
         setSections(result.data || []);
@@ -81,26 +84,34 @@ const ViewSections = () => {
 
   useEffect(() => {
     // Check if branchdet and academicYears are available before fetching classes
-    if (branchdet && branchdet.academicYears && branchdet.academicYears.length > 0) {
+    if (
+      branchdet &&
+      branchdet.academicYears &&
+      branchdet.academicYears.length > 0
+    ) {
       const currentAcademicYear = branchdet.academicYears[0];
-      fetchClasses(currentAcademicYear);  // Fetch classes based on current academic year
+      fetchClasses(currentAcademicYear); // Fetch classes based on current academic year
     } else {
       console.log("Branch details or academic years not available yet.");
     }
-  }, [branchdet]);  // This will re-run only when branchdet changes
-  
+  }, [branchdet]); // This will re-run only when branchdet changes
+
   // Fetch sections when selected class changes
   useEffect(() => {
     console.log("branchdet is iseeffect", branchdet);
 
-    if (branchdet && branchdet.academicYears && branchdet.academicYears.length > 0) {
+    if (
+      branchdet &&
+      branchdet.academicYears &&
+      branchdet.academicYears.length > 0
+    ) {
       const currentAcademicYear = branchdet.academicYears[0];
-      fetchClasses(currentAcademicYear);  // Fetch classes based on current academic year
+      fetchClasses(currentAcademicYear); // Fetch classes based on current academic year
+      if (selectedClass && currentAcademicYear) {
+        fetchSections(selectedClass, currentAcademicYear);
+      }
     } else {
       console.log("Branch details or academic years not available yet.");
-    }
-    if (selectedClass) {
-      fetchSections(selectedClass);
     }
   }, [selectedClass]);
 
@@ -108,62 +119,6 @@ const ViewSections = () => {
   const handleClassChange = (e) => {
     setSelectedClass(e.target.value);
   };
-
-  // // Handle section name update
-  // const handleUpdateSection = async (sectionId) => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const response = await fetch(Allapi.updateSection.url(sectionId), {
-  //       method: Allapi.updateSection.method,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       body: JSON.stringify({ name: editSectionName }),
-  //     });
-  //     const result = await response.json();
-
-  //     if (result.success) {
-  //       toast.success("Section updated successfully");
-  //       setEditSection(null);
-  //       setEditSectionName("");
-  //       fetchSections(selectedClass); // Refresh sections list
-  //     } else {
-  //       toast.error(result.message || "Failed to update section");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating section:", error.message);
-  //     toast.error(`Error updating section: ${error.message}`);
-  //   }
-  // };
-
-  // // Handle section deletion
-  // const handleDeleteSection = async (classId, sectionId) => {
-  //   if (window.confirm("Are you sure you want to delete this section?")) {
-  //     try {
-  //       const token = localStorage.getItem("token");
-  //       const response = await fetch(
-  //         Allapi.deleteSection.url(classId, sectionId),
-  //         {
-  //           method: Allapi.deleteSection.method,
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-  //       const result = await response.json();
-  //       if (result.success) {
-  //         toast.error("Section deleted successfully");
-  //         fetchAllSections(classId);
-  //       } else {
-  //         toast.error(result.message || "Failed to delete section");
-  //       }
-  //     } catch (error) {
-  //       toast.error("Error deleting section");
-  //     }
-  //   }
-  // };
 
   return (
     <div className="mt-16 p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-2xl">

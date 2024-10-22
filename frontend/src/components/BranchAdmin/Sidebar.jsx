@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { mycon } from "../../store/Mycontext";
 import { useContext } from "react";
+
 import {
   FaHome,
   FaChalkboardTeacher,
@@ -12,6 +13,7 @@ import {
   FaEdit,
   FaTrashAlt,
   FaSignOutAlt,
+  FaMoneyCheckAlt,
 } from "react-icons/fa";
 
 const BranchAdminSidebar = () => {
@@ -152,6 +154,28 @@ const BranchAdminSidebar = () => {
               >
                 <FaEdit className="mr-2" />
                 View-sections
+              </Link>
+            </div>
+          )}
+        </div>
+        <div>
+          <button
+            onClick={() => handleMenuClick("Fee-controller")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+              activeMenu === "Fee-controller" ? "bg-gray-700 text-white" : ""
+            }`}
+          >
+            <FaMoneyCheckAlt className="mr-3" />
+            Fee controller
+          </button>
+          {activeMenu === "Fee-controller" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to="/branch-admin/fee-type"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Set Fee Types
               </Link>
             </div>
           )}

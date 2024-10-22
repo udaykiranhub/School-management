@@ -118,13 +118,14 @@ exports.getAllSections = async (req, res) => {
 };
 
 exports.getSectionsByClass = async (req, res) => {
-  const { className } = req.params;
+  const { className, acadId } = req.params;
 
   try {
     // Find the class by name
-    const classData = await Class.findOne({ name: className }).populate(
-      "sections"
-    );
+    const classData = await Class.findOne({
+      name: className,
+      academicYear: acadId,
+    }).populate("sections");
 
     if (!classData) {
       return res

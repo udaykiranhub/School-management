@@ -16,7 +16,8 @@ exports.createClass = async (req, res) => {
     if (existingClass) {
       return res.status(400).json({
         success: false,
-        message: "Class with the same name already exists for this academic year",
+        message:
+          "Class with the same name already exists for this academic year",
       });
     }
 
@@ -51,7 +52,6 @@ exports.createClass = async (req, res) => {
     });
   }
 };
-
 
 // Get All Classes
 exports.getAllClasses = async (req, res) => {
@@ -141,5 +141,64 @@ exports.getClassDetails = async (req, res) => {
   } catch (error) {
     console.error("Error fetching class details:", error);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+//update class
+// Update class with subjects and check for uniqueness
+exports.updateClass = async (req, res) => {
+  try {
+    const { classId } = req.params; // Extract classId from URL parameters
+    const { name, academicYear, mainSubjects, additionalSubjects } = req.body;
+    console.log("main subjects ", mainSubjects);
+    console.log("addirtional sub", additionalSubjects);
+
+    // Check if another class with the same name already exists in the academic year
+    const existingClass = await Class.findOne({
+      _id: { $ne: classId }, // Exclude the current class from the check
+      name,
+      academicYear,
+    });
+
+    if (existingClass) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Class with the same name already exists for this academic year",
+      });
+    }
+
+    // Update class with new details, including updated subjects
+    const updatedClass = await Class.findByIdAndUpdate(
+      classId,
+      {
+        name,
+        academicYear,
+        subjects: {
+          mainSubjects,
+          additionalSubjects,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedClass) {
+      return res.status(404).json({
+        success: false,
+        message: "Class not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Class updated successfully",
+      data: updatedClass,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update class",
+      error: error.message,
+    });
   }
 };

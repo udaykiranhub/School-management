@@ -106,8 +106,29 @@ const Allapi = {
     method: "DELETE",
   },
   getSectionsByClass: {
-    url: (className) => `${backapi}/api/sections/getall/${className}`,
+    url: (className, curr_acad) =>
+      `${backapi}/api/sections/getall/${className}/${curr_acad}`,
     method: "GET",
+  },
+  updateClass: {
+    url: (classId) => `${backapi}/api/classes/update/${classId}`,
+    method: "PUT",
+  },
+  AddFeeType: {
+    url: `${backapi}/api/Fee-types/add/`,
+    method: "POST",
+  },
+  getAllFeeTypes: {
+    url: `${backapi}/api/Fee-types/allfeetypes/`,
+    method: "GET",
+  },
+  updateFeeType: {
+    url: `${backapi}/api/Fee-types/update/`,
+    method: "PUT",
+  },
+  deleteFeeType: {
+    url: `${backapi}/api/Fee-types/delete/`,
+    method: "DELETE",
   },
 };
 
