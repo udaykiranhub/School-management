@@ -136,7 +136,7 @@ const Allapi = {
   },
   deleteFeeStructure:{
     url: (sectionId,feeId) => `${backapi}/api/Fee-types/fees-section/${sectionId}/del/${feeId}`,
-    method: "POST",
+    method: "DELETE",
 
   }
 };

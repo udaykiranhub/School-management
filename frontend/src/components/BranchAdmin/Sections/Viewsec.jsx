@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaTrash, FaEdit, FaUserPlus, FaSave } from "react-icons/fa";
+import { FaTrash, FaEdit, FaUserPlus, FaSave, FaTimes } from "react-icons/fa"; // Add FaTimes for close icon
 import Allapi from "../../../common";
 import { mycon } from "../../../store/Mycontext";
 import './animation.css'; // Import the CSS file for animations
@@ -11,6 +11,8 @@ const ViewSections = () => {
   const [sections, setSections] = useState([]);
   const [classes, setClasses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewOpen, setViewOpen] = useState(false);
+
   const [selectedSection, setSelectedSection] = useState(null);
   const [feeTypes, setFeeTypes] = useState([]);
   const [fees, setFees] = useState([{ feeType: "", amount: "" }]); // Array of fee objects
@@ -94,7 +96,8 @@ const ViewSections = () => {
       const currentAcademicYear = branchdet.academicYears[0];
       fetchSections(selectedClass, currentAcademicYear);
     }
-  }, [selectedClass]);
+
+  }, [selectedClass, selectedSection]);
 
   const handleClassChange = (e) => {
     setSelectedClass(e.target.value);
@@ -106,9 +109,18 @@ const ViewSections = () => {
     setFees([{ feeType: "", amount: "" }]); // Reset fees array
   };
 
+  const handleView = (section) => {
+    setSelectedSection(section);
+    setViewOpen(true);
+  };
+
   const handleModalClose = () => {
     setIsModalOpen(false);
     setFees([{ feeType: "", amount: "" }]); // Reset fees array
+  };
+
+  const handleViewClose = () => {
+    setViewOpen(false);
   };
 
   const handleFeeChange = (index, field, value) => {
@@ -124,6 +136,33 @@ const ViewSections = () => {
   const handleRemoveFeeEntry = (index) => {
     const updatedFees = fees.filter((_, i) => i !== index);
     setFees(updatedFees); // Remove fee entry by index
+  };
+
+  // Handle fee deletion
+  const handleDeleteFee = async (sectionId,feeId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(Allapi.deleteFeeStructure.url(sectionId,feeId), {
+        method: Allapi.deleteFeeStructure.method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Fee deleted successfully");
+        fetchSections(selectedClass, branchdet.academicYears[0]);
+        setViewOpen(false) // Refresh sections
+      } else {
+        toast.error(result.message || "Failed to delete fee");
+      }
+    } catch (error) {
+      console.error("Error deleting fee:", error);
+      toast.error("Error deleting fee");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -196,22 +235,20 @@ const ViewSections = () => {
                     <span className="ml-1">Add Fee</span>
                   </button>
                 ) : (
-                  <span className="text-gray-600"> View Fee</span>
+                  <button
+                    className="px-3 py-1 bg-yellow-300 text-gray-700 rounded-md hover:bg-yellow-400 transition flex items-center"
+                    onClick={() => handleView(section)}
+                  >
+                    <FaSave />
+                    <span className="ml-1">View Fee</span>
+                  </button>
                 )}
-                <button
-                  className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition flex items-center"
-                  onClick={() => alert(`Add students to section: ${section.name}`)}
-                >
-                  <FaUserPlus />
-                  <span className="ml-1">Add Students</span>
-                </button>
+                
               </div>
             </li>
           ))
         )}
       </ul>
-
-      {/* Modal for adding fee */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className={`bg-white rounded-lg p-6 shadow-lg modal-animation`}>
@@ -274,6 +311,32 @@ const ViewSections = () => {
                 Close
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* View Fee Modal */}
+      {isViewOpen && selectedSection && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-xl w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+              onClick={handleViewClose}
+            >
+              <FaTimes />
+            </button>
+            <h2 className="text-xl font-bold mb-4">Fee Structure for {selectedSection.name}</h2>
+            <ul>
+              {selectedSection.fees.map((fee, index) => (
+                <li key={index} className="flex justify-between items-center mb-2">
+                  <span>{fee.feeType} - ${fee.amount}</span>
+                  <FaTrash
+                    className="text-red-500 cursor-pointer hover:text-red-700"
+                    onClick={() => handleDeleteFee(selectedSection._id,fee._id)}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}

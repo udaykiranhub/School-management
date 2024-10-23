@@ -57,20 +57,24 @@ console.log(fees)
 };
 
 
-
-// Remove a fee from a section
 exports.removeFeeFromSection = async (req, res) => {
   const { sectionId, feeId } = req.params; // Get sectionId and feeId from the request parameters
 
   try {
     const section = await Section.findById(sectionId);
-
+    
     if (!section) {
       return res.status(404).json({ success: false, message: "Section not found" });
     }
 
-    // Remove the fee from the fees array
-    section.fees.id(feeId).remove();
+    // Convert feeId to string for comparison and remove the fee from the fees array
+    const initialFeesLength = section.fees.length;
+    section.fees = section.fees.filter((fee, index) => fee._id.toString() !== feeId);
+
+    // If no fee was removed, return a 404 error
+    if (section.fees.length === initialFeesLength) {
+      return res.status(404).json({ success: false, message: "Fee not found in section" });
+    }
 
     // Save the updated section
     await section.save();
@@ -78,12 +82,15 @@ exports.removeFeeFromSection = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Fee removed successfully",
-      section,
+      section, // Optionally return the updated section
     });
   } catch (error) {
+    console.error("Error removing fee:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+
 
 // Get all fee types
 exports.getAllFeeTypes = async (req, res) => {
