@@ -12,6 +12,7 @@ const acdemicRoutes = require("./routers/AcademicRoutes");
 const classRoutes = require("./routers/ClassRoutes");
 const sectionRoutes = require("./routers/SectionRoutes");
 const feeRoutes = require("./routers/FeeTypeRouters");
+const townroutes = require("./routers/TownRoutes");
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use("/api/academic", protect.authMiddleware, acdemicRoutes);
 app.use("/api/classes", protect.authMiddleware, classRoutes);
 app.use("/api/sections", protect.authMiddleware, sectionRoutes);
 app.use("/api/Fee-types", protect.authMiddleware, feeRoutes);
+app.use("/api/towns", protect.authMiddleware, townroutes);
 
 database().then(
   app.listen(process.env.PORT, () => {

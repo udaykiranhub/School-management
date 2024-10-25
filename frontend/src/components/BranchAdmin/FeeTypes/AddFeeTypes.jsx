@@ -388,5 +388,4 @@ const AddFeeType = () => {
   );
 };
 
-
 export default AddFeeType;

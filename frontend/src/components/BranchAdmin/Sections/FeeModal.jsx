@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
 const Modal = ({ isOpen, onClose, onSubmit, sectionId }) => {
-  const [feeName, setFeeName] = React.useState('');
-  const [amount, setAmount] = React.useState('');
+  const [feeName, setFeeName] = React.useState("");
+  const [amount, setAmount] = React.useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({ sectionId, feeName, amount }); // Pass sectionId along with fee details
-    setFeeName('');
-    setAmount('');
+    setFeeName("");
+    setAmount("");
   };
 
   if (!isOpen) return null;

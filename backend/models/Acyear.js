@@ -5,7 +5,6 @@ const academicYearSchema = new mongoose.Schema(
     year: {
       type: String,
       required: true,
-      // unique: true,
       match: /^\d{4}-\d{4}$/, // Ensure the format is like "2024-2025"
     },
     startDate: {
@@ -25,6 +24,13 @@ const academicYearSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Class",
+      },
+    ],
+    towns: [
+      // Add the towns field as an array of ObjectId references to the Town model
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Town", // Reference to the Town model
       },
     ],
   },

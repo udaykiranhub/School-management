@@ -123,22 +123,30 @@ const Allapi = {
     method: "GET",
   },
   updateFeeType: {
-    url: (feeTypeId)=>`${backapi}/api/Fee-types/update/${feeTypeId}`,
+    url: (feeTypeId) => `${backapi}/api/Fee-types/update/${feeTypeId}`,
     method: "PUT",
   },
   deleteFeeType: {
-    url:(feeTypeId)=>`${backapi}/api/Fee-types/delete/${feeTypeId}`,
+    url: (feeTypeId) => `${backapi}/api/Fee-types/delete/${feeTypeId}`,
     method: "DELETE",
   },
-  addFeeStructure:{
+  addFeeStructure: {
     url: (sectionId) => `${backapi}/api/Fee-types/fees-section/${sectionId}`,
     method: "POST",
   },
-  deleteFeeStructure:{
-    url: (sectionId,feeId) => `${backapi}/api/Fee-types/fees-section/${sectionId}/del/${feeId}`,
+  deleteFeeStructure: {
+    url: (sectionId, feeId) =>
+      `${backapi}/api/Fee-types/fees-section/${sectionId}/del/${feeId}`,
     method: "DELETE",
-
-  }
+  },
+  addTown: {
+    url: `${backapi}/api/towns/add`,
+    method: "POST",
+  },
+  getallTowns: {
+    url: (academicId) => `${backapi}/api/towns/alltowns/${academicId}`,
+    method: "GET",
+  },
 };
 
 export default Allapi;

@@ -28,6 +28,8 @@ import AddAcademicYear from "./components/BranchAdmin/AcademicYears/Add.jsx";
 import Addsection from "./components/BranchAdmin/Sections/Addsection.jsx";
 import ViewSections from "./components/BranchAdmin/Sections/Viewsec.jsx";
 import AddFeeType from "./components/BranchAdmin/FeeTypes/AddFeeTypes.jsx";
+import AddTown from "./components/BranchAdmin/Transport/AddTown.jsx";
+import AddBus from "./components/BranchAdmin/Transport/AddBus.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -142,6 +144,19 @@ const Router = createBrowserRouter([
           {
             path: "fee-type",
             element: <AddFeeType />,
+          },
+          {
+            path: "transport",
+            children: [
+              {
+                path: "add-town",
+                element: <AddTown />,
+              },
+              {
+                path: "add-bus",
+                element: <AddBus />,
+              },
+            ],
           },
         ],
       },
