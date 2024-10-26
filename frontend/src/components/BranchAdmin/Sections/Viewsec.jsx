@@ -39,6 +39,10 @@ const ViewSections = () => {
     }
   };
 
+  function findObjectByKey(array, key, value) {
+    return array.find(obj => obj[key] === value).terms;
+  }
+
   const fetchSections = async (className, curr_acad) => {
     const token = localStorage.getItem("token");
     try {
@@ -326,17 +330,37 @@ const ViewSections = () => {
               <FaTimes />
             </button>
             <h2 className="text-xl font-bold mb-4">Fee Structure for {selectedSection.name}</h2>
-            <ul>
-              {selectedSection.fees.map((fee, index) => (
-                <li key={index} className="flex justify-between items-center mb-2">
-                  <span>{fee.feeType} - ${fee.amount}</span>
-                  <FaTrash
-                    className="text-red-500 cursor-pointer hover:text-red-700"
-                    onClick={() => handleDeleteFee(selectedSection._id,fee._id)}
-                  />
-                </li>
-              ))}
-            </ul>
+            <table className="w-full text-left border-collapse">
+  <thead>
+    <tr>
+      <th className="border-b-2 py-2 px-4">Fee Type</th>
+      <th className="border-b-2 py-2 px-4">Terms</th>
+
+      <th className="border-b-2 py-2 px-4">Amount (Rs)</th>
+      <th className="border-b-2 py-2 px-4">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {selectedSection.fees.map((fee, index) => (
+      <tr key={index} className="hover:bg-gray-100">
+        <td className="py-2 px-4 border-b">
+          {fee.feeType}
+        </td>
+        <td className="py-2 px-4 border-b">
+           {findObjectByKey(feeTypes, "type", fee.feeType)}
+        </td>
+        <td className="py-2 px-4 border-b">Rs {fee.amount}</td>
+        <td className="py-2 px-4 border-b">
+          <FaTrash
+            className="text-red-500 cursor-pointer hover:text-red-700"
+            onClick={() => handleDeleteFee(selectedSection._id, fee._id)}
+          />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
           </div>
         </div>
       )}

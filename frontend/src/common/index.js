@@ -147,6 +147,16 @@ const Allapi = {
     url: (academicId) => `${backapi}/api/towns/alltowns/${academicId}`,
     method: "GET",
   },
+  editTown:{
+
+    url: (townId) => `${backapi}/api/towns/edit/${townId}`,
+    method: "PUT",
+  },
+  deleteTown:{
+
+    url: (townId) => `${backapi}/api/towns/del/${townId}`,
+    method: "DELETE",
+  }
 };
 
 export default Allapi;

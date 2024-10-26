@@ -2,7 +2,7 @@ const express = require("express");
 const Town = require("../models/Towns");
 const AcademicYear = require("../models/Acyear"); // Import AcademicYear model
 const router = express.Router();
-
+const mongoose = require("mongoose");
 // Add town with uniqueness check and associate with academic year
 exports.Addtown = async (req, res) => {
   const { townName, amount, halts, academicId } = req.body;
@@ -35,6 +35,62 @@ exports.Addtown = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ error: true, message: error.message });
+  }
+};
+
+//editing 
+exports.editTown = async (req, res) => {
+  const {  townId } = req.params; // Extract ID from request parameters
+  const { townName, amount, halts, academicId, Terms } = req.body; // Extract data from request body
+
+  if (!mongoose.Types.ObjectId.isValid(townId)) {
+    return res.status(400).json({ message: "Invalid Town ID" });
+  }
+
+  try {
+    const updatedTown = await Town.findByIdAndUpdate(
+      townId,
+      { townName, amount, halts, academicId, Terms },
+      { new: true, runValidators: true } // `new: true` returns the updated document
+    );
+
+    if (!updatedTown) {
+      return res.status(404).json({ message: "Town not found" });
+    }
+
+    return res.status(200).json({ success: true, data: updatedTown });
+  } catch (error) {
+    console.error("Error updating town:", error);
+    return res.status(500).json({ message: "Error updating town", error: error.message });
+  }
+};
+// Delete Town Controller
+exports.deleteTown = async (req, res) => {
+  const { townId } = req.params; // Extract ID from request parameters
+  if (!mongoose.Types.ObjectId.isValid(townId)) {
+    return res.status(400).json({ message: "Invalid Town ID" });
+  }
+
+  try {
+    // Find the town to delete
+    const townToDelete = await Town.findById(townId);
+    if (!townToDelete) {
+      return res.status(404).json({ message: "Town not found" });
+    }
+
+    // Delete the town
+    await Town.findByIdAndDelete(townId);
+
+    // Remove town ID from associated Academic record
+    await AcademicYear.updateMany(
+      { _id: townToDelete.academicId }, // Find Academic record by academicId
+      { $pull: { towns: townId } } // Remove town ID from towns array
+    );
+
+    return res.status(200).json({ success: true, message: "Town deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting town:", error);
+    return res.status(500).json({ message: "Error deleting town", error: error.message });
   }
 };
 
