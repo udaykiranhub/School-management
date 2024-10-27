@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 router.post("/add",addFeeType);
-router.get("/allfeetypes",getAllFeeTypes);
+router.get("/allfeetype/:acyearid",getAllFeeTypes);
 router.put("/update/:feeTypeId",updateFeeType);
 router.delete("/delete/:feeTypeId",deleteFeeType);
 router.post("/fees-section/:sectionId",addFeeToSection);

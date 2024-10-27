@@ -5,10 +5,10 @@ const Section = require("../models/sections");
 
 // Add a new fee type
 exports.addFeeType = async (req, res) => {
-  const { type, terms } = req.body;
+  const { type, terms,academicYear } = req.body;
 
   try {
-    const newFeeType = new FeeType({ type, terms });
+    const newFeeType = new FeeType({ type, terms ,academicYear });
     await newFeeType.save();
     return res.status(201).json({ success: true, feeType: newFeeType });
   } catch (error) {
@@ -95,7 +95,9 @@ exports.removeFeeFromSection = async (req, res) => {
 // Get all fee types
 exports.getAllFeeTypes = async (req, res) => {
   try {
-    const feeTypes = await FeeType.find();
+    const { acyearid } = req.params;
+    console.log(acyearid)
+    const feeTypes = await FeeType.find( {academicYear:acyearid});
     return res.status(200).json({ success: true, feeTypes });
   } catch (error) {
     return res

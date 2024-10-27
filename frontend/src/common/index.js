@@ -119,7 +119,7 @@ const Allapi = {
     method: "POST",
   },
   getAllFeeTypes: {
-    url: `${backapi}/api/Fee-types/allfeetypes/`,
+    url: (acid) =>`${backapi}/api/Fee-types/allfeetype/${acid}`,
     method: "GET",
   },
   updateFeeType: {

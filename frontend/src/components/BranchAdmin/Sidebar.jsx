@@ -171,7 +171,11 @@ const BranchAdminSidebar = () => {
           {activeMenu === "Fee-controller" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to="/branch-admin/fee-type"
+                to={`/branch-admin/fee-type/${
+                  branchdet.academicYears.length <= 0
+                    ? ""
+                    : branchdet.academicYears[0]
+                }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />

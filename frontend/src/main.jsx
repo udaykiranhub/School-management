@@ -142,7 +142,7 @@ const Router = createBrowserRouter([
             ],
           },
           {
-            path: "fee-type",
+            path: "fee-type/:acid",
             element: <AddFeeType />,
           },
           {

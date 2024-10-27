@@ -68,10 +68,10 @@ const ViewSections = () => {
     }
   };
 
-  const fetchFeeTypes = async () => {
+  const fetchFeeTypes = async (curr_Acad) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(Allapi.getAllFeeTypes.url, {
+      const response = await fetch(Allapi.getAllFeeTypes.url(curr_Acad), {
         method: Allapi.getAllFeeTypes.method,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ const ViewSections = () => {
     ) {
       const currentAcademicYear = branchdet.academicYears[0];
       fetchClasses(currentAcademicYear);
-      fetchFeeTypes();
+      fetchFeeTypes(currentAcademicYear);
     }
   }, [branchdet]);
 

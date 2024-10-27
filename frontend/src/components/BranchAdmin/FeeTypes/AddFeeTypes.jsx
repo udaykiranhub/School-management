@@ -147,6 +147,7 @@
 // export default AddFeeType;
 import React, { useState, useEffect } from "react";
 import { FaPlusCircle, FaTrash, FaEdit } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
 
@@ -156,17 +157,19 @@ const AddFeeType = () => {
   const [terms, setTerms] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
+  const { acid } = useParams();
   // Fetch token from local storage
   const token = localStorage.getItem("token");
 
   // Fetch all fee types from the server
   const fetchFeeTypes = async () => {
     try {
-      const response = await fetch(Allapi.getAllFeeTypes.url, {
+      console.log('fetching')
+      const response = await fetch(Allapi.getAllFeeTypes.url(acid), {
         headers: {
           Authorization: `Bearer ${token}`, // Pass token in the request
         },
+       
       });
       const data = await response.json();
       if (data.success) {
@@ -191,13 +194,14 @@ const AddFeeType = () => {
     }
 
     try {
+      console.log(acid);
       const response = await fetch(Allapi.AddFeeType.url, {
         method: Allapi.AddFeeType.method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Pass token in the request
         },
-        body: JSON.stringify({ type: newFeeType, terms }),
+        body: JSON.stringify({ type: newFeeType, terms,academicYear:acid }),
       });
 
       const data = await response.json();
