@@ -124,7 +124,9 @@ const AddTown = () => {
 
   // Delete an entire town with confirmation
   const deleteTown = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this town?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this town?"
+    );
     if (!confirmed) {
       return; // Exit if the user cancels the deletion
     }
@@ -203,7 +205,10 @@ const AddTown = () => {
         {halts.length > 0 && (
           <ul className="list-disc pl-6 mb-6 text-black">
             {halts.map((halt, index) => (
-              <li key={index} className="mb-2 flex justify-between items-center">
+              <li
+                key={index}
+                className="mb-2 flex justify-between items-center"
+              >
                 {halt}
                 <button
                   onClick={() => deleteHalt(index)}
@@ -226,13 +231,20 @@ const AddTown = () => {
         <h3 className="text-xl font-semibold mb-4 text-gray-800">All Towns</h3>
         {towns.length > 0 ? (
           towns.map((town) => (
-            <div key={town._id} className="border p-4 rounded-lg shadow mb-6 bg-gray-50">
-              <h4 className="text-lg font-semibold text-indigo-700">{town.townName}</h4>
+            <div
+              key={town._id}
+              className="border p-4 rounded-lg shadow mb-6 bg-gray-50"
+            >
+              <h4 className="text-lg font-semibold text-indigo-700">
+                {town.townName}
+              </h4>
               <p className="text-gray-600">Amount: {town.amount}</p>
               <p className="text-gray-600">Halts:</p>
               <ul className="list-disc pl-6 mb-4">
                 {town.halts.map((halt, index) => (
-                  <li key={index} className="text-gray-600">{halt}</li>
+                  <li key={index} className="text-gray-600">
+                    {halt}
+                  </li>
                 ))}
               </ul>
               <div className="flex space-x-4">

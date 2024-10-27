@@ -33,6 +33,13 @@ const academicYearSchema = new mongoose.Schema(
         ref: "Town", // Reference to the Town model
       },
     ],
+    buses: [
+      // Add buses field as an array of ObjectId references to the Bus model
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Bus",
+      },
+    ],
   },
   { timestamps: true }
 );

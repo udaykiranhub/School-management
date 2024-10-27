@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { FaTrash, FaEdit, FaUserPlus, FaSave, FaTimes } from "react-icons/fa"; // Add FaTimes for close icon
 import Allapi from "../../../common";
 import { mycon } from "../../../store/Mycontext";
-import './animation.css'; // Import the CSS file for animations
+import "./animation.css"; // Import the CSS file for animations
 
 const ViewSections = () => {
   const { branchdet } = useContext(mycon);
@@ -40,19 +40,22 @@ const ViewSections = () => {
   };
 
   function findObjectByKey(array, key, value) {
-    return array.find(obj => obj[key] === value).terms;
+    return array.find((obj) => obj[key] === value).terms;
   }
 
   const fetchSections = async (className, curr_acad) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(Allapi.getSectionsByClass.url(className, curr_acad), {
-        method: Allapi.getSectionsByClass.method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        Allapi.getSectionsByClass.url(className, curr_acad),
+        {
+          method: Allapi.getSectionsByClass.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const result = await response.json();
       if (result.success) {
         setSections(result.data || []);
@@ -88,7 +91,11 @@ const ViewSections = () => {
   };
 
   useEffect(() => {
-    if (branchdet && branchdet.academicYears && branchdet.academicYears.length > 0) {
+    if (
+      branchdet &&
+      branchdet.academicYears &&
+      branchdet.academicYears.length > 0
+    ) {
       const currentAcademicYear = branchdet.academicYears[0];
       fetchClasses(currentAcademicYear);
       fetchFeeTypes();
@@ -100,7 +107,6 @@ const ViewSections = () => {
       const currentAcademicYear = branchdet.academicYears[0];
       fetchSections(selectedClass, currentAcademicYear);
     }
-
   }, [selectedClass, selectedSection]);
 
   const handleClassChange = (e) => {
@@ -143,23 +149,26 @@ const ViewSections = () => {
   };
 
   // Handle fee deletion
-  const handleDeleteFee = async (sectionId,feeId) => {
+  const handleDeleteFee = async (sectionId, feeId) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(Allapi.deleteFeeStructure.url(sectionId,feeId), {
-        method: Allapi.deleteFeeStructure.method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        Allapi.deleteFeeStructure.url(sectionId, feeId),
+        {
+          method: Allapi.deleteFeeStructure.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const result = await response.json();
 
       if (result.success) {
         toast.success("Fee deleted successfully");
         fetchSections(selectedClass, branchdet.academicYears[0]);
-        setViewOpen(false) // Refresh sections
+        setViewOpen(false); // Refresh sections
       } else {
         toast.error(result.message || "Failed to delete fee");
       }
@@ -182,14 +191,17 @@ const ViewSections = () => {
     }
 
     try {
-      const response = await fetch(Allapi.addFeeStructure.url(selectedSection._id), {
-        method: Allapi.addFeeStructure.method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fees }), // Send the entire fees array
-      });
+      const response = await fetch(
+        Allapi.addFeeStructure.url(selectedSection._id),
+        {
+          method: Allapi.addFeeStructure.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fees }), // Send the entire fees array
+        }
+      );
       const result = await response.json();
       if (result.success) {
         toast.success("Fees added successfully");
@@ -227,7 +239,10 @@ const ViewSections = () => {
           <p className="text-gray-600 text-center">No sections available.</p>
         ) : (
           sections.map((section) => (
-            <li key={section._id} className="flex items-center justify-between py-2">
+            <li
+              key={section._id}
+              className="flex items-center justify-between py-2"
+            >
               <span className="text-black">{section.name}</span>
               <div className="flex space-x-2">
                 {section.fees && section.fees.length === 0 ? (
@@ -247,7 +262,6 @@ const ViewSections = () => {
                     <span className="ml-1">View Fee</span>
                   </button>
                 )}
-                
               </div>
             </li>
           ))
@@ -256,7 +270,9 @@ const ViewSections = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className={`bg-white rounded-lg p-6 shadow-lg modal-animation`}>
-            <h2 className="text-xl font-bold mb-4 text-gray-700">Add Fee for {selectedSection?.name}</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-700">
+              Add Fee for {selectedSection?.name}
+            </h2>
             <form onSubmit={handleSubmit} className="text-gray-700">
               {fees.map((fee, index) => (
                 <div key={index} className="flex mb-4">
@@ -264,7 +280,9 @@ const ViewSections = () => {
                     <label className="block mb-1">Fee Type:</label>
                     <select
                       value={fee.feeType}
-                      onChange={(e) => handleFeeChange(index, 'feeType', e.target.value)}
+                      onChange={(e) =>
+                        handleFeeChange(index, "feeType", e.target.value)
+                      }
                       className="p-2 border rounded-md w-full"
                     >
                       <option value="">Select Fee Type</option>
@@ -280,7 +298,9 @@ const ViewSections = () => {
                     <input
                       type="number"
                       value={fee.amount}
-                      onChange={(e) => handleFeeChange(index, 'amount', e.target.value)}
+                      onChange={(e) =>
+                        handleFeeChange(index, "amount", e.target.value)
+                      }
                       className="p-2 border rounded-md w-full"
                       placeholder="Amount"
                     />
@@ -329,38 +349,39 @@ const ViewSections = () => {
             >
               <FaTimes />
             </button>
-            <h2 className="text-xl font-bold mb-4">Fee Structure for {selectedSection.name}</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Fee Structure for {selectedSection.name}
+            </h2>
             <table className="w-full text-left border-collapse">
-  <thead>
-    <tr>
-      <th className="border-b-2 py-2 px-4">Fee Type</th>
-      <th className="border-b-2 py-2 px-4">Terms</th>
+              <thead>
+                <tr>
+                  <th className="border-b-2 py-2 px-4">Fee Type</th>
+                  <th className="border-b-2 py-2 px-4">Terms</th>
 
-      <th className="border-b-2 py-2 px-4">Amount (Rs)</th>
-      <th className="border-b-2 py-2 px-4">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {selectedSection.fees.map((fee, index) => (
-      <tr key={index} className="hover:bg-gray-100">
-        <td className="py-2 px-4 border-b">
-          {fee.feeType}
-        </td>
-        <td className="py-2 px-4 border-b">
-           {findObjectByKey(feeTypes, "type", fee.feeType)}
-        </td>
-        <td className="py-2 px-4 border-b">Rs {fee.amount}</td>
-        <td className="py-2 px-4 border-b">
-          <FaTrash
-            className="text-red-500 cursor-pointer hover:text-red-700"
-            onClick={() => handleDeleteFee(selectedSection._id, fee._id)}
-          />
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
+                  <th className="border-b-2 py-2 px-4">Amount (Rs)</th>
+                  <th className="border-b-2 py-2 px-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedSection.fees.map((fee, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="py-2 px-4 border-b">{fee.feeType}</td>
+                    <td className="py-2 px-4 border-b">
+                      {findObjectByKey(feeTypes, "type", fee.feeType)}
+                    </td>
+                    <td className="py-2 px-4 border-b">Rs {fee.amount}</td>
+                    <td className="py-2 px-4 border-b">
+                      <FaTrash
+                        className="text-red-500 cursor-pointer hover:text-red-700"
+                        onClick={() =>
+                          handleDeleteFee(selectedSection._id, fee._id)
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
