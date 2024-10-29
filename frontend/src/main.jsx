@@ -30,6 +30,7 @@ import ViewSections from "./components/BranchAdmin/Sections/Viewsec.jsx";
 import AddFeeType from "./components/BranchAdmin/FeeTypes/AddFeeTypes.jsx";
 import AddTown from "./components/BranchAdmin/Transport/AddTown.jsx";
 import AddBus from "./components/BranchAdmin/Transport/AddBus.jsx";
+import AddStudents from "./components/BranchAdmin/Students/AddStudents.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -157,6 +158,10 @@ const Router = createBrowserRouter([
                 element: <AddBus />,
               },
             ],
+          },
+          {
+            path: "add-student",
+            element: <AddStudents />,
           },
         ],
       },
