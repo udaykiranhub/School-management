@@ -1375,15 +1375,38 @@ const AddStudents = () => {
     }
   }, [branchdet, classname, acid]);
 
-  const fetchTransportDetails = async () => {
-    try {
-      const townsRes = await fetch(`${backapi}/api/towns/alltowns/${acid}`);
-      const townsData = await townsRes.json();
-      setTowns(townsData);
+  
+const fetchTransportDetails = async () => {
+  console.log("fecthing towns")
+  const token = localStorage.getItem("token");
 
-      const busesRes = await fetch(`${backapi}/api/buses/allbuses/${acid}`);
-      const busesData = await busesRes.json();
-      setBuses(busesData);
+    try {
+      const response = await fetch(
+        Allapi.getallTowns.url(acid),
+        {
+          method: Allapi.getallTowns.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+      const townsData = await response.json();
+      setTowns(townsData.data);
+      console.log(townsData)
+
+      
+        const bus_response = await fetch(Allapi.getByPlaceBus.url(acid), {
+          method: Allapi.getByPlaceBus.method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({place:formData.transportDetails.town })
+        });
+  
+      const busesData = await bus_response.json();
+      setBuses(busesData.data);
+      console.log(busesData)
     } catch (error) {
       toast.error("Error fetching transport details");
     }
@@ -1444,7 +1467,7 @@ const AddStudents = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = async  (e) => {
     const { name, value } = e.target;
     if (name.startsWith("address.")) {
       const fieldName = name.split(".")[1];
@@ -1457,6 +1480,7 @@ const AddStudents = () => {
       }));
     } else if (name.startsWith("transportDetails.")) {
       const fieldName = name.split(".")[1];
+  
       setFormData((prev) => ({
         ...prev,
         transportDetails: {
@@ -1464,6 +1488,10 @@ const AddStudents = () => {
           [fieldName]: value,
         },
       }));
+        
+      console.log(formData.transportDetails.town)
+
+     
     } else if (name.startsWith("hostelDetails.")) {
       const fieldName = name.split(".")[1];
       setFormData((prev) => ({
@@ -1479,6 +1507,7 @@ const AddStudents = () => {
         [name]: value,
       }));
     }
+    await fetchTransportDetails()
   };
 
   const handleSubmit = async (e) => {
@@ -1815,12 +1844,14 @@ const AddStudents = () => {
             <label>Town:</label>
             <select
               name="transportDetails.town"
-              value={formData.transportDetails.town}
+              value={formData.transportDetails.town||"SELECT TOWN"}
               onChange={handleChange}
             >
+            <option value="">Select Towns</option>
+
               {towns.map((town) => (
-                <option key={town._id} value={town._id}>
-                  {town.name}
+                <option key={town._id} value={town.townName}>
+                  {town.townName}
                 </option>
               ))}
             </select>
@@ -1830,11 +1861,11 @@ const AddStudents = () => {
               value={formData.transportDetails.bus}
               onChange={handleChange}
             >
-              {buses.map((bus) => (
+              {/* {buses.map((bus) => (
                 <option key={bus._id} value={bus._id}>
-                  {bus.name}
+                  {bus.busNo}
                 </option>
-              ))}
+              ))} */}
             </select>
             <label>Halt:</label>
             <input

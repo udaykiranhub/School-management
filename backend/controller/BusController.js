@@ -70,6 +70,42 @@ exports.getAllBuses = async (req, res) => {
     });
   }
 };
+exports.searchBusesByPlace = async (req, res) => {
+  try {
+    const { academicId } = req.params;
+    const { place } = req.body; // Expecting a single place name in the request body
+
+    // Validate input
+    if (typeof place !== 'string' || place.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: "place must be a non-empty string",
+      });
+    }
+
+    // Find buses that have the specified place in the viaTowns array and match the academic year ID
+    const buses = await Bus.find({
+      academicId,
+      viaTowns: { $elemMatch: { $eq: place } } // Check if the place exists in the viaTowns array
+    });
+
+    if (buses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No buses found for the given criteria",
+      });
+    }
+
+    return res.status(200).json({ success: true, data: buses });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to search buses",
+      error: error.message,
+    });
+  }
+};
+
 
 // Update a bus
 exports.updateBus = async (req, res) => {

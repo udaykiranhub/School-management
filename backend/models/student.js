@@ -6,8 +6,21 @@ const studentSchema = new mongoose.Schema({
   surname: String,
   name: String,
   gender: String,
-  class: { type: mongoose.Schema.Types.ObjectId, ref: 'Class' },
-  section: { type: mongoose.Schema.Types.ObjectId, ref: 'Section' },
+  class: { 
+    name:{
+      type:String
+    },
+    id:{
+
+      type: mongoose.Schema.Types.ObjectId, ref: 'Class' },
+    },
+    
+  section: {  name:{
+    type:String
+  },
+  id:{
+
+    type:mongoose.Schema.Types.ObjectId, ref: 'Section' },},
   dob: Date,
   admissionDate: Date,
   photo: String,
@@ -31,7 +44,7 @@ const studentSchema = new mongoose.Schema({
   },
   transport: Boolean,
   transportDetails: {
-    town: { type: mongoose.Schema.Types.ObjectId, ref: 'Town' },
+    town: String,
     bus: { type: mongoose.Schema.Types.ObjectId, ref: 'Bus' },
     halt: String
   },

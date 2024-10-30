@@ -164,6 +164,11 @@ const Allapi = {
     url: (academicId) => `${backapi}/api/buses/all-buses/${academicId}`,
     method: "GET",
   },
+  getByPlaceBus:{
+    url: (academicId) => `${backapi}/api/buses/getBusByPlace/${academicId}`,
+    method: "POST",
+
+  },
   updateBus: {
     url: (BusId) => `${backapi}/api/buses/upd-bus/${BusId}`,
     method: "PUT",
