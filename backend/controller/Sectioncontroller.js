@@ -122,7 +122,7 @@ exports.getSectionsByClass = async (req, res) => {
 
   try {
     // Find the class by name
-    console.log(className,acadId)
+    console.log(className, acadId);
     const classData = await Class.findOne({
       name: className,
       academicYear: acadId,

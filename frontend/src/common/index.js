@@ -59,6 +59,7 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/academic/add/${branchId}`,
     method: "POST",
   },
+  
   getAcademicYears: {
     url: (branchId) => `${backapi}/api/academic/view/${branchId}`,
     method: "GET",
@@ -119,7 +120,7 @@ const Allapi = {
     method: "POST",
   },
   getAllFeeTypes: {
-    url: (acid) =>`${backapi}/api/Fee-types/allfeetype/${acid}`,
+    url: (acid) => `${backapi}/api/Fee-types/allfeetype/${acid}`,
     method: "GET",
   },
   updateFeeType: {
@@ -171,10 +172,10 @@ const Allapi = {
     url: (BusId) => `${backapi}/api/buses/del-bus/${BusId}`,
     method: "DELETE",
   },
-  addStudent:{
-    url:`${backapi}/api/students/add-student`,
-    method:'POST'
-  }
+  addStudent: {
+    url: `${backapi}/api/students/add-student`,
+    method: "POST",
+  },
 };
 
 export default Allapi;

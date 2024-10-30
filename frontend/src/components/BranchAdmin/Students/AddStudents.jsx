@@ -543,21 +543,705 @@
 
 // export default AddStudents;
 
+// import React, { useState, useEffect } from "react";
+// import { toast } from "react-toastify";
+// import Allapi from "../../../common";
+// import { useParams } from "react-router-dom";
+// import { useContext } from "react";
+// import { mycon } from "../../../store/Mycontext";
+// const AddStudents = () => {
+//   const { branchdet } = useContext(mycon);
+//   const [formData, setFormData] = useState({
+//     idNo: "",
+//     admissionNo: "",
+//     surname: "",
+//     name: "",
+//     gender: "",
+//     class: "",
+//     section: "",
+//     dob: "",
+//     admissionDate: "",
+//     photo: "",
+//     aadharNo: "",
+//     studentAAPR: "",
+//     caste: "",
+//     subCaste: "",
+//     fatherName: "",
+//     fatherAadhar: "",
+//     fatherOccupation: "",
+//     motherName: "",
+//     motherAadhar: "",
+//     motherOccupation: "",
+//     whatsappNo: "",
+//     emergencyContact: "",
+//     address: {
+//       doorNo: "",
+//       street: "",
+//       city: "",
+//       pincode: "",
+//     },
+//     transport: false,
+//     transportDetails: {
+//       town: "",
+//       bus: "",
+//       halt: "",
+//     },
+//     hostel: false,
+//     hostelDetails: {
+//       hostelFee: "",
+//       terms: "",
+//     },
+//     feeDetails: [],
+//     concession: {},
+//   });
+
+//   const [towns, setTowns] = useState([]);
+//   const [buses, setBuses] = useState([]);
+//   const [halts, setHalts] = useState([]);
+//   const [classes, setClasses] = useState([]);
+//   const [sections, setSections] = useState([]);
+//   const [classname, setClassname] = useState("null");
+//   const { acid } = useParams();
+//   const casteOptions = ["OC", "BC", "SC", "ST"];
+//   const fatherOccupationOptions = ["Employee", "Business"];
+//   const motherOccupationOptions = ["Housewife", "Employee"];
+
+//   const curracad = async (bid) => {
+//     const response = await fetch(Allapi.getAcademicYears.url(bid), {
+//       method: Allapi.getAcademicYears.method,
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch academic years");
+//     }
+
+//     const res = await response.json();
+//     if (res.success) {
+//       const years = res.data;
+//       const present_Acad = years.map((year) => {
+//         if (year._id == acid) {
+//           return year;
+//         }
+//       });
+//       const yearSuffix = present_Acad[0].year.slice(-2);
+//       console.log("present academic is", yearSuffix);
+//       const currentCount = 2; //Here we use the no of students in current academic year
+//       const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
+//       setFormData((prev) => ({ ...prev, idNo: id }));
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (branchdet && branchdet._id && acid) {
+//       console.log("branch details is", branchdet);
+//       curracad(branchdet._id);
+//       console.log("acid is", acid);
+//     }
+//     // Fetch classes based on the current academic year
+
+//     const fetchClasses = async () => {
+//       const token = localStorage.getItem("token");
+//       try {
+//         const response = await fetch(Allapi.getClasses.url(acid), {
+//           method: Allapi.getClasses.method,
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         });
+
+//         const result = await response.json();
+//         if (result.success) {
+//           setClasses(result.data);
+//         } else {
+//           toast.error(result.message || "Failed to fetch classes");
+//         }
+//       } catch (error) {
+//         console.error("Error fetching classes:", error);
+//         toast.error("Error fetching classes");
+//       }
+//     };
+
+//     if (acid) fetchClasses();
+//   }, [branchdet]);
+
+//   // Fetch sections based on selected class
+//   useEffect(() => {
+//     const fetchSections = async (className, curr_acad) => {
+//       const token = localStorage.getItem("token");
+//       try {
+//         const response = await fetch(
+//           Allapi.getSectionsByClass.url(className, curr_acad),
+//           {
+//             method: Allapi.getSectionsByClass.method,
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         );
+//         const result = await response.json();
+//         if (result.success) {
+//           setSections(result.data || []);
+//         } else {
+//           toast.error(result.message || "Failed to fetch sections");
+//         }
+//       } catch (error) {
+//         console.error("Error fetching sections:", error);
+//         toast.error("Error fetching sections");
+//       }
+//     };
+//     fetchSections(classname, acid);
+//   }, [classname, acid]);
+
+//   // Fetch towns, buses, and halts based on transport selection
+//   const fetchTransportDetails = async () => {
+//     try {
+//       const townsRes = await fetch(`${backapi}/api/towns/alltowns/${acid}`);
+//       const townsData = await townsRes.json();
+//       setTowns(townsData);
+
+//       const busesRes = await fetch(`${backapi}/api/buses/allbuses/${acid}`); // Adjust as needed
+//       const busesData = await busesRes.json();
+//       setBuses(busesData);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   const handleTransportChange = async (e) => {
+//     const checked = e.target.checked;
+//     setFormData((prev) => ({
+//       ...prev,
+//       transport: checked,
+//     }));
+//     if (checked) {
+//       await fetchTransportDetails();
+//     }
+//   };
+
+//   const handleClassChange = (e) => {
+//     // const selectedclassname=e.target.value;
+//     console.log("e is", e);
+//     id = e.target.value._id;
+//     console.log("class id is", id);
+//     setFormData((prev) => ({
+//       ...prev,
+//       class: id,
+//       section: "", // Reset section when class changes
+//     }));
+//     setClassname(selectedclassname);
+//   };
+
+//   const handleSectionChange = async (e) => {
+//     const selectedSection = e.target.value;
+//     setFormData((prev) => ({
+//       ...prev,
+//       section: selectedSection,
+//     }));
+//     // Fetch fees based on selected section
+//     // const fetchFees = async () => {
+//     //   try {
+//     //     const res = await fetch(
+//     //       `${backapi}/api/Fee-types/allfeetype/${selectedSection}`
+//     //     );
+//     //     const data = await res.json();
+//     //     setFormData((prev) => ({
+//     //       ...prev,
+//     //       feeDetails: data,
+//     //     }));
+//     //   } catch (error) {
+//     //     console.error(error);
+//     //   }
+//     // };
+//   };
+
+//   // Handle Cloudinary file upload
+//   const handlePhotoUpload = async (e) => {
+//     const file = e.target.files[0];
+//     const formData = new FormData();
+//     formData.append("file", file);
+//     formData.append("upload_preset", "your_cloudinary_preset"); // Replace with actual Cloudinary preset
+
+//     try {
+//       const res = await fetch(
+//         "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
+//         {
+//           method: "POST",
+//           body: formData,
+//         }
+//       );
+//       const data = await res.json();
+//       setFormData((prev) => ({ ...prev, photo: data.secure_url }));
+//       toast.success("Photo uploaded successfully!");
+//     } catch (error) {
+//       toast.error("Photo upload failed");
+//     }
+//   };
+
+//   // Handle input changes
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     if (name.startsWith("address.")) {
+//       const fieldName = name.split(".")[1];
+//       setFormData((prev) => ({
+//         ...prev,
+//         address: {
+//           ...prev.address,
+//           [fieldName]: value,
+//         },
+//       }));
+//     } else if (name.startsWith("transportDetails.")) {
+//       const fieldName = name.split(".")[1];
+//       setFormData((prev) => ({
+//         ...prev,
+//         transportDetails: {
+//           ...prev.transportDetails,
+//           [fieldName]: value,
+//         },
+//       }));
+//     } else if (name.startsWith("hostelDetails.")) {
+//       const fieldName = name.split(".")[1];
+//       setFormData((prev) => ({
+//         ...prev,
+//         hostelDetails: {
+//           ...prev.hostelDetails,
+//           [fieldName]: value,
+//         },
+//       }));
+//     } else {
+//       setFormData((prev) => ({
+//         ...prev,
+//         [name]: value,
+//       }));
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     // Validate and submit formData
+//     console.log(formData);
+//     // Make sure to submit the formData to your API here
+//     try {
+//       const token = localStorage.getItem("token");
+
+//       const res = await fetch(Allapi.addStudent.url, {
+//         method: Allapi.addSection.method,
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(formData),
+//       });
+
+//       if (res.ok) {
+//         toast.success("Student added successfully!");
+//         setFormData({
+//           /* reset form data to initial state */
+//         });
+//       } else {
+//         const errorData = await res.json();
+//         toast.error(`Failed to add student: ${errorData.message}`);
+//       }
+//     } catch (error) {
+//       toast.error("An error occurred while adding the student");
+//       console.error(error);
+//     }
+//   };
+
+//   return (
+//     <>
+//       <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg text-gray-700">
+//         <h2 className="text-2xl font-bold text-center mb-6">Add Student</h2>
+//         <form onSubmit={handleSubmit}>
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//             {/* Student Basic Details */}
+//             <div>
+//               <label className="block mb-1">ID No</label>
+//               <input
+//                 type="text"
+//                 value={formData.idNo}
+//                 readOnly
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Admission No</label>
+//               <input
+//                 type="text"
+//                 name="admissionNo"
+//                 value={formData.admissionNo}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Surname</label>
+//               <input
+//                 type="text"
+//                 name="surname"
+//                 value={formData.surname}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Name</label>
+//               <input
+//                 type="text"
+//                 name="name"
+//                 value={formData.name}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Gender</label>
+//               <select
+//                 name="gender"
+//                 value={formData.gender}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Gender</option>
+//                 <option value="Male">Male</option>
+//                 <option value="Female">Female</option>
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">Class</label>
+//               <select
+//                 name="class"
+//                 value={formData.class.name}
+//                 onChange={(e) => handleClassChange(e)}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Class</option>
+//                 {classes.map((classItem) => (
+//                   <option
+//                     key={classItem._id}
+//                     value={classItem}
+//                     id={classItem._id}
+//                   >
+//                     {classItem._id}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">Section</label>
+//               <select
+//                 name="section"
+//                 value={formData.section}
+//                 onChange={handleSectionChange}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Section</option>
+//                 {sections.map((sectionItem) => (
+//                   <option key={sectionItem._id} value={sectionItem._id}>
+//                     {sectionItem.name}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">Date of Birth</label>
+//               <input
+//                 type="date"
+//                 name="dob"
+//                 value={formData.dob}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Admission Date</label>
+//               <input
+//                 type="date"
+//                 name="admissionDate"
+//                 value={formData.admissionDate}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Aadhar No</label>
+//               <input
+//                 type="text"
+//                 name="aadharNo"
+//                 value={formData.aadharNo}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Student AAPR</label>
+//               <input
+//                 type="text"
+//                 name="studentAAPR"
+//                 value={formData.studentAAPR}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Caste</label>
+//               <select
+//                 name="caste"
+//                 value={formData.caste}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Caste</option>
+//                 {casteOptions.map((caste) => (
+//                   <option key={caste} value={caste}>
+//                     {caste}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">Sub Caste</label>
+//               <input
+//                 type="text"
+//                 name="subCaste"
+//                 value={formData.subCaste}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Father's Name</label>
+//               <input
+//                 type="text"
+//                 name="fatherName"
+//                 value={formData.fatherName}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Father's Aadhar</label>
+//               <input
+//                 type="text"
+//                 name="fatherAadhar"
+//                 value={formData.fatherAadhar}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Father's Occupation</label>
+//               <select
+//                 name="fatherOccupation"
+//                 value={formData.fatherOccupation}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Occupation</option>
+//                 {fatherOccupationOptions.map((occupation) => (
+//                   <option key={occupation} value={occupation}>
+//                     {occupation}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">Mother's Name</label>
+//               <input
+//                 type="text"
+//                 name="motherName"
+//                 value={formData.motherName}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Mother's Aadhar</label>
+//               <input
+//                 type="text"
+//                 name="motherAadhar"
+//                 value={formData.motherAadhar}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Mother's Occupation</label>
+//               <select
+//                 name="motherOccupation"
+//                 value={formData.motherOccupation}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               >
+//                 <option value="">Select Occupation</option>
+//                 {motherOccupationOptions.map((occupation) => (
+//                   <option key={occupation} value={occupation}>
+//                     {occupation}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//             <div>
+//               <label className="block mb-1">WhatsApp No</label>
+//               <input
+//                 type="text"
+//                 name="whatsappNo"
+//                 value={formData.whatsappNo}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Emergency Contact</label>
+//               <input
+//                 type="text"
+//                 name="emergencyContact"
+//                 value={formData.emergencyContact}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Door No</label>
+//               <input
+//                 type="text"
+//                 name="address.doorNo"
+//                 value={formData.address.doorNo}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Street</label>
+//               <input
+//                 type="text"
+//                 name="address.street"
+//                 value={formData.address.street}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">City</label>
+//               <input
+//                 type="text"
+//                 name="address.city"
+//                 value={formData.address.city}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div>
+//               <label className="block mb-1">Pincode</label>
+//               <input
+//                 type="text"
+//                 name="address.pincode"
+//                 value={formData.address.pincode}
+//                 onChange={handleChange}
+//                 className="input-field w-full"
+//               />
+//             </div>
+//             <div className="col-span-2">
+//               <label className="flex items-center mb-1">
+//                 <input
+//                   type="checkbox"
+//                   checked={formData.transport}
+//                   onChange={handleTransportChange}
+//                   className="mr-2"
+//                 />
+//                 Need Transport
+//               </label>
+//             </div>
+//             {formData.transport && (
+//               <>
+//                 <div>
+//                   <label className="block mb-1">Town</label>
+//                   <select
+//                     name="transportDetails.town"
+//                     value={formData.transportDetails.town}
+//                     onChange={handleChange}
+//                     className="input-field w-full"
+//                   >
+//                     <option value="">Select Town</option>
+//                     {towns.map((town) => (
+//                       <option key={town._id} value={town.name}>
+//                         {town.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                 </div>
+//                 <div>
+//                   <label className="block mb-1">Bus</label>
+//                   <select
+//                     name="transportDetails.bus"
+//                     value={formData.transportDetails.bus}
+//                     onChange={handleChange}
+//                     className="input-field w-full"
+//                   >
+//                     <option value="">Select Bus</option>
+//                     {buses.map((bus) => (
+//                       <option key={bus._id} value={bus.name}>
+//                         {bus.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                 </div>
+//                 <div>
+//                   <label className="block mb-1">Pickup Point</label>
+//                   <select
+//                     name="transportDetails.pickupPoint"
+//                     value={formData.transportDetails.pickupPoint}
+//                     onChange={handleChange}
+//                     className="input-field w-full"
+//                   >
+//                     <option value="">Select Pickup Point</option>
+//                     {pickupPoints.map((point) => (
+//                       <option key={point._id} value={point.name}>
+//                         {point.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                 </div>
+//               </>
+//             )}
+//             <div className="col-span-2">
+//               <button
+//                 type="submit"
+//                 className="btn bg-blue-500 text-white py-2 px-4 rounded"
+//               >
+//                 Add Student
+//               </button>
+//             </div>
+//           </div>
+//         </form>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AddStudents;
+
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
 import { useParams } from "react-router-dom";
-
+import { useContext } from "react";
+import { mycon } from "../../../store/Mycontext";
 
 const AddStudents = () => {
+  const { branchdet } = useContext(mycon);
   const [formData, setFormData] = useState({
     idNo: "",
     admissionNo: "",
     surname: "",
     name: "",
     gender: "",
-    class: "",
-    section: "",
+    class: { name: "", id: "" },
+    section: { name: "", id: "" },
     dob: "",
     admissionDate: "",
     photo: "",
@@ -579,17 +1263,17 @@ const AddStudents = () => {
       city: "",
       pincode: "",
     },
-    // transport: false,
-    // transportDetails: {
-    //   town: "",
-    //   bus: "",
-    //   halt: "",
-    // },
-    // hostel: false,
-    // hostelDetails: {
-    //   hostelFee: "",
-    //   terms: "",
-    // },
+    transport: false,
+    transportDetails: {
+      town: "",
+      bus: "",
+      halt: "",
+    },
+    hostel: false,
+    hostelDetails: {
+      hostelFee: "",
+      terms: "",
+    },
     feeDetails: [],
     concession: {},
   });
@@ -599,99 +1283,109 @@ const AddStudents = () => {
   const [halts, setHalts] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
-  const [classname,setClassname]=useState("null")
+  const [classname, setClassname] = useState("null");
   const { acid } = useParams();
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
   const motherOccupationOptions = ["Housewife", "Employee"];
 
-  // Generates ID based on the current academic year and sequence order
-//   const generateId = async () => {
-//     const yearSuffix = new Date().getFullYear().toString().slice(-2);
-//     const res = await fetch(
-//       `${backapi}/api/academic/view/${currentAcademicYear}`
-//     );
-//     const data = await res.json();
-//     const currentCount = data.length; // Assuming the API returns the number of students
-//     const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
-//     setFormData((prev) => ({ ...prev, idNo: id }));
-//   };
+  const curracad = async (bid) => {
+    const response = await fetch(Allapi.getAcademicYears.url(bid), {
+      method: Allapi.getAcademicYears.method,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-  // Fetch academic years on mount
+    if (!response.ok) {
+      throw new Error("Failed to fetch academic years");
+    }
 
-  // Fetch classes based on the current academic year
+    const res = await response.json();
+    if (res.success) {
+      const years = res.data;
+      const present_Acad = years.find((year) => year._id == acid);
+      const yearSuffix = present_Acad.year.slice(-2);
+      console.log("present academic is", yearSuffix);
+      const currentCount = 2; //Here we use the number of students in the current academic year
+      const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
+      setFormData((prev) => ({ ...prev, idNo: id }));
+    }
+  };
+
   useEffect(() => {
+    if (branchdet && branchdet._id && acid) {
+      curracad(branchdet._id);
+    }
+
     const fetchClasses = async () => {
-        const token = localStorage.getItem("token");
-        try {
-          const response = await fetch(Allapi.getClasses.url(acid), {
-            method: Allapi.getClasses.method,
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(Allapi.getClasses.url(acid), {
+          method: Allapi.getClasses.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setClasses(result.data);
+          console.log("classes are", classes);
+        } else {
+          toast.error(result.message || "Failed to fetch classes");
+        }
+      } catch (error) {
+        toast.error("Error fetching classes");
+      }
+    };
+
+    if (acid) fetchClasses();
+  }, [branchdet]);
+
+  useEffect(() => {
+    const fetchSections = async (className, curr_acad) => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(
+          Allapi.getSectionsByClass.url(className, curr_acad),
+          {
+            method: Allapi.getSectionsByClass.method,
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          });
-    
-          const result = await response.json();
-          if (result.success) {
-            setClasses(result.data);
-          } else {
-            toast.error(result.message || "Failed to fetch classes");
           }
-        } catch (error) {
-          console.error("Error fetching classes:", error);
-          toast.error("Error fetching classes");
+        );
+        const result = await response.json();
+        if (result.success) {
+          setSections(result.data || []);
+        } else {
+          toast.error(result.message || "Failed to fetch sections");
         }
-      };
-    
-    if (acid) fetchClasses();
-  }, [acid]);
+      } catch (error) {
+        toast.error("Error fetching sections");
+      }
+    };
+    if (classname != null && acid) {
+      console.log("classname is", classname);
+      console.log("acid is", acid);
+      fetchSections(classname, acid);
+    }
+  }, [branchdet, classname, acid]);
 
-  // Fetch sections based on selected class
-  useEffect(() => {
-    const fetchSections = async (className, curr_acad) => {
-        const token = localStorage.getItem("token");
-        try {
-          const response = await fetch(
-            Allapi.getSectionsByClass.url(className,curr_acad),
-            {
-              method: Allapi.getSectionsByClass.method,
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const result = await response.json();
-          if (result.success) {
-            setSections(result.data || []);
-          } else {
-            toast.error(result.message || "Failed to fetch sections");
-          }
-        } catch (error) {
-          console.error("Error fetching sections:", error);
-          toast.error("Error fetching sections");
-        }
-      };
-    fetchSections(classname, acid);
-  }, [classname, acid]);
-
-  // Fetch towns, buses, and halts based on transport selection
   const fetchTransportDetails = async () => {
     try {
-      const townsRes = await fetch(
-        `${backapi}/api/towns/alltowns/${acid}`
-      );
+      const townsRes = await fetch(`${backapi}/api/towns/alltowns/${acid}`);
       const townsData = await townsRes.json();
       setTowns(townsData);
 
-      const busesRes = await fetch(
-        `${backapi}/api/buses/allbuses/${acid}`
-      ); // Adjust as needed
+      const busesRes = await fetch(`${backapi}/api/buses/allbuses/${acid}`);
       const busesData = await busesRes.json();
       setBuses(busesData);
     } catch (error) {
-      console.error(error);
+      toast.error("Error fetching transport details");
     }
   };
 
@@ -707,48 +1401,32 @@ const AddStudents = () => {
   };
 
   const handleClassChange = (e) => {
-    // const selectedclassname=e.target.value;
-    console.log("e is",e);
-    id= e.target.value._id;
-    console.log("class id is",id)
+    const selectedClass = classes.find((cls) => cls.name === e.target.value);
+
+    console.log("selected class is ", selectedClass);
+    // console.log("selected class name", selectedClass.name);
     setFormData((prev) => ({
       ...prev,
-      class: id,
-      section: "", // Reset section when class changes
+      class: { name: selectedClass.name, id: selectedClass._id }, // Set both class name and id
+      section: "", // Reset section if class changes
     }));
-    setClassname(selectedclassname)
+    setClassname(selectedClass.name);
   };
 
   const handleSectionChange = async (e) => {
-    const selectedSection = e.target.value;
+    const selectedSection = sections.find((sec) => sec.name === e.target.value);
+    console.log("selected section is", selectedSection);
     setFormData((prev) => ({
       ...prev,
-      section: selectedSection,
+      section: { name: selectedSection.name, id: selectedSection._id },
     }));
-    // Fetch fees based on selected section
-    // const fetchFees = async () => {
-    //   try {
-    //     const res = await fetch(
-    //       `${backapi}/api/Fee-types/allfeetype/${selectedSection}`
-    //     );
-    //     const data = await res.json();
-    //     setFormData((prev) => ({
-    //       ...prev,
-    //       feeDetails: data,
-    //     }));
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-    
   };
 
-  // Handle Cloudinary file upload
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "your_cloudinary_preset"); // Replace with actual Cloudinary preset
+    formData.append("upload_preset", "your_cloudinary_preset");
 
     try {
       const res = await fetch(
@@ -766,7 +1444,6 @@ const AddStudents = () => {
     }
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name.startsWith("address.")) {
@@ -806,16 +1483,14 @@ const AddStudents = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate and submit formData
-    console.log(formData);
-    // Make sure to submit the formData to your API here
-    try {      
-         const token = localStorage.getItem("token");
+    console.log("formdata is", formData);
+    try {
+      const token = localStorage.getItem("token");
 
-      const res = await fetch(Allapi.addStudent.url,
-        {method:Allapi.addSection.method,
+      const res = await fetch(Allapi.addStudent.url, {
+        method: Allapi.addStudent.method,
         headers: {
-            Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -824,7 +1499,47 @@ const AddStudents = () => {
       if (res.ok) {
         toast.success("Student added successfully!");
         setFormData({
-          /* reset form data to initial state */
+          idNo: "",
+          admissionNo: "",
+          surname: "",
+          name: "",
+          gender: "",
+          class: "",
+          section: "",
+          dob: "",
+          admissionDate: "",
+          photo: "",
+          aadharNo: "",
+          studentAAPR: "",
+          caste: "",
+          subCaste: "",
+          fatherName: "",
+          fatherAadhar: "",
+          fatherOccupation: "",
+          motherName: "",
+          motherAadhar: "",
+          motherOccupation: "",
+          whatsappNo: "",
+          emergencyContact: "",
+          address: {
+            doorNo: "",
+            street: "",
+            city: "",
+            pincode: "",
+          },
+          transport: false,
+          transportDetails: {
+            town: "",
+            bus: "",
+            halt: "",
+          },
+          hostel: false,
+          hostelDetails: {
+            hostelFee: "",
+            terms: "",
+          },
+          feeDetails: [],
+          concession: {},
         });
       } else {
         const errorData = await res.json();
@@ -832,375 +1547,307 @@ const AddStudents = () => {
       }
     } catch (error) {
       toast.error("An error occurred while adding the student");
-      console.error(error);
     }
   };
 
   return (
-    <>
-      <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg text-gray-700">
-        <h2 className="text-2xl font-bold text-center mb-6">Add Student</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Student Basic Details */}
-            <div>
-              <label className="block mb-1">ID No</label>
-              <input
-                type="text"
-                value={formData.idNo}
-                readOnly
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Admission No</label>
-              <input
-                type="text"
-                name="admissionNo"
-                value={formData.admissionNo}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Surname</label>
-              <input
-                type="text"
-                name="surname"
-                value={formData.surname}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Gender</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="input-field w-full"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">Class</label>
-              <select
-                name="class"
-                value={formData.class.name}
-                onChange={(e)=>handleClassChange(e)}
-                className="input-field w-full"
-              >
-                <option value="">Select Class</option>
-                {classes.map((classItem) => (
-                  <option key={classItem._id} value={classItem} id={classItem._id}>
-                    {classItem._id}
-                    
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">Section</label>
-              <select
-                name="section"
-                value={formData.section}
-                onChange={handleSectionChange}
-                className="input-field w-full"
-              >
-                <option value="">Select Section</option>
-                {sections.map((sectionItem) => (
-                  <option key={sectionItem._id} value={sectionItem._id}>
-                    {sectionItem.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">Date of Birth</label>
-              <input
-                type="date"
-                name="dob"
-                value={formData.dob}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Admission Date</label>
-              <input
-                type="date"
-                name="admissionDate"
-                value={formData.admissionDate}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Aadhar No</label>
-              <input
-                type="text"
-                name="aadharNo"
-                value={formData.aadharNo}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Student AAPR</label>
-              <input
-                type="text"
-                name="studentAAPR"
-                value={formData.studentAAPR}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Caste</label>
-              <select
-                name="caste"
-                value={formData.caste}
-                onChange={handleChange}
-                className="input-field w-full"
-              >
-                <option value="">Select Caste</option>
-                {casteOptions.map((caste) => (
-                  <option key={caste} value={caste}>
-                    {caste}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">Sub Caste</label>
-              <input
-                type="text"
-                name="subCaste"
-                value={formData.subCaste}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Father's Name</label>
-              <input
-                type="text"
-                name="fatherName"
-                value={formData.fatherName}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Father's Aadhar</label>
-              <input
-                type="text"
-                name="fatherAadhar"
-                value={formData.fatherAadhar}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Father's Occupation</label>
-              <select
-                name="fatherOccupation"
-                value={formData.fatherOccupation}
-                onChange={handleChange}
-                className="input-field w-full"
-              >
-                <option value="">Select Occupation</option>
-                {fatherOccupationOptions.map((occupation) => (
-                  <option key={occupation} value={occupation}>
-                    {occupation}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">Mother's Name</label>
-              <input
-                type="text"
-                name="motherName"
-                value={formData.motherName}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Mother's Aadhar</label>
-              <input
-                type="text"
-                name="motherAadhar"
-                value={formData.motherAadhar}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Mother's Occupation</label>
-              <select
-                name="motherOccupation"
-                value={formData.motherOccupation}
-                onChange={handleChange}
-                className="input-field w-full"
-              >
-                <option value="">Select Occupation</option>
-                {motherOccupationOptions.map((occupation) => (
-                  <option key={occupation} value={occupation}>
-                    {occupation}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-1">WhatsApp No</label>
-              <input
-                type="text"
-                name="whatsappNo"
-                value={formData.whatsappNo}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Emergency Contact</label>
-              <input
-                type="text"
-                name="emergencyContact"
-                value={formData.emergencyContact}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Door No</label>
-              <input
-                type="text"
-                name="address.doorNo"
-                value={formData.address.doorNo}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Street</label>
-              <input
-                type="text"
-                name="address.street"
-                value={formData.address.street}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">City</label>
-              <input
-                type="text"
-                name="address.city"
-                value={formData.address.city}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div>
-              <label className="block mb-1">Pincode</label>
-              <input
-                type="text"
-                name="address.pincode"
-                value={formData.address.pincode}
-                onChange={handleChange}
-                className="input-field w-full"
-              />
-            </div>
-            <div className="col-span-2">
-              <label className="flex items-center mb-1">
-                <input
-                  type="checkbox"
-                  checked={formData.transport}
-                  onChange={handleTransportChange}
-                  className="mr-2"
-                />
-                Need Transport
-              </label>
-            </div>
-            {formData.transport && (
-              <>
-                <div>
-                  <label className="block mb-1">Town</label>
-                  <select
-                    name="transportDetails.town"
-                    value={formData.transportDetails.town}
-                    onChange={handleChange}
-                    className="input-field w-full"
-                  >
-                    <option value="">Select Town</option>
-                    {towns.map((town) => (
-                      <option key={town._id} value={town.name}>
-                        {town.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-1">Bus</label>
-                  <select
-                    name="transportDetails.bus"
-                    value={formData.transportDetails.bus}
-                    onChange={handleChange}
-                    className="input-field w-full"
-                  >
-                    <option value="">Select Bus</option>
-                    {buses.map((bus) => (
-                      <option key={bus._id} value={bus.name}>
-                        {bus.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-1">Pickup Point</label>
-                  <select
-                    name="transportDetails.pickupPoint"
-                    value={formData.transportDetails.pickupPoint}
-                    onChange={handleChange}
-                    className="input-field w-full"
-                  >
-                    <option value="">Select Pickup Point</option>
-                    {pickupPoints.map((point) => (
-                      <option key={point._id} value={point.name}>
-                        {point.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            )}
-            <div className="col-span-2">
-              <button
-                type="submit"
-                className="btn bg-blue-500 text-white py-2 px-4 rounded"
-              >
-                Add Student
-              </button>
-            </div>
+    <div className="form-container ">
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <div>
+          <label>ID No:</label>
+          <input
+            type="text"
+            name="idNo"
+            value={formData.idNo}
+            onChange={handleChange}
+            disabled
+          />
+        </div>
+        <div>
+          <label>Admission No:</label>
+          <input
+            type="text"
+            name="admissionNo"
+            value={formData.admissionNo}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Surname:</label>
+          <input
+            type="text"
+            name="surname"
+            value={formData.surname}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Gender:</label>
+          <select name="gender" value={formData.gender} onChange={handleChange}>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div>
+          <label>Class:</label>
+
+          <select
+            name="class"
+            value={formData.class.name || ""}
+            onChange={handleClassChange}
+          >
+            <option value="">Select Class</option>
+            {classes.map((cls) => (
+              <option key={cls._id} value={cls.name}>
+                {cls.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Section:</label>
+          <select
+            name="Section"
+            value={formData.section.name || ""}
+            onChange={handleSectionChange}
+          >
+            <option value="">Select Section</option>
+            {sections.map((sec) => (
+              <option key={sec._id} value={sec.name}>
+                {sec.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Date of Birth:</label>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Admission Date:</label>
+          <input
+            type="date"
+            name="admissionDate"
+            value={formData.admissionDate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Aadhar No:</label>
+          <input
+            type="text"
+            name="aadharNo"
+            value={formData.aadharNo}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Student AAPR:</label>
+          <input
+            type="text"
+            name="studentAAPR"
+            value={formData.studentAAPR}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Caste:</label>
+          <select name="caste" value={formData.caste} onChange={handleChange}>
+            {casteOptions.map((caste) => (
+              <option key={caste} value={caste}>
+                {caste}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Sub-Caste:</label>
+          <input
+            type="text"
+            name="subCaste"
+            value={formData.subCaste}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Father Name:</label>
+          <input
+            type="text"
+            name="fatherName"
+            value={formData.fatherName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Father Aadhar:</label>
+          <input
+            type="text"
+            name="fatherAadhar"
+            value={formData.fatherAadhar}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Father Occupation:</label>
+          <select
+            name="fatherOccupation"
+            value={formData.fatherOccupation}
+            onChange={handleChange}
+          >
+            {fatherOccupationOptions.map((occupation) => (
+              <option key={occupation} value={occupation}>
+                {occupation}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Mother Name:</label>
+          <input
+            type="text"
+            name="motherName"
+            value={formData.motherName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Mother Aadhar:</label>
+          <input
+            type="text"
+            name="motherAadhar"
+            value={formData.motherAadhar}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Mother Occupation:</label>
+          <select
+            name="motherOccupation"
+            value={formData.motherOccupation}
+            onChange={handleChange}
+          >
+            {motherOccupationOptions.map((occupation) => (
+              <option key={occupation} value={occupation}>
+                {occupation}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Whatsapp No:</label>
+          <input
+            type="text"
+            name="whatsappNo"
+            value={formData.whatsappNo}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Emergency Contact:</label>
+          <input
+            type="text"
+            name="emergencyContact"
+            value={formData.emergencyContact}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Address:</label>
+          <input
+            type="text"
+            name="address.doorNo"
+            placeholder="Door No"
+            value={formData.address.doorNo}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="address.street"
+            placeholder="Street"
+            value={formData.address.street}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="address.city"
+            placeholder="City"
+            value={formData.address.city}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="address.pincode"
+            placeholder="Pincode"
+            value={formData.address.pincode}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Upload Photo:</label>
+          <input type="file" onChange={handlePhotoUpload} />
+        </div>
+        <div>
+          <label>Transport Required:</label>
+          <input
+            type="checkbox"
+            name="transport"
+            checked={formData.transport}
+            onChange={handleTransportChange}
+          />
+        </div>
+        {formData.transport && (
+          <div>
+            <label>Town:</label>
+            <select
+              name="transportDetails.town"
+              value={formData.transportDetails.town}
+              onChange={handleChange}
+            >
+              {towns.map((town) => (
+                <option key={town._id} value={town._id}>
+                  {town.name}
+                </option>
+              ))}
+            </select>
+            <label>Bus:</label>
+            <select
+              name="transportDetails.bus"
+              value={formData.transportDetails.bus}
+              onChange={handleChange}
+            >
+              {buses.map((bus) => (
+                <option key={bus._id} value={bus._id}>
+                  {bus.name}
+                </option>
+              ))}
+            </select>
+            <label>Halt:</label>
+            <input
+              type="text"
+              name="transportDetails.halt"
+              value={formData.transportDetails.halt}
+              onChange={handleChange}
+            />
           </div>
-        </form>
-      </div>
-    </>
+        )}
+        <button type="submit">Submit</button>
+      </form>
+    </div>
   );
 };
 
