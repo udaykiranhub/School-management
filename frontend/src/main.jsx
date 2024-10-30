@@ -160,7 +160,7 @@ const Router = createBrowserRouter([
             ],
           },
           {
-            path: "add-student",
+            path: "add-student/:acid",
             element: <AddStudents />,
           },
         ],

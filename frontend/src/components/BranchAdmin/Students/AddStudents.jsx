@@ -546,7 +546,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
-const backapi = "http://localhost:3490";
+import { useParams } from "react-router-dom";
+
 
 const AddStudents = () => {
   const [formData, setFormData] = useState({
@@ -578,17 +579,17 @@ const AddStudents = () => {
       city: "",
       pincode: "",
     },
-    transport: false,
-    transportDetails: {
-      town: "",
-      bus: "",
-      halt: "",
-    },
-    hostel: false,
-    hostelDetails: {
-      hostelFee: "",
-      terms: "",
-    },
+    // transport: false,
+    // transportDetails: {
+    //   town: "",
+    //   bus: "",
+    //   halt: "",
+    // },
+    // hostel: false,
+    // hostelDetails: {
+    //   hostelFee: "",
+    //   terms: "",
+    // },
     feeDetails: [],
     concession: {},
   });
@@ -598,84 +599,94 @@ const AddStudents = () => {
   const [halts, setHalts] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
-  const [currentAcademicYear, setCurrentAcademicYear] = useState("");
-
+  const [classname,setClassname]=useState("null")
+  const { acid } = useParams();
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
   const motherOccupationOptions = ["Housewife", "Employee"];
 
   // Generates ID based on the current academic year and sequence order
-  const generateId = async () => {
-    const yearSuffix = new Date().getFullYear().toString().slice(-2);
-    const res = await fetch(
-      `${backapi}/api/academic/view/${currentAcademicYear}`
-    );
-    const data = await res.json();
-    const currentCount = data.length; // Assuming the API returns the number of students
-    const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
-    setFormData((prev) => ({ ...prev, idNo: id }));
-  };
+//   const generateId = async () => {
+//     const yearSuffix = new Date().getFullYear().toString().slice(-2);
+//     const res = await fetch(
+//       `${backapi}/api/academic/view/${currentAcademicYear}`
+//     );
+//     const data = await res.json();
+//     const currentCount = data.length; // Assuming the API returns the number of students
+//     const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
+//     setFormData((prev) => ({ ...prev, idNo: id }));
+//   };
 
   // Fetch academic years on mount
-  useEffect(() => {
-    const fetchAcademicYears = async () => {
-      try {
-        const res = await fetch(`${backapi}/api/academic/view/yourBranchId`); // Replace with actual branch ID
-        const data = await res.json();
-        setCurrentAcademicYear(data[0]); // Set current academic year
-        await generateId(); // Generate ID based on academic year
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchAcademicYears();
-  }, []);
 
   // Fetch classes based on the current academic year
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        const res = await fetch(
-          `${backapi}/api/classes/get-classes/${currentAcademicYear}`
-        );
-        const data = await res.json();
-        setClasses(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    if (currentAcademicYear) fetchClasses();
-  }, [currentAcademicYear]);
+        const token = localStorage.getItem("token");
+        try {
+          const response = await fetch(Allapi.getClasses.url(acid), {
+            method: Allapi.getClasses.method,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+    
+          const result = await response.json();
+          if (result.success) {
+            setClasses(result.data);
+          } else {
+            toast.error(result.message || "Failed to fetch classes");
+          }
+        } catch (error) {
+          console.error("Error fetching classes:", error);
+          toast.error("Error fetching classes");
+        }
+      };
+    
+    if (acid) fetchClasses();
+  }, [acid]);
 
   // Fetch sections based on selected class
   useEffect(() => {
-    const fetchSections = async () => {
-      if (formData.class) {
+    const fetchSections = async (className, curr_acad) => {
+        const token = localStorage.getItem("token");
         try {
-          const res = await fetch(
-            `${backapi}/api/sections/getall/${formData.class}/${currentAcademicYear}`
+          const response = await fetch(
+            Allapi.getSectionsByClass.url(className,curr_acad),
+            {
+              method: Allapi.getSectionsByClass.method,
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
           );
-          const data = await res.json();
-          setSections(data);
+          const result = await response.json();
+          if (result.success) {
+            setSections(result.data || []);
+          } else {
+            toast.error(result.message || "Failed to fetch sections");
+          }
         } catch (error) {
-          console.error(error);
+          console.error("Error fetching sections:", error);
+          toast.error("Error fetching sections");
         }
-      }
-    };
-    fetchSections();
-  }, [formData.class, currentAcademicYear]);
+      };
+    fetchSections(classname, acid);
+  }, [classname, acid]);
 
   // Fetch towns, buses, and halts based on transport selection
   const fetchTransportDetails = async () => {
     try {
       const townsRes = await fetch(
-        `${backapi}/api/towns/alltowns/${currentAcademicYear}`
+        `${backapi}/api/towns/alltowns/${acid}`
       );
       const townsData = await townsRes.json();
       setTowns(townsData);
 
       const busesRes = await fetch(
-        `${backapi}/api/buses/allbuses/${currentAcademicYear}`
+        `${backapi}/api/buses/allbuses/${acid}`
       ); // Adjust as needed
       const busesData = await busesRes.json();
       setBuses(busesData);
@@ -696,12 +707,16 @@ const AddStudents = () => {
   };
 
   const handleClassChange = (e) => {
-    const selectedClass = e.target.value;
+    // const selectedclassname=e.target.value;
+    console.log("e is",e);
+    id= e.target.value._id;
+    console.log("class id is",id)
     setFormData((prev) => ({
       ...prev,
-      class: selectedClass,
+      class: id,
       section: "", // Reset section when class changes
     }));
+    setClassname(selectedclassname)
   };
 
   const handleSectionChange = async (e) => {
@@ -711,21 +726,21 @@ const AddStudents = () => {
       section: selectedSection,
     }));
     // Fetch fees based on selected section
-    const fetchFees = async () => {
-      try {
-        const res = await fetch(
-          `${backapi}/api/Fee-types/allfeetype/${selectedSection}`
-        );
-        const data = await res.json();
-        setFormData((prev) => ({
-          ...prev,
-          feeDetails: data,
-        }));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    await fetchFees();
+    // const fetchFees = async () => {
+    //   try {
+    //     const res = await fetch(
+    //       `${backapi}/api/Fee-types/allfeetype/${selectedSection}`
+    //     );
+    //     const data = await res.json();
+    //     setFormData((prev) => ({
+    //       ...prev,
+    //       feeDetails: data,
+    //     }));
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+    
   };
 
   // Handle Cloudinary file upload
@@ -794,10 +809,13 @@ const AddStudents = () => {
     // Validate and submit formData
     console.log(formData);
     // Make sure to submit the formData to your API here
-    try {
-      const res = await fetch(`${backapi}/api/students/add`, {
-        method: "POST",
+    try {      
+         const token = localStorage.getItem("token");
+
+      const res = await fetch(Allapi.addStudent.url,
+        {method:Allapi.addSection.method,
         headers: {
+            Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -820,7 +838,7 @@ const AddStudents = () => {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+      <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg text-gray-700">
         <h2 className="text-2xl font-bold text-center mb-6">Add Student</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -881,14 +899,15 @@ const AddStudents = () => {
               <label className="block mb-1">Class</label>
               <select
                 name="class"
-                value={formData.class}
-                onChange={handleClassChange}
+                value={formData.class.name}
+                onChange={(e)=>handleClassChange(e)}
                 className="input-field w-full"
               >
                 <option value="">Select Class</option>
                 {classes.map((classItem) => (
-                  <option key={classItem._id} value={classItem._id}>
-                    {classItem.className}
+                  <option key={classItem._id} value={classItem} id={classItem._id}>
+                    {classItem._id}
+                    
                   </option>
                 ))}
               </select>
@@ -904,7 +923,7 @@ const AddStudents = () => {
                 <option value="">Select Section</option>
                 {sections.map((sectionItem) => (
                   <option key={sectionItem._id} value={sectionItem._id}>
-                    {sectionItem.sectionName}
+                    {sectionItem.name}
                   </option>
                 ))}
               </select>

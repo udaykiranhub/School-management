@@ -171,6 +171,10 @@ const Allapi = {
     url: (BusId) => `${backapi}/api/buses/del-bus/${BusId}`,
     method: "DELETE",
   },
+  addStudent:{
+    url:`${backapi}/api/students/add-student`,
+    method:'POST'
+  }
 };
 
 export default Allapi;
