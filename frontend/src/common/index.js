@@ -59,7 +59,7 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/academic/add/${branchId}`,
     method: "POST",
   },
-  
+
   getAcademicYears: {
     url: (branchId) => `${backapi}/api/academic/view/${branchId}`,
     method: "GET",
@@ -164,10 +164,9 @@ const Allapi = {
     url: (academicId) => `${backapi}/api/buses/all-buses/${academicId}`,
     method: "GET",
   },
-  getByPlaceBus:{
+  getByPlaceBus: {
     url: (academicId) => `${backapi}/api/buses/getBusByPlace/${academicId}`,
     method: "POST",
-
   },
   updateBus: {
     url: (BusId) => `${backapi}/api/buses/upd-bus/${BusId}`,

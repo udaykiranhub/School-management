@@ -1283,7 +1283,10 @@ const AddStudents = () => {
   const [halts, setHalts] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
-  const [classname, setClassname] = useState("null");
+  const [classname, setClassname] = useState(null);
+  const [curr_town, setcurr_town] = useState(null);
+  // const [Fees, setfees] = useState([{ name: "", amount: "", terms: "" }]);
+  const Fees = [];
   const { acid } = useParams();
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
@@ -1374,41 +1377,82 @@ const AddStudents = () => {
       fetchSections(classname, acid);
     }
   }, [branchdet, classname, acid]);
+  // useEffect(() => {
+  //   if (curr_town) {
+  //     console.log("fetching buses...");
+  //     console.log("current town is", curr_town);
+  //     fetchbusdetails(curr_town);
 
-  
-const fetchTransportDetails = async () => {
-  console.log("fecthing towns")
-  const token = localStorage.getItem("token");
+  //     const selectedtown = towns.find((town) => town.townName === curr_town);
+  //     console.log("selectes town in useEffect", selectedtown);
+  //     if (selectedtown) {
+  //       setHalts(selectedtown.halts);
+  //       console.log("halts isss", selectedtown.halts);
+  //     }
+  //     console.log("form data is", formData);
+  //     console.log("townname is", curr_town);
+  //     console.log("halts are useEffect", halts);
+  //   }
+  // }, [curr_town]);
+  useEffect(() => {
+    if (curr_town) {
+      console.log("Fetching buses for town:", curr_town);
+      fetchbusdetails(curr_town);
+    }
+  }, [curr_town]);
+
+  // Set halts when both towns and curr_town are available
+  useEffect(() => {
+    if (curr_town && towns.length > 0) {
+      const selectedtown = towns.find((town) => town.townName === curr_town);
+      console.log("Selected town:", selectedtown);
+
+      if (selectedtown) {
+        setHalts(selectedtown.halts);
+        console.log("Halts updated to:", selectedtown.halts);
+      }
+    }
+  }, [curr_town, towns]);
+
+  const fetchTransportDetails = async () => {
+    console.log("fecthing towns");
+    const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        Allapi.getallTowns.url(acid),
-        {
-          method: Allapi.getallTowns.method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
+      const response = await fetch(Allapi.getallTowns.url(acid), {
+        method: Allapi.getallTowns.method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       const townsData = await response.json();
       setTowns(townsData.data);
-      console.log(townsData)
-
-      
-        const bus_response = await fetch(Allapi.getByPlaceBus.url(acid), {
-          method: Allapi.getByPlaceBus.method,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({place:formData.transportDetails.town })
-        });
-  
-      const busesData = await bus_response.json();
-      setBuses(busesData.data);
-      console.log(busesData)
+      console.log("town data is", townsData);
     } catch (error) {
       toast.error("Error fetching transport details");
+    }
+  };
+  const fetchbusdetails = async (townname) => {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("current town to fetch busses is", townname);
+      const bus_response = await fetch(Allapi.getByPlaceBus.url(acid), {
+        method: Allapi.getByPlaceBus.method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({ place: townname }),
+      });
+
+      const busesData = await bus_response.json();
+      setBuses(busesData.data);
+      console.log(busesData);
+    } catch (error) {
+      console.log("bus error is", error.message);
+      toast.error(error);
     }
   };
 
@@ -1433,7 +1477,9 @@ const fetchTransportDetails = async () => {
       class: { name: selectedClass.name, id: selectedClass._id }, // Set both class name and id
       section: "", // Reset section if class changes
     }));
+    console.log("form data in classchange is", formData);
     setClassname(selectedClass.name);
+    console.log("classname current is", classname);
   };
 
   const handleSectionChange = async (e) => {
@@ -1443,6 +1489,22 @@ const fetchTransportDetails = async () => {
       ...prev,
       section: { name: selectedSection.name, id: selectedSection._id },
     }));
+
+    // {selectedSection.fees && selectedSection.fees.map((fee,index)=>{
+    //   setfees((prev)=>({
+    //     ...prev,
+
+    //   }))
+    // })}
+    if (selectedSection.fees) {
+      selectedSection.fees.map((fees) => {
+        Fees.push({
+          name: fees.feeType,
+          amount: fees.amount,
+        });
+      });
+    }
+    console.log("fees are ", Fees);
   };
 
   const handlePhotoUpload = async (e) => {
@@ -1466,9 +1528,18 @@ const fetchTransportDetails = async () => {
       toast.error("Photo upload failed");
     }
   };
+  const handleHostelChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      hostel: e.target.checked,
+    }));
+  };
 
-  const handleChange = async  (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
+    console.log("name is", name, " value is", value);
+    console.log("towns are", towns);
+
     if (name.startsWith("address.")) {
       const fieldName = name.split(".")[1];
       setFormData((prev) => ({
@@ -1478,20 +1549,22 @@ const fetchTransportDetails = async () => {
           [fieldName]: value,
         },
       }));
+
+      console.log("form data is address ", formData);
     } else if (name.startsWith("transportDetails.")) {
       const fieldName = name.split(".")[1];
-  
+
       setFormData((prev) => ({
         ...prev,
-        transportDetails: {
-          ...prev.transportDetails,
-          [fieldName]: value,
-        },
+        transportDetails: { ...prev.transportDetails, [fieldName]: value },
       }));
-        
-      console.log(formData.transportDetails.town)
-
-     
+      if (fieldName == "town") {
+        setcurr_town(value);
+      }
+      // Fetch transport details only if the town field is updated
+      if (towns.length == 0) {
+        await fetchTransportDetails();
+      }
     } else if (name.startsWith("hostelDetails.")) {
       const fieldName = name.split(".")[1];
       setFormData((prev) => ({
@@ -1501,14 +1574,18 @@ const fetchTransportDetails = async () => {
           [fieldName]: value,
         },
       }));
+      Fees.push();
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
     }
-    await fetchTransportDetails()
   };
+  function addfee() {
+    Fees.push({ name: "hostel-fee", amount: formData.hostelDetails.hostelFee });
+    console.log("all fees are", Fees);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1644,7 +1721,7 @@ const fetchTransportDetails = async () => {
           </select>
         </div>
         <div>
-          <label>Section:</label>
+          <label>Section:</label>+
           <select
             name="Section"
             value={formData.section.name || ""}
@@ -1844,10 +1921,10 @@ const fetchTransportDetails = async () => {
             <label>Town:</label>
             <select
               name="transportDetails.town"
-              value={formData.transportDetails.town||"SELECT TOWN"}
+              value={formData.transportDetails.town || "SELECT TOWN"}
               onChange={handleChange}
             >
-            <option value="">Select Towns</option>
+              <option value="">Select Towns</option>
 
               {towns.map((town) => (
                 <option key={town._id} value={town.townName}>
@@ -1861,19 +1938,71 @@ const fetchTransportDetails = async () => {
               value={formData.transportDetails.bus}
               onChange={handleChange}
             >
-              {/* {buses.map((bus) => (
-                <option key={bus._id} value={bus._id}>
-                  {bus.busNo}
-                </option>
-              ))} */}
+              <option value="">Select Buses</option>
+
+              {buses &&
+                buses.map((bus) => (
+                  <option key={bus._id} value={bus._id}>
+                    {bus.busNo}
+                  </option>
+                ))}
             </select>
             <label>Halt:</label>
-            <input
-              type="text"
+            <select
               name="transportDetails.halt"
               value={formData.transportDetails.halt}
               onChange={handleChange}
-            />
+            >
+              <option value="">Select Halts</option>
+
+              {halts.map((halt, index) => (
+                <option key={index} value={halt}>
+                  {halt}
+                </option>
+              ))}
+            </select>
+
+            <div>
+              {/* Hostel */}
+              <div className="col-span-2">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.hostel}
+                    onChange={handleHostelChange}
+                    className="mr-2"
+                  />
+                  Require Hostel?
+                </label>
+                {formData.hostel && (
+                  <div className="mt-4">
+                    <div>
+                      <label>Hostel Fee</label>
+                      <input
+                        type="number"
+                        name="hostelDetails.hostelFee"
+                        value={formData.hostelDetails.hostelFee}
+                        onChange={handleChange}
+                        className="input-field"
+                      />
+                    </div>
+                    <div>
+                      <label>Number of Terms</label>
+                      <input
+                        type="text"
+                        name="hostelDetails.terms"
+                        value={formData.hostelDetails.terms}
+                        onChange={handleChange}
+                        className="input-field"
+                      />
+                    </div>
+                    <button onClick={addfee} className="text-white  bg-red-600">
+                      Addfee
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
         <button type="submit">Submit</button>
