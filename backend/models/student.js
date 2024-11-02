@@ -59,7 +59,7 @@ const studentSchema = new mongoose.Schema({
   },
   feeDetails: [
     {
-      feeType: String,
+      name: String,
       amount: Number,
       terms_accepted: String,
       concession: Number,
