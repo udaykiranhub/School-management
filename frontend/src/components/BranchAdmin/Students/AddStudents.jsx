@@ -16,7 +16,7 @@ const AddStudents = () => {
     class: { name: "", id: "" },
     section: { name: "", id: "" },
     dob: "",
-    admissionDate: "",
+    admissionDate:  new Date().toISOString().slice(0, 10),
     photo: "",
     aadharNo: "",
     studentAAPR: "",
@@ -57,7 +57,7 @@ const AddStudents = () => {
   const [classname, setClassname] = useState(null);
   const [curr_town, setcurr_town] = useState(null);
   const [feeTypes, setFeeTypes] = useState([]);
-  
+
   const [feeDetails, setFeeDetails] = useState([]);
   const { acid } = useParams();
   const casteOptions = ["OC", "BC", "SC", "ST"];
@@ -98,19 +98,36 @@ const AddStudents = () => {
 
     const res = await response.json();
     if (res.success) {
+    
+      const countStudent = await fetch(Allapi.getStudentCountByAcademicYear.url(acid), {
+        method: Allapi.getStudentCountByAcademicYear.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+     const  countres= await countStudent.json()
+      if(countres.success){
+        console.log(countres)
+        const students = countres.count;
+        console.log(students)
+      }
       const years = res.data;
       const present_Acad = years.find((year) => year._id == acid);
       const yearSuffix = present_Acad.year.slice(-2);
+
       console.log("present academic is", yearSuffix);
-      const currentCount = 2; //Here we use the number of students in the current academic year
+      const currentCount = countres.count; //Here we use the number of students in the current academic year
       const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
       setFormData((prev) => ({ ...prev, idNo: id }));
     }
   };
-  
+
   function findObjectByKey(array, key, value) {
-    return array.find((obj) => obj[key] === value).terms;
+    const found = array.find((obj) => obj[key] === value);
+    console.log(found)
+    return found ? found.terms : null
   }
+
 
   const handleFeeChange = (index, field, value) => {
     const updatedFeeDetails = feeDetails.map((fee, idx) =>
@@ -119,11 +136,7 @@ const AddStudents = () => {
     setFeeDetails(updatedFeeDetails);
 
     // Validate terms to ensure it does not exceed maxTerms
-    if (field === 'terms' && value > maxTerms) {
-      setError(`Terms cannot exceed ${maxTerms}`);
-    } else {
-      setError('');
-    }
+
   };
   useEffect(() => {
     if (branchdet && branchdet._id && acid) {
@@ -154,7 +167,7 @@ const AddStudents = () => {
     };
 
     if (acid) fetchClasses();
-    if(acid)  fetchFeeTypes(acid);
+    if (acid) fetchFeeTypes(acid);
   }, [branchdet]);
 
   useEffect(() => {
@@ -295,26 +308,26 @@ const AddStudents = () => {
   const handleSectionChange = async (e) => {
     const selectedSection = sections.find((sec) => sec.name === e.target.value);
     setFormData((prev) => ({
-        ...prev,
-        section: { name: selectedSection.name, id: selectedSection._id },
+      ...prev,
+      section: { name: selectedSection.name, id: selectedSection._id },
     }));
 
     // Clear the feeDetails state
     setFeeDetails([]);
 
     if (selectedSection.fees) {
-        const newFees = selectedSection.fees.map((fees) => ({
-            name: fees.feeType,
-            amount: fees.amount,
-        }));
-        setFeeDetails(newFees,);
+      const newFees = selectedSection.fees.map((fees) => ({
+        name: fees.feeType,
+        amount: fees.amount,
+      }));
+      setFeeDetails(newFees,);
     }
-   
+
   };
   useEffect(() => {
     console.log("fees are ", feeDetails);
-}, [feeDetails]);
-console.log("fees are ", feeDetails);
+  }, [feeDetails]);
+  console.log("fees are ", feeDetails);
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
@@ -391,9 +404,9 @@ console.log("fees are ", feeDetails);
   };
   function addfee() {
     const newFee = {
-        name: "hostel-fee",
-        amount: formData.hostelDetails.hostelFee,
-        terms:formData.hostelDetails.terms
+      name: "hostel-fee",
+      amount: formData.hostelDetails.hostelFee,
+      terms: formData.hostelDetails.terms
     };
     setFeeDetails([...feeDetails, newFee]);
     console.log("all fees are", feeDetails);
@@ -401,10 +414,10 @@ console.log("fees are ", feeDetails);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
- console.log({
-    ...formData,
-    feeDetails,
-  })
+    console.log({
+      ...formData,
+      feeDetails,
+    })
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(Allapi.addStudent.url, {
@@ -414,11 +427,11 @@ console.log("fees are ", feeDetails);
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            ...formData,
-            feeDetails,
-          }),
+          ...formData,
+          feeDetails,
+        }),
       });
-console.log(res)
+      console.log(res)
       if (res.ok) {
         toast.success("Student added successfully!");
         setFormData({
@@ -464,6 +477,7 @@ console.log(res)
           feeDetails: [],
           concession: {},
         });
+        window.location.reload();
       } else {
         const errorData = await res.json();
         toast.error(`Failed to add student: ${errorData.message}`);
@@ -732,7 +746,7 @@ console.log(res)
             checked={formData.transport}
             onChange={handleTransportChange}
           />
-        </div> 
+        </div>
 
         {formData.transport && (
           <div>
@@ -780,9 +794,12 @@ console.log(res)
               ))}
             </select>
 
-            <div>
+            
+          </div>
+        )}
+        <div>
               {/* Hostel */}
-              <div className="col-span-2">
+            { !formData.transport &&  (<div className="col-span-2">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
@@ -814,51 +831,47 @@ console.log(res)
                         className="input-field"
                       />
                     </div>
-                    <button onClick={(e) => {
-    e.preventDefault();
-    addfee();
-}} className="text-white  bg-red-600">
-                      Addfee
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addfee();
+                        // Disable the button after clicking
+                        document.getElementById('addHostelButton').disabled = true;
+                      }}
+                      id="addHostelButton"
+                      className="text-white bg-red-600"
+                    >
+                      Add Fee
                     </button>
                   </div>
                 )}
- <div>
-      <h2>Fee Details</h2>
-      <ul>
-        {feeDetails.map((fee, index) => (
-          <li key={fee.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span>
-              {fee.name}: {fee.amount} - Type: {findObjectByKey(feeTypes, 'type', fee.name)}
-            </span>
-
-            <label>Terms:</label>
-            <input
-              type="number"
-              value={fee.terms}
-              onChange={(e) => handleFeeChange(index, 'terms', parseInt(e.target.value, 10))}
-              min="1"
-              max={findObjectByKey(feeTypes, 'type', fee.name)}
-              style={{ width: '60px' }}
-            />
-
-            <label>Concession:</label>
-            <input
-              type="number"
-              value={fee.concession}
-              onChange={(e) => handleFeeChange(index, 'concession', parseFloat(e.target.value))}
-              min="0"
-              style={{ width: '80px' }}
-            />
-          </li>
-        ))}
-      </ul>
-      
-     
-    </div>
-              </div>
+             
+              </div>)}
+            
             </div>
-          </div>
-        )}
+          <div>
+                  <h2>Fee Details</h2>
+                  <ul>
+                    {feeDetails.map((fee, index) => (
+                      <li key={fee.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span>
+                          {fee.name}: {fee.amount} - Type: {findObjectByKey(feeTypes, 'type', fee.name) || findObjectByKey(feeDetails, 'name', fee.name)}
+                        </span>
+
+                        <label>Concession:</label>
+                        <input
+                          type="number"
+                          value={fee.concession}
+                          onChange={(e) => handleFeeChange(index, 'concession', parseFloat(e.target.value))}
+                          min="0"
+                          style={{ width: '80px' }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+
+
+                </div>
         <button type="submit">Submit</button>
       </form>
     </div>
