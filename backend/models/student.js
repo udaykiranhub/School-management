@@ -4,6 +4,7 @@ const studentSchema = new mongoose.Schema({
   idNo: {type:String,
   },
   admissionNo: String,
+  academic_id:String,
   surname: String,
   name: String,
   gender: String,
@@ -50,7 +51,7 @@ const studentSchema = new mongoose.Schema({
   transport: Boolean,
   transportDetails: {
     town: String,
-    bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus" },
+    bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus", required:false },
     halt: String,
   },
   hostel: Boolean,
@@ -64,6 +65,7 @@ const studentSchema = new mongoose.Schema({
       amount: Number,
       terms_accepted: String,
       concession: Number,
+      finalAmount:Number,
     },
   ],
 });

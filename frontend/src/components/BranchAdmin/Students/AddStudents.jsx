@@ -19,6 +19,7 @@ const AddStudents = () => {
     dob: "",
     admissionDate: "",
     photo: "",
+    academic_id:"",
     aadharNo: "",
     studentAAPR: "",
     caste: "",
@@ -50,7 +51,7 @@ const AddStudents = () => {
       terms: "",
     },
     feeDetails: [],
-    concession: {},
+   
   });
 
   const [towns, setTowns] = useState([]);
@@ -85,9 +86,32 @@ const AddStudents = () => {
       const present_Acad = years.find((year) => year._id == acid);
       const yearSuffix = present_Acad.year.slice(-2);
       console.log("present academic is", yearSuffix);
-      const currentCount = 2; //Here we use the number of students in the current academic year
-      const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
-      setFormData((prev) => ({ ...prev, idNo: id }));
+      const studentCountResponse = await fetch(Allapi.getStudentCountByAcademicYear.url(acid), {
+        method: Allapi.getStudentCountByAcademicYear.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!studentCountResponse.ok) {
+        throw new Error("Failed to fetch student count for the academic year");
+      }
+
+      const studentCountData = await studentCountResponse.json();
+      if (studentCountData.success) {
+        const currentCount = studentCountData.count + 1; // Increment for the new student
+        const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
+
+        // Update the form data
+        setFormData((prev) => ({
+          ...prev,
+          idNo: id,
+          academic_id: acid,
+        }));
+      } else {
+        throw new Error("Failed to retrieve student count data");
+      }
+      
     }
   };
 
@@ -431,22 +455,30 @@ const AddStudents = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("formdata is", formData);
+  
+    // Create a deep copy of formData to manipulate before submission
+    const submissionData = { ...formData };
+  
+    // Remove transportDetails if transport is false
+    if (!formData.transport) {
+      delete submissionData.transportDetails;
+    }
+  
     try {
       const token = localStorage.getItem("token");
-
+  
       const res = await fetch(Allapi.addStudent.url, {
         method: Allapi.addStudent.method,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
-
+  
       if (res.ok) {
         toast.success("Student added successfully!");
         setFormData({
-          idNo: "",
           admissionNo: "",
           surname: "",
           name: "",
@@ -455,6 +487,7 @@ const AddStudents = () => {
           section: "",
           dob: "",
           admissionDate: "",
+          academic_id: "",
           photo: "",
           aadharNo: "",
           studentAAPR: "",
@@ -491,15 +524,16 @@ const AddStudents = () => {
         });
       } else {
         const errorData = await res.json();
+        console.log(errorData);
         toast.error(`Failed to add student: ${errorData.message}`);
       }
     } catch (error) {
       toast.error("An error occurred while adding the student");
     }
   };
-
+  
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="bg-gray-100 p-6  text-balck rounded-lg shadow-md max-w-4xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -930,31 +964,53 @@ const AddStudents = () => {
         </div>
 
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-          <table className="min-w-full table-auto">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
-                  Fee Name
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.feeDetails.map((fee, index) => (
-                <tr key={index} className="border-t hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {fee.name}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {fee.amount}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+  <table className="min-w-full table-auto">
+    <thead className="bg-gray-100">
+      <tr>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Fee Name
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Amount
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Concession (%)
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Final Amount
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {formData.feeDetails.map((fee, index) => (
+        <tr key={index} className="border-t text-left hover:bg-gray-50">
+          <td className="px-6 py-4 text-sm text-gray-700">{fee.name}</td>
+          <td className="px-6 py-4 text-sm text-gray-700">{fee.amount}</td>
+          <td className="px-6 py-4 text-sm text-gray-700">
+            <input
+              type="number"
+              className="w-20 px-2 py-1 border rounded-md"
+              value={fee.concession || ''}
+              min="0"
+              max="100"
+              onChange={(e) => {
+                const concession = parseFloat(e.target.value) || 0;
+                const finalAmount = fee.amount - (fee.amount * concession) / 100;
+                const updatedFees = [...formData.feeDetails];
+                updatedFees[index] = { ...fee, concession, finalAmount };
+                setFormData({ ...formData, feeDetails: updatedFees });
+              }}
+            />
+          </td>
+          <td className="px-6 py-4 text-sm text-gray-700">
+            {fee.finalAmount ? fee.finalAmount.toFixed(2) : fee.amount}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
         <div className="flex justify-center">
           <button

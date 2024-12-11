@@ -4,29 +4,17 @@ const mongoose = require("mongoose");
 const Class = require("../models/Classes");
 const Student = require('../models/student'); // Assuming you have a Student model
 
+
+
 // Controller function to get student count in an academic year
 exports.getStudentCountByAcademicYear = async (req, res) => {
   const { academicyearid } = req.params;
 
   try {
-    // Find classes associated with the academic year
-    const classes = await Class.find({  academicYear: academicyearid });
+    // Count students directly from the Student collection by academicYearId
+    const totalStudents = await Student.countDocuments({ academic_id: academicyearid });
 
-    if (!classes.length) {
-      return res.status(404).json({ message: 'No classes found for this academic year.' });
-    }
-
-    // Initialize total student count
-    let totalStudents = 0;
-    // console.log(classes)
-
-    // Loop through each class and count students
-    for (const cls of classes) {
-      const studentCount = await Student.countDocuments({ 'class.id': cls._id });
-      totalStudents += studentCount;
-    }
-
-    return res.status(200).json({success:true,count: totalStudents });
+    return res.status(200).json({ success: true, count: totalStudents });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
