@@ -9,4 +9,5 @@ router.delete(
   Academicyearcontroller.deleteAcademicYear
 );
 router.put("/edit/:academicYearId", Academicyearcontroller.editAcademicYear);
+router.get("/allstudents/:academicyearid",Academicyearcontroller.getStudentCountByAcademicYear)
 module.exports = router;

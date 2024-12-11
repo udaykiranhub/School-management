@@ -4,6 +4,12 @@ import Allapi from "../../../common";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { mycon } from "../../../store/Mycontext";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import Allapi from "../../../common";
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { mycon } from "../../../store/Mycontext";
 
 const AddStudents = () => {
   const { branchdet } = useContext(mycon);
@@ -78,6 +84,9 @@ const AddStudents = () => {
     if (!response.ok) {
       throw new Error("Failed to fetch academic years");
     }
+    if (!response.ok) {
+      throw new Error("Failed to fetch academic years");
+    }
 
     const res = await response.json();
     if (res.success) {
@@ -106,7 +115,28 @@ const AddStudents = () => {
             "Content-Type": "application/json",
           },
         });
+    const fetchClasses = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(Allapi.getClasses.url(acid), {
+          method: Allapi.getClasses.method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
+        const result = await response.json();
+        if (result.success) {
+          setClasses(result.data);
+          console.log("classes are", classes);
+        } else {
+          toast.error(result.message || "Failed to fetch classes");
+        }
+      } catch (error) {
+        toast.error("Error fetching classes");
+      }
+    };
         const result = await response.json();
         if (result.success) {
           setClasses(result.data);
@@ -122,6 +152,41 @@ const AddStudents = () => {
     if (acid) fetchClasses();
   }, [branchdet]);
 
+  useEffect(() => {
+    const fetchSections = async (className, curr_acad) => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(
+          Allapi.getSectionsByClass.url(className, curr_acad),
+          {
+            method: Allapi.getSectionsByClass.method,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const result = await response.json();
+        if (result.success) {
+          setSections(result.data || []);
+        } else {
+          toast.error(result.message || "Failed to fetch sections");
+        }
+      } catch (error) {
+        toast.error("Error fetching sections");
+      }
+    };
+    if (classname != null && acid) {
+      console.log("classname is", classname);
+      console.log("acid is", acid);
+      fetchSections(classname, acid);
+    }
+  }, [branchdet, classname, acid]);
+  // useEffect(() => {
+  //   if (curr_town) {
+  //     console.log("fetching buses...");
+  //     console.log("current town is", curr_town);
+  //     fetchbusdetails(curr_town);
   useEffect(() => {
     const fetchSections = async (className, curr_acad) => {
       const token = localStorage.getItem("token");
@@ -175,7 +240,29 @@ const AddStudents = () => {
       fetchbusdetails(curr_town);
     }
   }, [curr_town]);
+  //     const selectedtown = towns.find((town) => town.townName === curr_town);
+  //     console.log("selectes town in useEffect", selectedtown);
+  //     if (selectedtown) {
+  //       setHalts(selectedtown.halts);
+  //       console.log("halts isss", selectedtown.halts);
+  //     }
+  //     console.log("form data is", formData);
+  //     console.log("townname is", curr_town);
+  //     console.log("halts are useEffect", halts);
+  //   }
+  // }, [curr_town]);
+  useEffect(() => {
+    if (curr_town) {
+      console.log("Fetching buses for town:", curr_town);
+      fetchbusdetails(curr_town);
+    }
+  }, [curr_town]);
 
+  // Set halts when both towns and curr_town are available
+  useEffect(() => {
+    if (curr_town && towns.length > 0) {
+      const selectedtown = towns.find((town) => town.townName === curr_town);
+      console.log("Selected town:", selectedtown);
   // Set halts when both towns and curr_town are available
   useEffect(() => {
     if (curr_town && towns.length > 0) {
@@ -197,6 +284,9 @@ const AddStudents = () => {
     }
   }, [curr_town, towns]);
 
+  const fetchTransportDetails = async () => {
+    console.log("fecthing towns");
+    const token = localStorage.getItem("token");
   const fetchTransportDetails = async () => {
     console.log("fecthing towns");
     const token = localStorage.getItem("token");
@@ -226,10 +316,45 @@ const AddStudents = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+    try {
+      const response = await fetch(Allapi.getallTowns.url(acid), {
+        method: Allapi.getallTowns.method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const townsData = await response.json();
+      setTowns(townsData.data);
+      console.log("town data is", townsData);
+    } catch (error) {
+      toast.error("Error fetching transport details");
+    }
+  };
+  const fetchbusdetails = async (townname) => {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("current town to fetch busses is", townname);
+      const bus_response = await fetch(Allapi.getByPlaceBus.url(acid), {
+        method: Allapi.getByPlaceBus.method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
 
         body: JSON.stringify({ place: townname }),
       });
+        body: JSON.stringify({ place: townname }),
+      });
 
+      const busesData = await bus_response.json();
+      setBuses(busesData.data);
+      console.log(busesData);
+    } catch (error) {
+      console.log("bus error is", error.message);
+      toast.error(error);
+    }
+  };
       const busesData = await bus_response.json();
       setBuses(busesData.data);
       console.log(busesData);
@@ -347,6 +472,15 @@ const AddStudents = () => {
     console.log("name is", name, " value is", value);
     console.log("towns are", towns);
 
+    if (name.startsWith("address.")) {
+      const fieldName = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [fieldName]: value,
+        },
+      }));
     if (name.startsWith("address.")) {
       const fieldName = name.split(".")[1];
       setFormData((prev) => ({

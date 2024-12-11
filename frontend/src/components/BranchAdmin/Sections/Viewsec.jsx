@@ -16,7 +16,7 @@ const ViewSections = () => {
   const [selectedSection, setSelectedSection] = useState(null);
   const [feeTypes, setFeeTypes] = useState([]);
   const [fees, setFees] = useState([{ feeType: "", amount: "" }]); // Array of fee objects
-
+  
   const fetchClasses = async (curr_acad) => {
     const token = localStorage.getItem("token");
     try {

@@ -66,7 +66,11 @@ const Login = () => {
           navigate("/admin");
         } else if (res.data.role === "BranchAdmin") {
           navigate("/branch-admin");
-        } else {
+        }
+        else if (res.data.role === "Student") {
+          navigate("/");
+        }
+         else {
           alert("Invalid credentials");
         }
 

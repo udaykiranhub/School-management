@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
-  idNo: String,
+  idNo: {type:String,
+  },
   admissionNo: String,
   surname: String,
   name: String,
@@ -59,7 +60,7 @@ const studentSchema = new mongoose.Schema({
   },
   feeDetails: [
     {
-      feeType: String,
+      name: String,
       amount: Number,
       terms_accepted: String,
       concession: Number,
