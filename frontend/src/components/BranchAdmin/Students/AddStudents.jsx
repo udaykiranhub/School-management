@@ -556,16 +556,31 @@ const AddStudents = () => {
   const handlePrint = () => {
     // Get the table to print
     const printContents = document.querySelector("table").outerHTML;
-
+  
     // Add CSS for table formatting
     const style = `
       <style>
         .maintitle {
-    font-size: 20px;
-    font-weight: bold; 
-    text-align: center;
-    margin-bottom: 10px; 
-}
+          font-size: 20px;
+          font-weight: bold; 
+          text-align: center;
+          margin-bottom: 10px; 
+        }
+        .declaration {
+          margin-top: 20px;
+          font-size: 14px;
+          text-align: justify;
+        }
+        .signatures {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 40px;
+        }
+        .signature-label {
+          font-weight: bold;
+          font-size: 16px;
+          text-align: center;
+        }
         table {
           width: 100%;
           border-collapse: collapse;
@@ -583,10 +598,10 @@ const AddStudents = () => {
         }
       </style>
     `;
-
+  
     // Open a new window for printing
     const printWindow = window.open("", "_blank");
-
+  
     // Write contents to the new window
     printWindow.document.write(`
       <html>
@@ -595,7 +610,7 @@ const AddStudents = () => {
           ${style}
         </head>
         <body>
-          <div class="maintitle">FEE RECEIPT</div>
+          <div class="maintitle">FEE Declaration</div>
           <div>Name: ${formData.name}</div>
           <div>Class: ${formData.class.name}</div>
           <div>Section: ${formData.section.name}</div>
@@ -603,16 +618,28 @@ const AddStudents = () => {
           <div>Father Name: ${formData.fatherName}</div>
           <div>Phone Number: ${formData.whatsappNo}</div>
           ${printContents}
+          <div class="declaration">
+            I hereby declare that the information provided above is correct, and I agree to pay the fee as mentioned above. I understand that this receipt is valid only upon authentication by the institution.
+          </div>
+          <div class="signatures">
+            <div class="signature-label">
+              Principal's Signature
+            </div>
+            <div class="signature-label">
+              Parent's Signature
+            </div>
+          </div>
         </body>
       </html>
     `);
-
+  
     // Print the window content
     printWindow.document.close(); // Close document for additional changes
     printWindow.focus(); // Ensure focus on the print window
     printWindow.print(); // Trigger print dialog
     printWindow.close(); // Close the print window after printing
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -241,7 +241,11 @@ const BranchAdminSidebar = () => {
                 Add Students
               </Link>
               <Link
-                to="/branch-admin/transport/add-bus"
+                to={`/branch-admin/students-report/${
+                  branchdet.academicYears.length <= 0
+                    ? ""
+                    : branchdet.academicYears[0]
+                }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
