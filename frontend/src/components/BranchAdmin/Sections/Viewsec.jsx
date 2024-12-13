@@ -16,7 +16,7 @@ const ViewSections = () => {
   const [selectedSection, setSelectedSection] = useState(null);
   const [feeTypes, setFeeTypes] = useState([]);
   const [fees, setFees] = useState([{ feeType: "", amount: "" }]); // Array of fee objects
-  
+
   const fetchClasses = async (curr_acad) => {
     const token = localStorage.getItem("token");
     try {
@@ -40,7 +40,16 @@ const ViewSections = () => {
   };
 
   function findObjectByKey(array, key, value) {
-    return array.find((obj) => obj[key] === value).terms;
+    console.log("Array is", array);
+
+    const foundObject = array.find((obj) => {
+      console.log("Checking object:", obj);
+      return obj[key] === value; // Ensure the callback returns the condition
+    });
+
+    console.log("foundobj",foundObject);
+
+    return foundObject ? foundObject.terms : undefined;
   }
 
   const fetchSections = async (className, curr_acad) => {

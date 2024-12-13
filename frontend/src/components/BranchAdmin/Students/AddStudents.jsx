@@ -23,19 +23,19 @@ const AddStudents = () => {
     class: { name: "", id: "" },
     section: { name: "", id: "" },
     dob: "",
-    admissionDate: "",
+    admissionDate: new Date().toISOString().split("T")[0],
     photo: "",
     academic_id: "",
     aadharNo: "",
     studentAAPR: "",
-    caste: "",
+    caste: "OC",
     subCaste: "",
     fatherName: "",
     fatherAadhar: "",
-    fatherOccupation: "",
+    fatherOccupation: "Employee",
     motherName: "",
     motherAadhar: "",
-    motherOccupation: "",
+    motherOccupation: "House-wife",
     whatsappNo: "",
     emergencyContact: "",
     address: {
@@ -66,6 +66,8 @@ const AddStudents = () => {
   const [sections, setSections] = useState([]);
   const [classname, setClassname] = useState(null);
   const [curr_town, setcurr_town] = useState(null);
+  const [stdcount, setstdcount] = useState(0);
+  const [ysuffix, setysuffix] = useState(0);
 
   const Fees = [];
   const { acid } = useParams();
@@ -108,6 +110,8 @@ const AddStudents = () => {
       const studentCountData = await studentCountResponse.json();
       if (studentCountData.success) {
         const currentCount = studentCountData.count + 1; // Increment for the new student
+        setstdcount(currentCount);
+        setysuffix(yearSuffix);
         const id = `${yearSuffix}${String(currentCount).padStart(4, "0")}`;
 
         // Update the form data
@@ -183,23 +187,7 @@ const AddStudents = () => {
       fetchSections(classname, acid);
     }
   }, [branchdet, classname, acid]);
-  // useEffect(() => {
-  //   if (curr_town) {
-  //     console.log("fetching buses...");
-  //     console.log("current town is", curr_town);
-  //     fetchbusdetails(curr_town);
 
-  //     const selectedtown = towns.find((town) => town.townName === curr_town);
-  //     console.log("selectes town in useEffect", selectedtown);
-  //     if (selectedtown) {
-  //       setHalts(selectedtown.halts);
-  //       console.log("halts isss", selectedtown.halts);
-  //     }
-  //     console.log("form data is", formData);
-  //     console.log("townname is", curr_town);
-  //     console.log("halts are useEffect", halts);
-  //   }
-  // }, [curr_town]);
   useEffect(() => {
     if (curr_town) {
       console.log("Fetching buses for town:", curr_town);
@@ -491,72 +479,10 @@ const AddStudents = () => {
       0
     );
 
-  // const handlePrint = () => {
-  //   // Get the table to print
-  //   const printContents = document.querySelector("table").outerHTML;
-
-  //   // Add CSS for table formatting
-  //   const style = `
-  //     <style>
-  //       img {
-  //         display: block;
-  //         margin: 20px auto;
-  //         width: 200px;
-  //         height: 214px;
-  //         object-fit: cover; /* Ensures proper scaling */
-  //       }
-  //       table {
-  //         width: 100%;
-  //         border-collapse: collapse;
-  //       }
-  //       th, td {
-  //         border: 1px solid #ccc;
-  //         padding: 8px;
-  //         text-align: left;
-  //       }
-  //       th {
-  //         background-color: #f8f8f8;
-  //       }
-  //       tr:hover {
-  //         background-color: #f1f1f1;
-  //       }
-  //     </style>
-  //   `;
-
-  //   // Open a new window for printing
-  //   const printWindow = window.open("", "_blank");
-
-  //   // Write contents to the new window
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Vidya Nidhi Institutions</title>
-  //         ${style}
-  //       </head>
-  //       <body>
-  //       <div>Name:${formData.name}</div>
-  //       <div>Class:${formData.class.name}</div>
-  //       <div>Section:${formData.section.name}</div>
-  //       <div>Id no:${formData.idNo}</div>
-  //       <div>Father Name:${formData.fatherName}</div>
-  //       <div>phone number:${formData.whatsappNo}</div>
-  //       <img src="${formData.photo}" alt="profile-img"/>
-
-  //         ${printContents}
-  //       </body>
-  //     </html>
-  //   `);
-
-  //   // Print the window content
-  //   printWindow.document.close(); // Close document for additional changes
-  //   printWindow.focus(); // Ensure focus on the print window
-  //   printWindow.print(); // Trigger print dialog
-  //   printWindow.close(); // Close the print window after printing
-  // };
   const handlePrint = () => {
     // Get the table to print
     const printContents = document.querySelector("table").outerHTML;
-  
+
     // Add CSS for table formatting
     const style = `
       <style>
@@ -598,10 +524,10 @@ const AddStudents = () => {
         }
       </style>
     `;
-  
+
     // Open a new window for printing
     const printWindow = window.open("", "_blank");
-  
+
     // Write contents to the new window
     printWindow.document.write(`
       <html>
@@ -619,7 +545,7 @@ const AddStudents = () => {
           <div>Phone Number: ${formData.whatsappNo}</div>
           ${printContents}
           <div class="declaration">
-            I hereby declare that the information provided above is correct, and I agree to pay the fee as mentioned above. I understand that this receipt is valid only upon authentication by the institution.
+            I hereby declare that the information provided above is correct, and I agree to pay the fee as mentioned above. I understand that this Fee declaration is valid only upon authentication by the institution.
           </div>
           <div class="signatures">
             <div class="signature-label">
@@ -632,18 +558,23 @@ const AddStudents = () => {
         </body>
       </html>
     `);
-  
+
     // Print the window content
     printWindow.document.close(); // Close document for additional changes
     printWindow.focus(); // Ensure focus on the print window
     printWindow.print(); // Trigger print dialog
     printWindow.close(); // Close the print window after printing
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("formdata is", formData);
+
+    // Check if the photo field is empty
+    if (!formData.photo || formData.photo === "") {
+      toast.error("Please wait for the photo to upload before submitting.");
+      return; // Prevent submission
+    }
 
     // Create a deep copy of formData to manipulate before submission
     const submissionData = { ...formData };
@@ -656,6 +587,7 @@ const AddStudents = () => {
     try {
       const token = localStorage.getItem("token");
 
+      // Make the API request to submit the form
       const res = await fetch(Allapi.addStudent.url, {
         method: Allapi.addStudent.method,
         headers: {
@@ -664,10 +596,15 @@ const AddStudents = () => {
         },
         body: JSON.stringify(submissionData),
       });
+      const fres = await res.json();
 
-      if (res.ok) {
+      if (fres.success) {
         toast.success("Student added successfully!");
+
+        // Reset form data and photo preview
+        setphotoPreview("");
         setFormData({
+          idNo: `${ysuffix}${String(stdcount + 1).padStart(4, "0")}`,
           admissionNo: "",
           surname: "",
           name: "",
@@ -675,19 +612,19 @@ const AddStudents = () => {
           class: "",
           section: "",
           dob: "",
-          admissionDate: "",
+          admissionDate: new Date().toISOString().split("T")[0],
           academic_id: "",
           photo: "",
           aadharNo: "",
           studentAAPR: "",
-          caste: "",
+          caste: "OC",
           subCaste: "",
           fatherName: "",
           fatherAadhar: "",
-          fatherOccupation: "",
+          fatherOccupation: "Employee",
           motherName: "",
           motherAadhar: "",
-          motherOccupation: "",
+          motherOccupation: "House-wife",
           whatsappNo: "",
           emergencyContact: "",
           address: {
@@ -712,12 +649,11 @@ const AddStudents = () => {
           concession: {},
         });
       } else {
-        const errorData = await res.json();
-        console.log(errorData);
-        toast.error(`Failed to add student: ${errorData.message}`);
+        toast.error(fres.message);
       }
     } catch (error) {
-      toast.error("An error occurred while adding the student");
+      console.error(error);
+      toast.error("An error occurred while adding the student.");
     }
   };
 
@@ -1149,6 +1085,7 @@ const AddStudents = () => {
               </div>
               <div className="col-span-3">
                 <button
+                  type="button"
                   onClick={addTfee}
                   className="text-white justify-center bg-red-600 mt-2 px-4 py-2 rounded"
                 >
@@ -1199,6 +1136,7 @@ const AddStudents = () => {
               </div>
               <div className="col-span-2">
                 <button
+                  type="button"
                   onClick={addfee}
                   className="text-white bg-red-600 mt-2 px-4 py-2 rounded"
                 >
@@ -1277,6 +1215,7 @@ const AddStudents = () => {
               </tr>
             </tfoot>
             <button
+              type="button"
               onClick={handlePrint}
               className=" absolute bottom-2 left-2  bg-blue-500 text-white rounded-md hover:bg-blue-600 print:hidden"
             >
