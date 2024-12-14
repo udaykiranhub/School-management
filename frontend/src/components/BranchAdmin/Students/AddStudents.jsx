@@ -570,20 +570,174 @@ const AddStudents = () => {
     e.preventDefault();
     console.log("formdata is", formData);
 
-    // Check if the photo field is empty
-    if (!formData.photo || formData.photo === "") {
-      toast.error("Please wait for the photo to upload before submitting.");
-      return; // Prevent submission
+    // Validate required fields
+    if (!formData.name || formData.name.trim() === "") {
+      toast.error("Student name is required.");
+      return;
+    }
+    if (!formData.surname || formData.surname.trim() === "") {
+      toast.error("Surname is required.");
+      return;
+    }
+    if (!formData.gender) {
+      toast.error("Gender is required.");
+      return;
+    }
+    if (!formData.class) {
+      toast.error("Class is required.");
+      return;
+    }
+    if (!formData.section) {
+      toast.error("Section is required.");
+      return;
+    }
+    if (!formData.dob) {
+      toast.error("Date of birth is required.");
+      return;
     }
 
-    // Create a deep copy of formData to manipulate before submission
-    const submissionData = { ...formData };
+    // Check valid date of birth
+    const dobDate = new Date(formData.dob);
+    if (isNaN(dobDate.getTime()) || dobDate > new Date()) {
+      toast.error("Please enter a valid date of birth.");
+      return;
+    }
+
+    if (!formData.admissionNo || formData.admissionNo.trim() === "") {
+      toast.error("Admission number is required.");
+      return;
+    }
+    if (!formData.aadharNo || !/^\d{12}$/.test(formData.aadharNo)) {
+      toast.error("aadhar number must be 12 digits");
+      return;
+    }
+    if (!formData.studentAAPR || !/^\d{12}$/.test(formData.studentAAPR)) {
+      toast.error("student aapar number must be 12 digits");
+      return;
+    }
+
+    if (!formData.whatsappNo || !/^\d{10}$/.test(formData.whatsappNo)) {
+      toast.error("Valid WhatsApp number is required (10 digits).");
+      return;
+    }
+
+    if (
+      !formData.emergencyContact ||
+      !/^\d{10}$/.test(formData.emergencyContact)
+    ) {
+      toast.error("Valid emergency contact is required (10 digits).");
+      return;
+    }
+
+    if (!formData.address.doorNo || formData.address.doorNo.trim() === "") {
+      toast.error("Door number in address is required.");
+      return;
+    }
+    if (!formData.address.street || formData.address.street.trim() === "") {
+      toast.error("Street in address is required.");
+      return;
+    }
+    if (!formData.address.city || formData.address.city.trim() === "") {
+      toast.error("City in address is required.");
+      return;
+    }
+    if (
+      !formData.address.pincode ||
+      !/^\d{6}$/.test(formData.address.pincode)
+    ) {
+      toast.error("Valid pincode is required (6 digits).");
+      return;
+    }
+
+    // Validate Aadhar details
+    if (formData.aadharNo && !/^\d{12}$/.test(formData.aadharNo)) {
+      toast.error("Aadhar number must be 12 digits.");
+      return;
+    }
+    if (formData.fatherAadhar && !/^\d{12}$/.test(formData.fatherAadhar)) {
+      toast.error("Father's Aadhar number must be 12 digits.");
+      return;
+    }
+    if (formData.motherAadhar && !/^\d{12}$/.test(formData.motherAadhar)) {
+      toast.error("Mother's Aadhar number must be 12 digits.");
+      return;
+    }
+
+    // Validate photo upload
+    if (!formData.photo || formData.photo === "") {
+      toast.error("Please wait for the photo to upload before submitting.");
+      return;
+    }
 
     // Remove transportDetails if transport is false
     if (!formData.transport) {
-      delete submissionData.transportDetails;
+      delete formData.transportDetails;
+    } else {
+      // Validate transport details
+      if (
+        !formData.transportDetails.town ||
+        formData.transportDetails.town.trim() === ""
+      ) {
+        toast.error("Town is required for transport details.");
+        return;
+      }
+      if (
+        !formData.transportDetails.bus ||
+        formData.transportDetails.bus.trim() === ""
+      ) {
+        toast.error("Bus is required for transport details.");
+        return;
+      }
+      if (
+        !formData.transportDetails.halt ||
+        formData.transportDetails.halt.trim() === ""
+      ) {
+        toast.error("Halt is required for transport details.");
+        return;
+      }
+      if (
+        !formData.transportDetails.amount ||
+        isNaN(formData.transportDetails.amount) ||
+        formData.transportDetails.amount <= 0
+      ) {
+        toast.error("Valid transport amount is required.");
+        return;
+      }
     }
 
+    // Remove hostelDetails if hostel is false
+    if (!formData.hostel) {
+      delete formData.hostelDetails;
+    } else {
+      // Validate hostel details
+      if (
+        !formData.hostelDetails.hostelFee ||
+        isNaN(formData.hostelDetails.hostelFee) ||
+        formData.hostelDetails.hostelFee <= 0
+      ) {
+        toast.error("Valid hostel fee is required.");
+        return;
+      }
+      if (
+        !formData.hostelDetails.terms ||
+        formData.hostelDetails.terms.trim() === ""
+      ) {
+        toast.error("Terms for hostel details are required.");
+        return;
+      }
+    }
+
+    // Check if feeDetails array is valid
+    if (
+      !formData.feeDetails ||
+      !Array.isArray(formData.feeDetails) ||
+      formData.feeDetails.length === 0
+    ) {
+      toast.error("At least one fee detail must be provided.");
+      return;
+    }
+
+    // Submit the form
     try {
       const token = localStorage.getItem("token");
 
@@ -594,7 +748,7 @@ const AddStudents = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(submissionData),
+        body: JSON.stringify(formData),
       });
       const fres = await res.json();
 

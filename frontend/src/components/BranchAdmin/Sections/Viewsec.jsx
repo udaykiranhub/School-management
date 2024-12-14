@@ -41,13 +41,15 @@ const ViewSections = () => {
 
   function findObjectByKey(array, key, value) {
     console.log("Array is", array);
+    console.log("key is", key);
+    console.log("value is", value);
 
     const foundObject = array.find((obj) => {
       console.log("Checking object:", obj);
       return obj[key] === value; // Ensure the callback returns the condition
     });
 
-    console.log("foundobj",foundObject);
+    console.log("foundobj", foundObject);
 
     return foundObject ? foundObject.terms : undefined;
   }
