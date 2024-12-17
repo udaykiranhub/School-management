@@ -75,3 +75,43 @@ exports.getStudentsBySection = async (req, res) => {
       .json({ success: false, message: "Error fetching students", error });
   }
 };
+
+exports.getStudentById = async (req, res) => {
+  try {
+    const { sid } = req.params; // Extract student ID from request parameters
+
+    // Convert string id into ObjectId
+    const SId = new mongoose.Types.ObjectId(sid);
+
+    const student = await Student.findById(sid);
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: student,
+    });
+  } catch (error) {
+    console.error("Error fetching student by ID:", error);
+
+    // Handle invalid ObjectId error
+    if (error.name === "BSONTypeError" || error.name === "CastError") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid student ID format",
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Error fetching student",
+      error: error.message,
+    });
+  }
+};
+

@@ -32,6 +32,7 @@ import AddTown from "./components/BranchAdmin/Transport/AddTown.jsx";
 import AddBus from "./components/BranchAdmin/Transport/AddBus.jsx";
 import AddStudents from "./components/BranchAdmin/Students/AddStudents.jsx";
 import StudentsReports from "./components/BranchAdmin/Students/StudentsReports.jsx";
+import FeeReport from "./components/BranchAdmin/Students/FeeReport.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -167,6 +168,10 @@ const Router = createBrowserRouter([
           {
             path: "students-report/:acid",
             element: <StudentsReports />,
+          },
+          {
+            path: "students-payfee/:sid",
+            element: < FeeReport/>,
           },
         ],
       },

@@ -1,7 +1,5 @@
 // import { getBranchAdmin } from "../../../backend/controller/Usercontroller";
 
-
-
 // import { getStudentCountByAcademicYear } from "../../../backend/controller/Academicyearcontroller";
 
 const backapi = "http://localhost:3490";
@@ -77,10 +75,9 @@ const Allapi = {
     url: (academicId) => `${backapi}/api/academic/edit/${academicId}`,
     method: "PUT",
   },
-  getStudentCountByAcademicYear:{
+  getStudentCountByAcademicYear: {
     url: (academicId) => `${backapi}/api/academic/allstudents/${academicId}`,
     method: "GET",
-
   },
   addClass: {
     url: `${backapi}/api/classes/create-class`,
@@ -190,8 +187,12 @@ const Allapi = {
     method: "POST",
   },
   getStudentsBySection: {
-    url: (sectionId)=>`${backapi}/api/students/get-student/${sectionId}`,
+    url: (sectionId) => `${backapi}/api/students/get-student/${sectionId}`,
     method: "POST",
+  },
+  getstudentbyId: {
+    url: (sid) => `${backapi}/api/students/get-student/${sid}`,
+    method: "GET",
   },
 };
 

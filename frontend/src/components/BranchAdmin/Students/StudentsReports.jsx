@@ -336,6 +336,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Allapi from "./../../../common/index"; // Adjust the path as needed
 import * as XLSX from "xlsx"; // Import xlsx library for Excel export
+import { Link } from "react-router-dom";
+import FeeReport from "./FeeReport";
 
 const StudentsReports = () => {
   const { acid } = useParams();
@@ -349,6 +351,7 @@ const StudentsReports = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [activeTab, setActiveTab] = useState("studentList"); // Tab state to toggle between Student List and Download Data
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [feetab, setfeetab] = useState(null);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -653,6 +656,18 @@ const StudentsReports = () => {
                 <p className="text-gray-600 text-center">
                   Class: {student.class.name}
                 </p>
+
+                <div className="fee pay-button">
+                  <Link
+                    to={`/branch-admin/students-payfee/${student._id}/`}
+                    onClick={(e) => {
+                      setfeetab(student._id);
+                    }}
+                    className="bg-red-500 text-white p-2 hover:text-black hover:bg-red-700"
+                  >
+                    pay Fee
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

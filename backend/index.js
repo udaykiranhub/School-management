@@ -14,7 +14,7 @@ const sectionRoutes = require("./routers/SectionRoutes");
 const feeRoutes = require("./routers/FeeTypeRouters");
 const townroutes = require("./routers/TownRoutes");
 const busroutes = require("./routers/BusRoutes");
-const studentRoutes= require("./routers/studentRoutes");
+const studentRoutes = require("./routers/studentRoutes");
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use("/api/sections", protect.authMiddleware, sectionRoutes);
 app.use("/api/Fee-types", protect.authMiddleware, feeRoutes);
 app.use("/api/towns", protect.authMiddleware, townroutes);
 app.use("/api/buses", protect.authMiddleware, busroutes);
-app.use("/api/students",protect.authMiddleware,studentRoutes)
+app.use("/api/students", protect.authMiddleware, studentRoutes);
 database().then(
   app.listen(process.env.PORT, () => {
     console.log("server is running");
