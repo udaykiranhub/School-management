@@ -336,10 +336,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Allapi from "./../../../common/index"; // Adjust the path as needed
 import * as XLSX from "xlsx"; // Import xlsx library for Excel export
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import FeeReport from "./FeeReport";
 
 const StudentsReports = () => {
+  const navigate = useNavigate();
   const { acid } = useParams();
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
@@ -348,7 +350,6 @@ const StudentsReports = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
   const [activeTab, setActiveTab] = useState("studentList"); // Tab state to toggle between Student List and Download Data
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [feetab, setfeetab] = useState(null);
@@ -642,7 +643,7 @@ const StudentsReports = () => {
               <div
                 key={student._id}
                 className="p-4 bg-white shadow-md rounded hover:shadow-lg cursor-pointer"
-                onClick={() => setSelectedStudent(student)}
+                onClick={() => navigate(`/branch-admin/students/${student._id}`)}
               >
                 <img
                   src={student.photo || "/placeholder.jpg"}
@@ -685,116 +686,7 @@ const StudentsReports = () => {
         </div>
       )}
 
-      {selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg relative">
-            <button
-              onClick={() => setSelectedStudent(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
-            >
-              &times;
-            </button>
-            <h2 className="text-gray-800 text-xl font-bold mb-4">
-              {selectedStudent.name} {selectedStudent.surname}
-            </h2>
-            <img
-              src={selectedStudent.photo || "/placeholder.jpg"}
-              alt={selectedStudent.name}
-              className="w-24 h-24 rounded-full mx-auto mb-4"
-            />
-            <div className="grid grid-cols-1 gap-2">
-              <p>
-                <strong>ID:</strong> {selectedStudent.idNo}
-              </p>
-              <p>
-                <strong>Admission No:</strong> {selectedStudent.admissionNo}
-              </p>
-              <p>
-                <strong>Class:</strong> {selectedStudent.class.name}
-              </p>
-              <p>
-                <strong>Section:</strong> {selectedStudent.section.name}
-              </p>
-              <p>
-                <strong>Gender:</strong> {selectedStudent.gender}
-              </p>
-              <p>
-                <strong>Date of Birth:</strong>{" "}
-                {new Date(selectedStudent.dob).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Aadhar Number:</strong> {selectedStudent.aadharNo}
-              </p>
-              <p>
-                <strong>AAPR Number:</strong> {selectedStudent.studentAAPR}
-              </p>
-
-              <p>
-                <strong>Father's Name:</strong> {selectedStudent.fatherName}
-              </p>
-              <p>
-                <strong>Father's Occupation :</strong>{" "}
-                {selectedStudent.fatherOccupation
-                  ? selectedStudent.fatherOccupation
-                  : "-------"}
-              </p>
-              <p>
-                <strong>Father's Aadhar :</strong>{" "}
-                {selectedStudent.fatherAadhar
-                  ? selectedStudent.fatherAadhar
-                  : "-------"}
-              </p>
-
-              <p>
-                <strong>Mother's Name:</strong> {selectedStudent.motherName}
-              </p>
-              <p>
-                <strong>Mother's Occupation :</strong>{" "}
-                {selectedStudent.motherOccupation
-                  ? selectedStudent.motherOccupation
-                  : "-------"}
-              </p>
-              <p>
-                <strong>mother's Aadhar :</strong>{" "}
-                {selectedStudent.motherAadhar
-                  ? selectedStudent.motherAadhar
-                  : "-------"}
-              </p>
-
-              <p>
-                <strong>Caste:</strong> {selectedStudent.caste}
-              </p>
-              <p>
-                <strong>Sub Caste:</strong> {selectedStudent.subCaste}
-              </p>
-
-              <p>
-                <strong>Address:</strong> {selectedStudent.address.doorNo},{" "}
-                {selectedStudent.address.street}, {selectedStudent.address.city}
-                , {selectedStudent.address.pincode}
-              </p>
-              <p>
-                <strong> Whatsapp-Contact:</strong> {selectedStudent.whatsappNo}
-              </p>
-              <p>
-                <strong>Emergency Contact:</strong>{" "}
-                {selectedStudent.emergencyContact}
-              </p>
-              <p>
-                <strong>Hostel:</strong> {selectedStudent.hostel ? "Yes" : "No"}
-              </p>
-              <p>
-                <strong>Fee Details:</strong>{" "}
-                {selectedStudent.feeDetails.map((fee, index) => (
-                  <span key={index}>
-                    {fee.name}: {fee.amount}
-                  </span>
-                ))}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+     
     </div>
   );
 };

@@ -33,7 +33,7 @@ import AddBus from "./components/BranchAdmin/Transport/AddBus.jsx";
 import AddStudents from "./components/BranchAdmin/Students/AddStudents.jsx";
 import StudentsReports from "./components/BranchAdmin/Students/StudentsReports.jsx";
 import FeeReport from "./components/BranchAdmin/Students/FeeReport.jsx";
-
+import StudentEdit from './components/BranchAdmin/Students/StudentEdit.jsx'
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -170,9 +170,10 @@ const Router = createBrowserRouter([
             element: <StudentsReports />,
           },
           {
-            path: "students-payfee/:sid",
-            element: < FeeReport/>,
+            path: "students/:sid",
+            element: < StudentEdit/>,
           },
+          
         ],
       },
     ],

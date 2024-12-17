@@ -115,3 +115,67 @@ exports.getStudentById = async (req, res) => {
   }
 };
 
+// Edit student information
+exports.updateStudent = async (req, res) => {
+  try {
+    const { sid } = req.params; // Get the student ID from URL parameters
+    const updatedData = req.body; // Get the data to update from the request body
+
+    // Find student by ID and update the data
+    const student = await Student.findByIdAndUpdate(sid, updatedData, {
+      new: true, // Return the updated student document
+      runValidators: true, // Run validators on the updated fields
+    });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Student updated successfully",
+      data: student,
+    });
+  } catch (error) {
+    console.error("Error updating student:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating student",
+      error: error.message,
+    });
+  }
+};
+// Delete student by ID
+exports.deleteStudent = async (req, res) => {
+  try {
+    const { sid } = req.params; // Get the student ID from URL parameters
+
+    // Find and delete the student by ID
+    const student = await Student.findByIdAndDelete(sid);
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    // Optionally, delete the associated user from the User model if needed
+    await mongoose.model("User").deleteOne({ username: student.idNo });
+
+    res.status(200).json({
+      success: true,
+      message: "Student and associated user deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting student",
+      error: error.message,
+    });
+  }
+};

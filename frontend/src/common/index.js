@@ -194,6 +194,14 @@ const Allapi = {
     url: (sid) => `${backapi}/api/students/get-student/${sid}`,
     method: "GET",
   },
+  deletestudentbyId: {
+    url: (sid) => `${backapi}/api/students/delete-student/${sid}`,
+    method: "DELETE",
+  },
+  editstudentbyId: {
+    url: (sid) => `${backapi}/api/students/edit-student/${sid}`,
+    method: "PUT",
+  },
 };
 
 export default Allapi;
