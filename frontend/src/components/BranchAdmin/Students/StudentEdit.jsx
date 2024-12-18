@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
 import  {  useRef } from "react";
+import { MdDelete } from "react-icons/md";
+
 
 
 import { useContext } from "react";
@@ -78,10 +80,15 @@ const StudentEdit = () => {
 
         if (!response.ok) throw new Error("Failed to fetch student details");
 
-        const data = await response.json();
-        setFormData(data.data);
-        console.log(data)
-        setPhotoPreview(data.photo || "");
+        const datares = await response.json();
+        setFormData((prev) => ({
+          ...prev,
+          ...datares.data, // Merge fetched data
+        }));
+  
+        console.log(datares);
+        
+        setPhotoPreview(datares.data.photo || "");
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -97,13 +104,13 @@ const StudentEdit = () => {
   const [halts, setHalts] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
-  const [classname, setClassname] = useState(null);
   const [curr_town, setcurr_town] = useState(null);
   const [stdcount, setstdcount] = useState(0);
   const [ysuffix, setysuffix] = useState(0);
-
+  
   const Fees = [];
- const acid=formData.academic_id;
+  const acid=formData.academic_id;
+  const [classname, setClassname] = useState(null);
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
   const motherOccupationOptions = ["Housewife", "Employee"];
@@ -152,7 +159,11 @@ const StudentEdit = () => {
           ...prev,
           idNo: id,
           academic_id: acid,
+
         }));
+  setClassname(formData.class.name)
+  setcurr_town(formData.transportDetails.town);
+
       } else {
         throw new Error("Failed to retrieve student count data");
       }
@@ -188,10 +199,11 @@ const StudentEdit = () => {
     };
 
     if (acid) fetchClasses();
-  }, [branchdet]);
+  }, [branchdet,acid]);
 
   useEffect(() => {
     const fetchSections = async (className, curr_acad) => {
+      console.log("hello",className);
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
@@ -262,6 +274,7 @@ const StudentEdit = () => {
         },
       });
       const townsData = await response.json();
+      console.log("towns are ",townsData);
       setTowns(townsData.data);
       console.log("town data is", townsData);
     } catch (error) {
@@ -290,6 +303,11 @@ const StudentEdit = () => {
       toast.error(error);
     }
   };
+  useEffect(() => {
+    if (formData.transport) {
+      fetchTransportDetails();
+    }
+  }, [acid]); 
 
   const handleTransportChange = async (e) => {
     const checked = e.target.checked;
@@ -307,6 +325,13 @@ const StudentEdit = () => {
           formData.transportDetails.town = "";
         }
       });
+      formData.transportDetails.amount=null;
+      formData.transportDetails.bus=null;
+      formData.transportDetails.halt=null;
+      formData.transportDetails.town=null;
+
+
+
     }
   };
 
@@ -734,9 +759,14 @@ const StudentEdit = () => {
       return;
     }
 
+   
     // Remove transportDetails if transport is false
     if (!formData.transport) {
-      delete formData.transportDetails;
+  // formData.transportDetails = undefined; 
+  // formData.transportDetails.amount=null;
+  formData.transportDetails.bus=null;
+  formData.transportDetails.halt=null;
+  formData.transportDetails.town=null;
     } else {
       // Validate transport details
       if (
@@ -772,7 +802,11 @@ const StudentEdit = () => {
 
     // Remove hostelDetails if hostel is false
     if (!formData.hostel) {
-      delete formData.hostelDetails;
+      if(!formData.hostel){
+        formData.hostelDetails.hostelFee="";
+        formData.hostelDetails.terms="";
+        alert("hi");
+      }
     } else {
       // Validate hostel details
       if (
@@ -807,8 +841,8 @@ const StudentEdit = () => {
       const token = localStorage.getItem("token");
 
       // Make the API request to submit the form
-      const res = await fetch(Allapi.addStudent.url, {
-        method: Allapi.addStudent.method,
+      const res = await fetch(Allapi.editstudentbyId.url(sid), {
+        method: Allapi.editstudentbyId.method,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -867,6 +901,7 @@ const StudentEdit = () => {
           feeDetails: [],
           concession: {},
         });
+        window.location.reload();
       } else {
         toast.error(fres.message);
       }
@@ -977,7 +1012,7 @@ const StudentEdit = () => {
             <input
               type="date"
               name="dob"
-              value={formData.dob}
+              value={formData.dob.split("T")[0]} 
               onChange={handleChange}
               className="input-field"
               required
@@ -989,7 +1024,7 @@ const StudentEdit = () => {
               type="date"
               name="admissionDate"
               value={
-                formData.admissionDate || new Date().toISOString().split("T")[0]
+                formData.admissionDate.split("T")[0] || new Date().toISOString().split("T")[0]
               }
               onChange={handleChange}
               className="input-field"
@@ -1209,7 +1244,7 @@ const StudentEdit = () => {
             onChange={handlePhotoUpload}
             className="input-field"
             accept="image/*"
-            required
+            
           />
         </div>
         {photoPreview ? (
@@ -1257,6 +1292,7 @@ const StudentEdit = () => {
                   name="transportDetails.town"
                   value={formData.transportDetails.town || ""}
                   onChange={handleChange}
+                  onLoadStart={handleChange}
                   className="input-field"
                   required
                 >
@@ -1448,7 +1484,7 @@ const StudentEdit = () => {
             type="submit"
             className="bg-blue-600 text-white px-6 py-2 rounded-md"
           >
-            Add Student
+            Update Student
           </button>
         </div>
       </form>
