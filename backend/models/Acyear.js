@@ -5,7 +5,7 @@ const academicYearSchema = new mongoose.Schema(
     year: {
       type: String,
       required: true,
-      match: /^\d{4}-\d{4}$/, // Ensure the format is like "2024-2025"
+      match: /^\d{4}-\d{4}$/,
     },
     startDate: {
       type: Date,
@@ -38,6 +38,12 @@ const academicYearSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Bus",
+      },
+    ],
+    exams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Exam",
       },
     ],
   },
