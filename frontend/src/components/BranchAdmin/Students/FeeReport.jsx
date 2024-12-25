@@ -481,13 +481,8 @@ const FeeReport = () => {
                             type="number"
                             className="border p-1 rounded w-full"
                             placeholder="Enter Payment"
-                            max={payment.dueAmount}
-                    
-                            onChange={(e) => {
-                              // payment.terms[num][selectedTerm][
-                              //   payment.terms[num][selectedTerm].length - 1
-                              // ].amountPaid = e.target.value;
-                            }}
+                            max={payment.totalDue}
+                            onChange={(e) => {}}
                           />
                         </td>
                       </tr>

@@ -51,6 +51,7 @@ const AddStudents = () => {
       bus: "",
       halt: "",
       amount: 0,
+      terms: 0,
     },
     hostel: false,
     hostelDetails: {
@@ -75,7 +76,28 @@ const AddStudents = () => {
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
   const motherOccupationOptions = ["Housewife", "Employee"];
+  useEffect(() => {
+    // Update feeDetails with default concession and calculated finalAmount
+    const updatedFees = formData.feeDetails.map((fee) => {
+      const concession = fee.concession || 0; // Default to 0 if concession is not set
+      const finalAmount =
+        concession === 0
+          ? fee.amount
+          : fee.amount - (fee.amount * concession) / 100;
 
+      return {
+        ...fee,
+        concession, // Ensure concession is set
+        finalAmount, // Calculate or set default finalAmount
+        terms: findObjectByKey(feeTypes, "type", fee.name), // Update terms
+      };
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      feeDetails: updatedFees, // Update feeDetails with the new values
+    }));
+  }, [feeTypes]);
   const curracad = async (bid) => {
     const response = await fetch(Allapi.getAcademicYears.url(bid), {
       method: Allapi.getAcademicYears.method,
@@ -126,6 +148,7 @@ const AddStudents = () => {
       }
     }
   };
+
   const fetchFeeTypes = async (curr_Acad) => {
     const token = localStorage.getItem("token");
     try {
@@ -183,28 +206,6 @@ const AddStudents = () => {
 
     if (acid) fetchClasses();
   }, [branchdet]);
-  useEffect(() => {
-    // Update feeDetails with default concession and calculated finalAmount
-    const updatedFees = formData.feeDetails.map((fee) => {
-      const concession = fee.concession || 0; // Default to 0 if concession is not set
-      const finalAmount =
-        concession === 0
-          ? fee.amount
-          : fee.amount - (fee.amount * concession) / 100;
-
-      return {
-        ...fee,
-        concession, // Ensure concession is set
-        finalAmount, // Calculate or set default finalAmount
-        terms: findObjectByKey(feeTypes, "type", fee.name), // Update terms
-      };
-    });
-
-    setFormData((prev) => ({
-      ...prev,
-      feeDetails: updatedFees, // Update feeDetails with the new values
-    }));
-  }, [formData.feeDetails, feeTypes]);
 
   useEffect(() => {
     const fetchSections = async (className, curr_acad) => {
@@ -321,6 +322,7 @@ const AddStudents = () => {
           formData.feeDetails.splice(index, 1);
           formData.transportDetails.amount = 0;
           formData.transportDetails.town = "";
+          formData.transportDetails.terms = 0;
         }
       });
     }
@@ -332,7 +334,7 @@ const AddStudents = () => {
     console.log("value is", value);
 
     const foundObject = array.find((obj) => {
-      console.log("Checking object:", obj);
+      // console.log("Checking object:", obj);
       return obj[key] === value; // Ensure the callback returns the condition
     });
 
@@ -444,7 +446,7 @@ const AddStudents = () => {
     } else if (name.startsWith("transportDetails.")) {
       console.log("details fee are ", formData.feeDetails);
       const fieldName = name.split(".")[1];
-
+      console.log(fieldName);
       setFormData((prev) => ({
         ...prev,
         transportDetails: { ...prev.transportDetails, [fieldName]: value },
@@ -478,6 +480,7 @@ const AddStudents = () => {
     }
   };
   function addTfee() {
+    console.log("form dta ", formData);
     if (formData.transport == true && formData.transportDetails.amount != 0) {
       const checkTfee = formData.feeDetails.some(
         (fee) => fee.name === "Transport-fee"
@@ -490,6 +493,7 @@ const AddStudents = () => {
             {
               name: "Transport-fee",
               amount: parseInt(formData.transportDetails.amount),
+              terms: parseInt(formData.transportDetails.terms),
             },
           ],
         }));
@@ -499,6 +503,7 @@ const AddStudents = () => {
     }
   }
   function addfee() {
+    console.log("adding hostel");
     console.log("current fees are", Fees);
 
     const checkfee = formData.feeDetails.some(
@@ -513,6 +518,7 @@ const AddStudents = () => {
           {
             name: "hostel-fee",
             amount: parseInt(formData.hostelDetails.hostelFee),
+            terms: parseInt(formData.hostelDetails.terms),
           },
         ],
       }));
@@ -1300,6 +1306,19 @@ const AddStudents = () => {
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Number of Terms
+                </label>
+                <input
+                  type="text"
+                  name="transportDetails.terms"
+                  value={formData.transportDetails.terms || ""}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                />
+              </div>
               <div className="col-span-3">
                 <button
                   type="button"
@@ -1396,7 +1415,9 @@ const AddStudents = () => {
                     {fee.amount}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    {findObjectByKey(feeTypes, "type", fee.name)}
+                    {findObjectByKey(feeTypes, "type", fee.name)
+                      ? findObjectByKey(feeTypes, "type", fee.name)
+                      : fee.terms}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     <input
@@ -1410,7 +1431,10 @@ const AddStudents = () => {
                           feeTypes,
                           "type",
                           fee.name
-                        );
+                        )
+                          ? findObjectByKey(feeTypes, "type", fee.name)
+                          : fee.terms;
+
                         const concession = parseFloat(e.target.value) || 0;
                         const finalAmount =
                           fee.amount - (fee.amount * concession) / 100;
