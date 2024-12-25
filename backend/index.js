@@ -15,9 +15,12 @@ const feeRoutes = require("./routers/FeeTypeRouters");
 const townroutes = require("./routers/TownRoutes");
 const busroutes = require("./routers/BusRoutes");
 const studentRoutes = require("./routers/studentRoutes");
+const examRoutes = require("./routers/ExamRoutes");
+
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api", router);
 app.use("/api/branch", protect.authMiddleware, branchRoutes);
 app.use("/api/branch", protect.authMiddleware, userRoutes);
@@ -28,6 +31,8 @@ app.use("/api/Fee-types", protect.authMiddleware, feeRoutes);
 app.use("/api/towns", protect.authMiddleware, townroutes);
 app.use("/api/buses", protect.authMiddleware, busroutes);
 app.use("/api/students", protect.authMiddleware, studentRoutes);
+app.use("/api/exams", protect.authMiddleware, examRoutes);
+
 database().then(
   app.listen(process.env.PORT, () => {
     console.log("server is running");
