@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
-  idNo: {type:String,
-  },
+  idNo: { type: String },
   admissionNo: String,
-  academic_id:String,
+  academic_id: String,
   surname: String,
   name: String,
   gender: String,
@@ -51,7 +50,7 @@ const studentSchema = new mongoose.Schema({
   transport: Boolean,
   transportDetails: {
     town: String,
-    bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus", required:false },
+    bus: { type: mongoose.Schema.Types.ObjectId, ref: "Bus", required: false },
     halt: String,
   },
   hostel: Boolean,
@@ -63,9 +62,25 @@ const studentSchema = new mongoose.Schema({
     {
       name: String,
       amount: Number,
-      terms_accepted: String,
+      terms: String,
       concession: Number,
-      finalAmount:Number,
+      finalAmount: Number,
+    },
+  ],
+  paidFee: [
+    {
+      name: { type: String }, // e.g., "Bus", "ID Card"
+      terms: {
+        // Use Map to allow dynamic keys (e.g., "Term 1", "Term 2", etc.)
+        type: Map,
+        of: [
+          {
+            amountPaid: { type: Number },
+            dueAmount: { type: Number },
+            paidDate: { type: Date },
+          },
+        ],
+      },
     },
   ],
 });

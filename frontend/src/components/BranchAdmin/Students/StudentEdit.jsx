@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Allapi from "../../../common";
-import  {  useRef } from "react";
+import { useRef } from "react";
 import { MdDelete } from "react-icons/md";
-
-
 
 import { useContext } from "react";
 import { mycon } from "../../../store/Mycontext";
@@ -14,8 +12,8 @@ const cloudName = import.meta.env.VITE_CLOUD_NAME;
 const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
 import { useReactToPrint } from "react-to-print";
 const StudentEdit = () => {
-    const navigate=useNavigate();
-  const { sid } = useParams(); 
+  const navigate = useNavigate();
+  const { sid } = useParams();
   // Get student ID from the URL
   const tableRef = useRef();
   const { branchdet } = useContext(mycon);
@@ -85,14 +83,14 @@ const StudentEdit = () => {
           ...prev,
           ...datares.data, // Merge fetched data
         }));
-  
+
         console.log(datares);
-        
-        setPhotoPreview(datares.data.photo || "");
+
+        setphotoPreview(datares.data.photo || "");
       } catch (error) {
         toast.error(error.message);
       } finally {
-        setLoading(false);
+        console.log("form data is", formData);
       }
     };
 
@@ -107,9 +105,9 @@ const StudentEdit = () => {
   const [curr_town, setcurr_town] = useState(null);
   const [stdcount, setstdcount] = useState(0);
   const [ysuffix, setysuffix] = useState(0);
-  
+
   const Fees = [];
-  const acid=formData.academic_id;
+  const acid = formData.academic_id;
   const [classname, setClassname] = useState(null);
   const casteOptions = ["OC", "BC", "SC", "ST"];
   const fatherOccupationOptions = ["Employee", "Business"];
@@ -157,13 +155,11 @@ const StudentEdit = () => {
         // Update the form data
         setFormData((prev) => ({
           ...prev,
-          idNo: id,
+
           academic_id: acid,
-
         }));
-  setClassname(formData.class.name)
-  setcurr_town(formData.transportDetails.town);
-
+        setClassname(formData.class.name);
+        setcurr_town(formData.transportDetails.town);
       } else {
         throw new Error("Failed to retrieve student count data");
       }
@@ -199,11 +195,11 @@ const StudentEdit = () => {
     };
 
     if (acid) fetchClasses();
-  }, [branchdet,acid]);
+  }, [branchdet, acid]);
 
   useEffect(() => {
     const fetchSections = async (className, curr_acad) => {
-      console.log("hello",className);
+      console.log("hello", className);
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
@@ -274,7 +270,7 @@ const StudentEdit = () => {
         },
       });
       const townsData = await response.json();
-      console.log("towns are ",townsData);
+      console.log("towns are ", townsData);
       setTowns(townsData.data);
       console.log("town data is", townsData);
     } catch (error) {
@@ -307,7 +303,7 @@ const StudentEdit = () => {
     if (formData.transport) {
       fetchTransportDetails();
     }
-  }, [acid]); 
+  }, [acid]);
 
   const handleTransportChange = async (e) => {
     const checked = e.target.checked;
@@ -325,13 +321,10 @@ const StudentEdit = () => {
           formData.transportDetails.town = "";
         }
       });
-      formData.transportDetails.amount=null;
-      formData.transportDetails.bus=null;
-      formData.transportDetails.halt=null;
-      formData.transportDetails.town=null;
-
-
-
+      formData.transportDetails.amount = null;
+      formData.transportDetails.bus = null;
+      formData.transportDetails.halt = null;
+      formData.transportDetails.town = null;
     }
   };
 
@@ -629,13 +622,15 @@ const StudentEdit = () => {
       toast.error("Authorization token not found!");
       return;
     }
-  
+
     // Confirm with the user before proceeding with the deletion
-    const isConfirmed = window.confirm("Are you sure you want to delete this student?");
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this student?"
+    );
     if (!isConfirmed) {
       return; // Exit the function if the user cancels the deletion
     }
-  
+
     try {
       const response = await fetch(Allapi.deletestudentbyId.url(sid), {
         method: Allapi.deletestudentbyId.method,
@@ -643,18 +638,15 @@ const StudentEdit = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) throw new Error("Failed to delete student");
-  
+
       toast.success("Student deleted successfully");
       navigate(`/branch-admin/students-report/${acid}`); // Redirect to the academic ID's student list after deletion
     } catch (error) {
       toast.error(error.message);
     }
   };
-  
-  
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -759,14 +751,13 @@ const StudentEdit = () => {
       return;
     }
 
-   
     // Remove transportDetails if transport is false
     if (!formData.transport) {
-  // formData.transportDetails = undefined; 
-  // formData.transportDetails.amount=null;
-  formData.transportDetails.bus=null;
-  formData.transportDetails.halt=null;
-  formData.transportDetails.town=null;
+      // formData.transportDetails = undefined;
+      // formData.transportDetails.amount=null;
+      formData.transportDetails.bus = null;
+      formData.transportDetails.halt = null;
+      formData.transportDetails.town = null;
     } else {
       // Validate transport details
       if (
@@ -802,9 +793,9 @@ const StudentEdit = () => {
 
     // Remove hostelDetails if hostel is false
     if (!formData.hostel) {
-      if(!formData.hostel){
-        formData.hostelDetails.hostelFee="";
-        formData.hostelDetails.terms="";
+      if (!formData.hostel) {
+        formData.hostelDetails.hostelFee = "";
+        formData.hostelDetails.terms = "";
         alert("hi");
       }
     } else {
@@ -1012,7 +1003,7 @@ const StudentEdit = () => {
             <input
               type="date"
               name="dob"
-              value={formData.dob.split("T")[0]} 
+              value={formData.dob.split("T")[0]}
               onChange={handleChange}
               className="input-field"
               required
@@ -1024,7 +1015,8 @@ const StudentEdit = () => {
               type="date"
               name="admissionDate"
               value={
-                formData.admissionDate.split("T")[0] || new Date().toISOString().split("T")[0]
+                formData.admissionDate.split("T")[0] ||
+                new Date().toISOString().split("T")[0]
               }
               onChange={handleChange}
               className="input-field"
@@ -1244,7 +1236,6 @@ const StudentEdit = () => {
             onChange={handlePhotoUpload}
             className="input-field"
             accept="image/*"
-            
           />
         </div>
         {photoPreview ? (
@@ -1488,22 +1479,17 @@ const StudentEdit = () => {
           </button>
         </div>
       </form>
-       {/* Delete Button */}
-       <div className="mt-4">
-  <button
-    onClick={() => handleDelete(sid, acid)} // Pass both sid and acid
-    className="bg-red-500 text-white px-6 py-2 rounded-md"
-  >
-    Delete Student
-  </button>
-</div>
-
-        
+      {/* Delete Button */}
+      <div className="mt-4">
+        <button
+          onClick={() => handleDelete(sid, acid)} // Pass both sid and acid
+          className="bg-red-500 text-white px-6 py-2 rounded-md"
+        >
+          Delete Student
+        </button>
+      </div>
     </div>
-    
   );
- 
 };
 
 export default StudentEdit;
- 

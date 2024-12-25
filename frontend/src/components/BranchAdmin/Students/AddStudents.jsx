@@ -14,6 +14,7 @@ const AddStudents = () => {
   const { branchdet } = useContext(mycon);
   const [hosteladd, sethosteladd] = useState(false);
   const [photoPreview, setphotoPreview] = useState("");
+  const [feeTypes, setFeeTypes] = useState([]);
   const [formData, setFormData] = useState({
     idNo: "",
     admissionNo: "",
@@ -125,7 +126,33 @@ const AddStudents = () => {
       }
     }
   };
+  const fetchFeeTypes = async (curr_Acad) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(Allapi.getAllFeeTypes.url(curr_Acad), {
+        method: Allapi.getAllFeeTypes.method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      if (result.success) {
+        setFeeTypes(result.feeTypes);
+      } else {
+        toast.error(result.message || "Failed to fetch fee types");
+      }
+    } catch (error) {
+      console.error("Error fetching fee types:", error);
+      toast.error("Error fetching fee types");
+    }
+  };
 
+  useEffect(() => {
+    if (acid) {
+      fetchFeeTypes(acid);
+    }
+  }, [acid]);
   useEffect(() => {
     if (branchdet && branchdet._id && acid) {
       curracad(branchdet._id);
@@ -156,6 +183,28 @@ const AddStudents = () => {
 
     if (acid) fetchClasses();
   }, [branchdet]);
+  useEffect(() => {
+    // Update feeDetails with default concession and calculated finalAmount
+    const updatedFees = formData.feeDetails.map((fee) => {
+      const concession = fee.concession || 0; // Default to 0 if concession is not set
+      const finalAmount =
+        concession === 0
+          ? fee.amount
+          : fee.amount - (fee.amount * concession) / 100;
+
+      return {
+        ...fee,
+        concession, // Ensure concession is set
+        finalAmount, // Calculate or set default finalAmount
+        terms: findObjectByKey(feeTypes, "type", fee.name), // Update terms
+      };
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      feeDetails: updatedFees, // Update feeDetails with the new values
+    }));
+  }, [formData.feeDetails, feeTypes]);
 
   useEffect(() => {
     const fetchSections = async (className, curr_acad) => {
@@ -277,6 +326,20 @@ const AddStudents = () => {
     }
   };
 
+  function findObjectByKey(array, key, value) {
+    console.log("Array is", array);
+    console.log("key is", key);
+    console.log("value is", value);
+
+    const foundObject = array.find((obj) => {
+      console.log("Checking object:", obj);
+      return obj[key] === value; // Ensure the callback returns the condition
+    });
+
+    console.log("foundobj", foundObject);
+
+    return foundObject ? foundObject.terms : undefined;
+  }
   const handleClassChange = (e) => {
     const selectedClass = classes.find((cls) => cls.name === e.target.value);
 
@@ -291,6 +354,7 @@ const AddStudents = () => {
     console.log("form data in classchange is", formData);
     setClassname(selectedClass.name);
     console.log("classname current is", classname);
+    console.log("fee types", feeTypes);
   };
 
   const handleSectionChange = async (e) => {
@@ -309,18 +373,16 @@ const AddStudents = () => {
     // })}
     if (selectedSection.fees) {
       console.log("current sec fees are", selectedSection.fees);
-      selectedSection.fees.map((fees) => {
-        formData.feeDetails.push({
+
+      setFormData((prev) => ({
+        ...prev,
+        feeDetails: selectedSection.fees.map((fees) => ({
           name: fees.feeType,
           amount: fees.amount,
-        });
-        console.log("formadata is", formData);
-        Fees.push({
-          name: fees.feeType,
-          amount: fees.amount,
-        });
-      });
+        })),
+      }));
     }
+    console.log("form fee", formData.feeDetails);
     console.log(" curr fees are ", Fees);
   };
 
@@ -1213,11 +1275,12 @@ const AddStudents = () => {
                   required
                 >
                   <option value="">Select Bus</option>
-                  {buses.map((bus) => (
-                    <option key={bus._id} value={bus._id}>
-                      {bus.busNo}
-                    </option>
-                  ))}
+                  {buses &&
+                    buses.map((bus) => (
+                      <option key={bus._id} value={bus._id}>
+                        {bus.busNo}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -1312,6 +1375,10 @@ const AddStudents = () => {
                   Amount
                 </th>
                 <th className="px-6 py-3 text-left text-sm font-bold text-black">
+                  Terms
+                </th>
+
+                <th className="px-6 py-3 text-left text-sm font-bold text-black">
                   Concession (%)
                 </th>
                 <th className="px-6 py-3 text-left text-sm font-bold text-black">
@@ -1328,6 +1395,9 @@ const AddStudents = () => {
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {fee.amount}
                   </td>
+                  <td className="py-2 px-4 border-b">
+                    {findObjectByKey(feeTypes, "type", fee.name)}
+                  </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     <input
                       type="number"
@@ -1336,6 +1406,11 @@ const AddStudents = () => {
                       min="0"
                       max="100"
                       onChange={(e) => {
+                        const terms = findObjectByKey(
+                          feeTypes,
+                          "type",
+                          fee.name
+                        );
                         const concession = parseFloat(e.target.value) || 0;
                         const finalAmount =
                           fee.amount - (fee.amount * concession) / 100;
@@ -1344,6 +1419,7 @@ const AddStudents = () => {
                           ...fee,
                           concession,
                           finalAmount,
+                          terms,
                         };
                         setFormData({ ...formData, feeDetails: updatedFees });
                       }}
