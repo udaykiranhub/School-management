@@ -13,11 +13,7 @@ exports.authMiddleware = (req, res, next) => {
   const token = authHeader.replace("Bearer ", "");
 
   try {
-<<<<<<< HEAD
-
-=======
     // console.log("try")
->>>>>>> 8497c196b8fbe807dd80de1a62debd0c6724cd8c
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
