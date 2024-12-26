@@ -4,12 +4,14 @@ const AcademicYear = require("../models/Acyear");
 // Add a new exam
 exports.addExam = async (req, res) => {
   try {
-    const { examName, classId, examType, academicId, subjects } = req.body;
+    const { examName, classId, examType, academicId, sectionId, subjects } =
+      req.body;
 
     const existingExam = await Exam.findOne({
       examName,
       classId,
       academicId,
+      sectionId,
     });
     if (existingExam) {
       return res.status(400).json({
@@ -24,6 +26,7 @@ exports.addExam = async (req, res) => {
       classId,
       examType,
       subjects,
+      sectionId,
     });
 
     const savedExam = await newExam.save();
@@ -50,12 +53,13 @@ exports.addExam = async (req, res) => {
 // Get all exams for a specific academic year
 exports.getAllExams = async (req, res) => {
   try {
-    const { academicId } = req.params;
+    const { sectionId, classId } = req.params;
 
     // Find all exams related to the specific academic year
-    const exams = await Exam.find({ academicId })
+    const exams = await Exam.find({ sectionId, classId })
       .populate("classId", { name: 1 })
-      .populate("academicId", { year: 1 });
+      .populate("academicId", { year: 1 })
+      .populate("sectionId", { name: 1 });
     return res.status(200).json({ success: true, data: exams });
   } catch (error) {
     return res.status(500).json({
@@ -67,40 +71,40 @@ exports.getAllExams = async (req, res) => {
 };
 
 // Search exams by class or section
-exports.searchExams = async (req, res) => {
-  try {
-    const { academicId } = req.params;
-    const { query } = req.body; // Expecting search query (e.g., class or section)
+// exports.searchExams = async (req, res) => {
+//   try {
+//     const { academicId } = req.params;
+//     const { query } = req.body; // Expecting search query (e.g., class or section)
 
-    if (typeof query !== "string" || query.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "Query must be a non-empty string",
-      });
-    }
+//     if (typeof query !== "string" || query.trim() === "") {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Query must be a non-empty string",
+//       });
+//     }
 
-    // Find exams that match the query in class or section
-    const exams = await Exam.find({
-      academicId,
-      $or: [{ class: query }, { section: query }],
-    });
+//     // Find exams that match the query in class or section
+//     const exams = await Exam.find({
+//       academicId,
+//       $or: [{ class: query }, { section: query }],
+//     });
 
-    if (exams.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No exams found for the given criteria",
-      });
-    }
+//     if (exams.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No exams found for the given criteria",
+//       });
+//     }
 
-    return res.status(200).json({ success: true, data: exams });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to search exams",
-      error: error.message,
-    });
-  }
-};
+//     return res.status(200).json({ success: true, data: exams });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to search exams",
+//       error: error.message,
+//     });
+//   }
+// };
 
 // Update an exam
 exports.updateExam = async (req, res) => {

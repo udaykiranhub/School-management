@@ -15,6 +15,11 @@ const examSchema = new mongoose.Schema(
       ref: "Class",
       required: true,
     },
+    sectionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
+    },
     academicId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicYear",
@@ -52,7 +57,7 @@ const examSchema = new mongoose.Schema(
 );
 
 examSchema.index(
-  { examName: 1, classId: 1, academicYear: 1 },
+  { examName: 1, classId: 1, academicYear: 1, sectionId: 1 },
   { unique: true }
 );
 
