@@ -4,16 +4,29 @@ const {
   getAllMarks,
   getMarksByStudent,
   updateMarks,
-  deleteMarks
+  deleteMarks,
+  getMarksReport
 } = require("../controller/MarksController");
 const protect = require("../middleware/Authtoken");
 
 const router = express.Router();
 
-router.post("/:branchId", protect.authMiddleware, addMarks); // Add marks
-router.get("/:branchId", protect.authMiddleware, getAllMarks); // Get all marks
-router.get("/:studentId/:branchId", protect.authMiddleware, getMarksByStudent); // Get marks by student
-router.put("/:id/:branchId", protect.authMiddleware, updateMarks); // Update marks
-router.delete("/:id/:branchId", protect.authMiddleware, deleteMarks); // Delete marks
+// Add marks
+router.post("/:branchId", protect.authMiddleware, addMarks);
+
+// Get marks report for an exam
+router.get("/report/:examId/:classId/:sectionId/:branchId", protect.authMiddleware, getMarksReport);
+
+// Get all marks
+router.get("/:branchId", protect.authMiddleware, getAllMarks);
+
+// Get marks by student
+router.get("/:studentId/:branchId", protect.authMiddleware, getMarksByStudent);
+
+// Update marks
+router.put("/:id/:branchId", protect.authMiddleware, updateMarks);
+
+// Delete marks
+router.delete("/:id/:branchId", protect.authMiddleware, deleteMarks);
 
 module.exports = router;

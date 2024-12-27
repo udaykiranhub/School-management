@@ -11,18 +11,11 @@ const ViewMarks = () => {
   const [examId, setExamId] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
-  
+
   const [exams, setExams] = useState([]);
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
-  const [marksData, setMarksData] = useState({
-    examName: '',
-    className: '',
-    sectionName: '',
-    passStudents: [],
-    failStudents: [],
-    subjectReport: []
-  });
+  const [marksData, setMarksData] = useState(null);
 
   // Fetch current academic year
   useEffect(() => {
@@ -35,7 +28,7 @@ const ViewMarks = () => {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
-          
+
           const res = await response.json();
           if (res.success && res.data.length > 0) {
             const latestYear = res.data.sort((a, b) => {
@@ -43,7 +36,7 @@ const ViewMarks = () => {
               const [startB] = b.year.split("-").map(Number);
               return startB - startA;
             })[0];
-            
+
             setAcid(latestYear._id);
             setCurrentAcademicYear(latestYear.year);
           }
@@ -81,8 +74,15 @@ const ViewMarks = () => {
   const handleClassChange = async (classId) => {
     setSelectedClass(classId);
     setSelectedSection('');
+    setExamId('');
+    setMarksData(null);
+
+    if (!classId) return;
+
     try {
       const selectedClass = classes.find(cls => cls._id === classId);
+      if (!selectedClass) return;
+
       const response = await fetch(Allapi.getSectionsByClass.url(selectedClass.name, acid), {
         method: Allapi.getSectionsByClass.method,
         headers: {
@@ -100,13 +100,21 @@ const ViewMarks = () => {
 
   const handleSectionChange = async (sectionId) => {
     setSelectedSection(sectionId);
+    setExamId('');
+    setMarksData(null);
+
+    if (!sectionId || !selectedClass) return;
+
     try {
-      const response = await fetch(Allapi.getAllExams.url(selectedClass, sectionId), {
-        method: Allapi.getAllExams.method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await fetch(
+        Allapi.getAllExams.url(selectedClass, sectionId, branchdet._id),
+        {
+          method: Allapi.getAllExams.method,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const result = await response.json();
       if (result.success) {
         setExams(result.data);
@@ -123,47 +131,75 @@ const ViewMarks = () => {
     }
 
     try {
-      const response = await fetch(Allapi.getMarks.url(examId, selectedClass, selectedSection), {
-        method: Allapi.getMarks.method,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      
+      const response = await fetch(
+        Allapi.getMarksReport.url(examId, selectedClass, selectedSection, branchdet._id),
+        {
+          method: Allapi.getMarksReport.method,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
       const result = await response.json();
       if (result.success) {
-        setMarksData(result.data);
+        // Sort pass students by total marks in descending order
+        const sortedData = {
+          ...result.data,
+          passStudents: result.data.passStudents
+            .sort((a, b) => {
+              // First sort by total marks
+              const totalDiff = b.total - a.total;
+              if (totalDiff !== 0) return totalDiff;
+
+              // If total marks are equal, sort by percentage
+              return b.percentage - a.percentage;
+            })
+        };
+        setMarksData(sortedData);
       } else {
-        toast.error("Failed to fetch marks data");
+        toast.error(result.message || "Failed to fetch marks data");
       }
     } catch (error) {
       toast.error("Error fetching marks data");
     }
   };
 
+  // Function to determine rank suffix
+  const getRankSuffix = (rank) => {
+    if (rank >= 11 && rank <= 13) return 'th';
+    const lastDigit = rank % 10;
+    switch (lastDigit) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
   return (
-    <div className="min-h-screen px-4 py-8 bg-gray-100">
-      <div className="max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
-        <h2 className="mb-6 text-3xl font-bold text-center text-indigo-700">Marks View with Ranks</h2>
-        
+    <div className="min-h-screen px-4 py-8 bg-slate-100">
+      <div className="max-w-6xl p-8 mx-auto bg-white rounded-xl shadow-xl">
+        <h2 className="mb-8 text-3xl font-bold text-center text-blue-700">Marks View with Ranks</h2>
+
         {/* Filters Section */}
         <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-4">
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Academic Year</label>
+            <label className="block mb-2 text-sm font-semibold text-gray-800">Academic Year</label>
             <input
               type="text"
               value={currentAcademicYear}
               disabled
-              className="w-full p-2 bg-gray-100 border rounded"
+              className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-700"
             />
           </div>
-          
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Class</label>
+            <label className="block mb-2 text-sm font-semibold text-gray-800">Class</label>
             <select
               value={selectedClass}
               onChange={(e) => handleClassChange(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             >
               <option value="">Select Class</option>
               {classes.map((cls) => (
@@ -171,13 +207,13 @@ const ViewMarks = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Section</label>
+            <label className="block mb-2 text-sm font-semibold text-gray-800">Section</label>
             <select
               value={selectedSection}
               onChange={(e) => handleSectionChange(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
               disabled={!selectedClass}
             >
               <option value="">Select Section</option>
@@ -186,13 +222,13 @@ const ViewMarks = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Exam</label>
+            <label className="block mb-2 text-sm font-semibold text-gray-800">Exam</label>
             <select
               value={examId}
               onChange={(e) => setExamId(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
               disabled={!selectedSection}
             >
               <option value="">Select Exam</option>
@@ -203,121 +239,167 @@ const ViewMarks = () => {
           </div>
         </div>
 
-        <div className="mb-6 text-center">
+        <div className="mb-8 text-center">
           <button
             onClick={fetchMarksData}
-            className="px-6 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+            disabled={!examId || !selectedClass || !selectedSection}
+            className={`px-8 py-3 text-white rounded-lg font-medium transition-colors duration-200 ${!examId || !selectedClass || !selectedSection
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800'
+              }`}
           >
             View Results
           </button>
         </div>
 
         {/* Results Display */}
-        {marksData.examName && (
+        {marksData && (
           <div className="space-y-8">
             {/* Exam Details */}
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="mb-4 text-xl font-semibold">Exam Details</h3>
-              <div className="grid grid-cols-3 gap-4">
+            <div className="p-6 bg-blue-50 rounded-xl border border-blue-200 shadow-sm">
+              <h3 className="mb-4 text-xl font-semibold text-blue-800">Exam Details</h3>
+              <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <p className="text-gray-600">Exam Name:</p>
-                  <p className="font-medium">{marksData.examName}</p>
+                  <p className="text-sm font-medium text-gray-600">Exam Name:</p>
+                  <p className="text-lg font-semibold text-gray-900">{marksData.examName}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Class:</p>
-                  <p className="font-medium">{marksData.className}</p>
+                  <p className="text-sm font-medium text-gray-600">Class:</p>
+                  <p className="text-lg font-semibold text-gray-900">{marksData.className}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600">Section:</p>
-                  <p className="font-medium">{marksData.sectionName}</p>
+                  <p className="text-sm font-medium text-gray-600">Section:</p>
+                  <p className="text-lg font-semibold text-gray-900">{marksData.sectionName}</p>
                 </div>
               </div>
             </div>
 
             {/* Pass Students */}
-            <div className="overflow-x-auto">
-              <h3 className="mb-4 text-xl font-semibold text-green-600">Pass Students</h3>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="p-3 text-left border">Rank</th>
-                    <th className="p-3 text-left border">Name</th>
-                    {marksData.passStudents[0]?.subjects.map((subject) => (
-                      <th key={subject.name} className="p-3 text-left border">{subject.name}</th>
-                    ))}
-                    <th className="p-3 text-left border">Total</th>
-                    <th className="p-3 text-left border">Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {marksData.passStudents.map((student, index) => (
-                    <tr key={student.id}>
-                      <td className="p-3 border">{index + 1}</td>
-                      <td className="p-3 border">{student.name}</td>
-                      {student.subjects.map((subject) => (
-                        <td key={subject.name} className="p-3 border">{subject.marks}</td>
+            {marksData.passStudents?.length > 0 && (
+              <div className="overflow-x-auto">
+                <h3 className="mb-4 text-xl font-semibold text-green-700">
+                  Pass Students ({marksData.passStudents.length})
+                </h3>
+                <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-green-50">
+                    <tr>
+                      <th className="p-4 text-left font-semibold text-green-900 border-b border-green-200">Rank</th>
+                      <th className="p-4 text-left font-semibold text-green-900 border-b border-green-200">Name</th>
+                      {marksData.passStudents[0]?.subjects.map((subject) => (
+                        <th key={subject.name} className="p-4 text-left font-semibold text-green-900 border-b border-green-200">
+                          {subject.name}
+                        </th>
                       ))}
-                      <td className="p-3 border">{student.total}</td>
-                      <td className="p-3 border">{student.percentage}%</td>
+                      <th className="p-4 text-left font-semibold text-green-900 border-b border-green-200">Total</th>
+                      <th className="p-4 text-left font-semibold text-green-900 border-b border-green-200">Percentage</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {marksData.passStudents.map((student, index) => {
+                      const rank = index + 1;
+                      const rankSuffix = getRankSuffix(rank);
+
+                      return (
+                        <tr key={student.id} className={`hover:bg-green-50 ${index < 3 ? 'bg-green-50' : ''}`}>
+                          <td className="p-4 border-b border-green-100">
+                            <span className={`font-bold ${index < 3 ? 'text-green-700' : ''}`}>
+                              {rank}{rankSuffix}
+                            </span>
+                          </td>
+                          <td className="p-4 border-b border-green-100 font-medium">
+                            {student.name}
+                            {index < 3 && (
+                              <span className="ml-2 text-xs font-bold text-green-700">
+                                {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                              </span>
+                            )}
+                          </td>
+                          {student.subjects.map((subject) => (
+                            <td key={subject.name} className="p-4 border-b border-green-100">
+                              {subject.marks}
+                            </td>
+                          ))}
+                          <td className="p-4 border-b border-green-100 font-semibold">
+                            {student.total}
+                          </td>
+                          <td className="p-4 border-b border-green-100 font-semibold text-green-700">
+                            {student.percentage}%
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {/* Failed Students */}
-            <div className="overflow-x-auto">
-              <h3 className="mb-4 text-xl font-semibold text-red-600">Failed Students</h3>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="p-3 text-left border">Name</th>
-                    {marksData.failStudents[0]?.subjects.map((subject) => (
-                      <th key={subject.name} className="p-3 text-left border">{subject.name}</th>
-                    ))}
-                    <th className="p-3 text-left border">Total</th>
-                    <th className="p-3 text-left border">Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {marksData.failStudents.map((student) => (
-                    <tr key={student.id} className="bg-yellow-50">
-                      <td className="p-3 border">{student.name}</td>
-                      {student.subjects.map((subject) => (
-                        <td key={subject.name} className="p-3 border">{subject.marks}</td>
+            {marksData.failStudents?.length > 0 && (
+              <div className="overflow-x-auto">
+                <h3 className="mb-4 text-xl font-semibold text-red-700">
+                  Failed Students ({marksData.failStudents.length})
+                </h3>
+                <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-red-50">
+                    <tr>
+                      <th className="p-4 text-left font-semibold text-red-900 border-b border-red-200">Name</th>
+                      {marksData.failStudents[0]?.subjects.map((subject) => (
+                        <th key={subject.name} className="p-4 text-left font-semibold text-red-900 border-b border-red-200">
+                          {subject.name}
+                        </th>
                       ))}
-                      <td className="p-3 border">{student.total}</td>
-                      <td className="p-3 border">{student.percentage}%</td>
+                      <th className="p-4 text-left font-semibold text-red-900 border-b border-red-200">Total</th>
+                      <th className="p-4 text-left font-semibold text-red-900 border-b border-red-200">Percentage</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {marksData.failStudents.map((student) => (
+                      <tr key={student.id} className="hover:bg-red-50">
+                        <td className="p-4 border-b border-red-100 text-black font-medium">{student.name}</td>
+                        {student.subjects.map((subject) => (
+                          <td key={subject.name} className="p-4 border-b border-red-100">
+                            <span className={subject.marks < subject.passMarks ? 'text-red-600 font-bold' : 'text-black'}>
+                              {subject.marks}
+                            </span>
+                          </td>
+                        ))}
+                        <td className="p-4 border-b border-red-100 text-black font-semibold">{student.total}</td>
+                        <td className="p-4 border-b border-red-100 font-semibold text-red-700">{student.percentage}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {/* Subject-wise Report */}
-            <div className="overflow-x-auto">
-              <h3 className="mb-4 text-xl font-semibold">Subject-wise Report</h3>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="p-3 text-left border">Subject</th>
-                    <th className="p-3 text-left border">Pass Count</th>
-                    <th className="p-3 text-left border">Fail Count</th>
-                    <th className="p-3 text-left border">Total Students</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {marksData.subjectReport.map((subject) => (
-                    <tr key={subject.name}>
-                      <td className="p-3 border">{subject.name}</td>
-                      <td className="p-3 border">{subject.passCount}</td>
-                      <td className="p-3 border">{subject.failCount}</td>
-                      <td className="p-3 border">{subject.totalCount}</td>
+            {marksData.subjectReport?.length > 0 && (
+              <div className="overflow-x-auto">
+                <h3 className="mb-4 text-xl font-semibold text-gray-800">Subject-wise Report</h3>
+                <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="p-4 text-left font-semibold text-gray-800 border-b border-gray-200">Subject</th>
+                      <th className="p-4 text-left font-semibold text-gray-800 border-b border-gray-200">Pass Count</th>
+                      <th className="p-4 text-left font-semibold text-gray-800 border-b border-gray-200">Fail Count</th>
+                      <th className="p-4 text-left font-semibold text-gray-800 border-b border-gray-200">Pass Percentage</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {marksData.subjectReport.map((subject) => (
+                      <tr key={subject.name} className="hover:bg-gray-50">
+                        <td className="p-4 border-b text-black font-medium">{subject.name}</td>
+                        <td className="p-4 border-b text-green-700 font-medium">{subject.passCount}</td>
+                        <td className="p-4 border-b text-red-700 font-medium">{subject.failCount}</td>
+                        <td className="p-4 border-b text-black font-medium">
+                          {((subject.passCount / (subject.passCount + subject.failCount)) * 100).toFixed(2)}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 

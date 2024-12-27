@@ -202,25 +202,39 @@ const Allapi = {
     url: (sid) => `${backapi}/api/students/edit-student/${sid}`,
     method: "PUT",
   },
-  addExam:{
+  addExam: {
     url: `${backapi}/api/exams/add-exam`,
     method: "POST",
   },
-  getAllExams:{
-    url : (scls,ssec,bid)=>`${backapi}/api/exams/all-exams/${scls}/${ssec}/${bid}`,
+  getAllExams: {
+    url: (classId, sectionId, branchId) =>
+      `${backapi}/api/exams/all-exams/${classId}/${sectionId}/${branchId}`,
     method: "GET",
   },
-  deleteExam:{
-    url : (exid)=>`${backapi}/api/exams/delete-exam/${exid}`,
+  deleteExam: {
+    url: (examId) => `${backapi}/api/exams/delete-exam/${examId}`,
     method: "DELETE",
   },
-  getEveryExam:{
-    url : (bid)=>`${backapi}/api/exams/all-exams/${bid}`,
+  getEveryExam: {
+    url: (branchId) => `${backapi}/api/exams/all-exams/${branchId}`,
     method: "GET",
   },
-  addMarks:{
-    url: (bid)=>`${backapi}/api/marks/${bid}`,
-    method: "POST"
+  addMarks: {
+    url: (branchId) => `${backapi}/api/marks/${branchId}`,
+    method: "POST",
+  },
+  getAllMarks: {
+    url: (branchId) => `${backapi}/api/marks/${branchId}`,
+    method: "GET",
+  },
+  getMarksByStudent: {
+    url: (studentId, branchId) => `${backapi}/api/marks/${studentId}/${branchId}`,
+    method: "GET",
+  },
+  getMarksReport: {
+    url: (examId, classId, sectionId, branchId) =>
+      `${backapi}/api/marks/report/${examId}/${classId}/${sectionId}/${branchId}`,
+    method: "GET",
   }
 };
 
