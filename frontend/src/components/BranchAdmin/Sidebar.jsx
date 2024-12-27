@@ -286,6 +286,50 @@ const BranchAdminSidebar = () => {
             </div>
           )}
         </div>
+
+
+
+        <div>
+  <button
+    onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
+    className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+      activeMenu === "marks"
+        ? "bg-gray-700 text-black"
+        : "text-black"
+    }`}
+  >
+    <FaChalkboardTeacher className="mr-3" />
+    Marks
+  </button>
+  {activeMenu === "marks" && ( // Change "exams" to "marks"
+    <div className="flex flex-col pl-6 mt-2 space-y-2">
+      <Link
+        to={`/branch-admin/marks/enter`} // Link to the "Enter Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaPlus className="mr-2" />
+        Enter Marks
+      </Link>
+      <Link
+        to={`/branch-admin/marks/view`} // Link to the "View Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaEdit className="mr-2" />
+        View Marks
+      </Link>
+    </div>
+  )}
+</div>
+
+
+
+
+
+
+
+
+
+
       </nav>
 
       {/* Logout Button */}

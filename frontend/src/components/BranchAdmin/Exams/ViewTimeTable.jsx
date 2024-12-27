@@ -162,7 +162,7 @@ const ViewTimeTable = () => {
       fetchExams();
     }
   }, [selectedClass, selectedSection]);
-
+  console.log("exams data is: ",exams);
   return (
     <div className="min-h-screen px-4 py-8 bg-gray-100">
       <div className="max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
