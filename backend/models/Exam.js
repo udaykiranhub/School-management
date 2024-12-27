@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 
 const examSchema = new mongoose.Schema(
   {
+    branchId:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Branch",
+      required:true,
+    },
     examName: {
       type: String,
       required: true,

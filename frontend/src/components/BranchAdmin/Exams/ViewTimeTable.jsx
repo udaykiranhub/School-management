@@ -90,11 +90,11 @@ const ViewTimeTable = () => {
   };
 
   const fetchExams = async () => {
-    if (!selectedClass || !selectedSection) return;
+    if (!selectedClass || !selectedSection  || !branchdet?._id) return;
     
     setLoading(true);
     try {
-      const response = await fetch(Allapi.getAllExams.url(selectedClass, selectedSection), {
+      const response = await fetch(Allapi.getAllExams.url(selectedClass, selectedSection, branchdet._id), {
         method: Allapi.getAllExams.method,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

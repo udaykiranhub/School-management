@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const marksSchema = new mongoose.Schema(
   {
+    branchId:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Branch",
+      required: true,
+    },
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
@@ -46,4 +51,5 @@ const marksSchema = new mongoose.Schema(
   }
 );
 
+marksSchema.index({ studentId: 1, examId: 1 }, { unique: true });
 module.exports = mongoose.model("Marks", marksSchema);

@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,14 +10,14 @@ const CreateTimeTable = () => {
   const [acid, setAcid] = useState('');
   const [wholeData, setWholeData] = useState([]);
   const [currentAcademicYear, setCurrentAcademicYear] = useState('');
-  
+
   // Form states
   const [examName, setExamName] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [sections, setSections] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  
+
   // Schedule states
   const [schedule, setSchedule] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -71,6 +70,7 @@ const CreateTimeTable = () => {
       const result = await response.json();
       if (result.success) {
         setWholeData(result.data);
+        console.log("clSS details",result)
       } else {
         toast.error(result.message || "Failed to fetch class data");
       }
@@ -195,6 +195,7 @@ const CreateTimeTable = () => {
     }
 
     const examData = {
+      branchId: branchdet._id, // Added branchId
       examName,
       classId: selectedClass,
       sectionId: selectedSection,
@@ -390,7 +391,7 @@ const CreateTimeTable = () => {
                   <div>
                     <p className="font-medium">{item.name}</p>
                     <p className="text-sm text-gray-600">
-                      Marks: {item.marks} | Pass Marks: {item.passMarks} | 
+                      Subject: {item.name} | Marks: {item.marks} | Pass Marks: {item.passMarks} | 
                       Date: {new Date(item.date).toLocaleDateString()} | 
                       Time: {item.time}
                     </p>

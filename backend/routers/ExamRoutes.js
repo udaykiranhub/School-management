@@ -5,7 +5,8 @@ const {
   addExam,
   updateExam,
   deleteExam,
-  getAllExams,
+  getAllExamsByClassSection,
+  getAllExams
 } = require("../controller/ExamController");
 
 const router = express.Router();
@@ -14,7 +15,10 @@ const router = express.Router();
 router.post("/add-exam", addExam);
 
 // Route to get all exams for a specific class and section
-router.get("/all-exams/:classId/:sectionId", getAllExams);
+router.get("/all-exams/:classId/:sectionId/:branchId", getAllExamsByClassSection);
+
+router.get("/all-exams/:branchId", getAllExams);
+
 
 // Route to delete a specific exam by ID
 router.delete("/delete-exam/:examId", deleteExam);

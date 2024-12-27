@@ -207,12 +207,20 @@ const Allapi = {
     method: "POST",
   },
   getAllExams:{
-    url : (scls,ssec)=>`${backapi}/api/exams/all-exams/${scls}/${ssec}`,
+    url : (scls,ssec,bid)=>`${backapi}/api/exams/all-exams/${scls}/${ssec}/${bid}`,
     method: "GET",
   },
   deleteExam:{
     url : (exid)=>`${backapi}/api/exams/delete-exam/${exid}`,
     method: "DELETE",
+  },
+  getEveryExam:{
+    url : (bid)=>`${backapi}/api/exams/all-exams/${bid}`,
+    method: "GET",
+  },
+  addMarks:{
+    url: (bid)=>`${backapi}/api/marks/${bid}`,
+    method: "POST"
   }
 };
 
