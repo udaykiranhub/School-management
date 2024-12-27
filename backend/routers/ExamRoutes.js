@@ -1,3 +1,20 @@
+// const express = require("express");
+// const {
+//   addExam,
+//   updateExam,
+//   deleteExam,
+//   getAllExams,
+// } = require("../controller/ExamController");
+
+// const router = express.Router();
+
+// router.post("/add-exam", addExam);
+// router.get("/all-exam/:classId/:sectionId", getAllExams);
+// router.delete("/del-exam/:examId", deleteExam);
+// router.put("/upd-exam/:examId", updateExam);
+// module.exports = router;
+
+
 const express = require("express");
 const {
   addExam,
@@ -8,8 +25,17 @@ const {
 
 const router = express.Router();
 
+// Route to add a new exam
 router.post("/add-exam", addExam);
-router.get("/all-exam/:classId/:sectionId", getAllExams);
-router.delete("/del-exam/:examId", deleteExam);
-router.put("/upd-exam/:examId", updateExam);
+
+// Route to get all exams for a specific class and section
+router.get("/all-exams/:classId/:sectionId", getAllExams);
+
+// Route to delete a specific exam by ID
+router.delete("/delete-exam/:examId", deleteExam);
+
+// Route to update a specific exam by ID
+router.put("/update-exam/:examId", updateExam);
+
 module.exports = router;
+

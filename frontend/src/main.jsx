@@ -34,6 +34,8 @@ import AddStudents from "./components/BranchAdmin/Students/AddStudents.jsx";
 import StudentsReports from "./components/BranchAdmin/Students/StudentsReports.jsx";
 import FeeReport from "./components/BranchAdmin/Students/FeeReport.jsx";
 import StudentEdit from "./components/BranchAdmin/Students/StudentEdit.jsx";
+import CreateTimeTable from "./components/BranchAdmin/Exams/CreateTimeTable.jsx";
+import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -104,6 +106,17 @@ const Router = createBrowserRouter([
           {
             path: "",
             element: <Bdashboard />,
+          },
+          {
+            path: "exam",
+            children : [{
+              path: "create-timetable",
+              element: <CreateTimeTable/>
+            },
+          {
+            path: "view-timetable",
+            element: <ViewTimeTable/>
+          }]
           },
           {
             path: "class/view-all/:acid",

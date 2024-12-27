@@ -202,6 +202,18 @@ const Allapi = {
     url: (sid) => `${backapi}/api/students/edit-student/${sid}`,
     method: "PUT",
   },
+  addExam:{
+    url: `${backapi}/api/exams/add-exam`,
+    method: "POST",
+  },
+  getAllExams:{
+    url : (scls,ssec)=>`${backapi}/api/exams/all-exams/${scls}/${ssec}`,
+    method: "GET",
+  },
+  deleteExam:{
+    url : (exid)=>`${backapi}/api/exams/delete-exam/${exid}`,
+    method: "DELETE",
+  }
 };
 
 export default Allapi;
