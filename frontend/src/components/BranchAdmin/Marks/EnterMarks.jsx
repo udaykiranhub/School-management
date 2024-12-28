@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -77,36 +75,6 @@ const EnterMarks = () => {
     }
   };
 
-  // const fetchStudents = async (classId, sectionId) => {
-  //   try {
-  //     const response = await fetch(Allapi.getStudentsBySection.url(sectionId), {
-  //       method: Allapi.getStudentsBySection.method,
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({ classId })
-  //     });
-
-  //     const result = await response.json();
-  //     if (result.success) {
-  //       setStudents(result.data);
-  //       // Initialize marks data structure
-  //       const initialMarks = {};
-  //       result.data.forEach(student => {
-  //         initialMarks[student._id] = {};
-  //         selectedExam.subjects.forEach(subject => {
-  //           initialMarks[student._id][subject.name] = '';
-  //         });
-  //       });
-  //       setMarksData(initialMarks);
-  //     } else {
-  //       toast.error(result.message || "Failed to fetch students");
-  //     }
-  //   } catch (error) {
-  //     toast.error("Error fetching students");
-  //   }
-  // };
   const fetchStudents = async (classId, sectionId) => {
     if (!classId || !sectionId) return;
 
@@ -327,7 +295,7 @@ const EnterMarks = () => {
 
   return (
     <div className="min-h-screen px-4 py-8 bg-gray-100">
-      <div className="max-w-7xl p-8 mx-auto bg-white rounded-lg shadow-lg">
+      <div className="p-8 mx-auto bg-white rounded-lg shadow-lg max-w-7xl">
         <h2 className="mb-6 text-3xl font-bold text-gray-800">Enter Student Marks</h2>
 
         {/* Academic Year Display */}
@@ -339,7 +307,7 @@ const EnterMarks = () => {
             type="text"
             value={currentAcademicYear}
             disabled
-            className="w-full p-3 bg-gray-50 text-gray-700 border rounded"
+            className="w-full p-3 text-gray-700 border rounded bg-gray-50"
           />
         </div>
 
@@ -353,7 +321,7 @@ const EnterMarks = () => {
             <select
               value={selectedClass}
               onChange={handleClassChange}
-              className="w-full p-3 bg-white border rounded text-gray-700"
+              className="w-full p-3 text-gray-700 bg-white border rounded"
             >
               <option value="">Select Class</option>
               {uniqueClasses.map((cls) => (
@@ -373,7 +341,7 @@ const EnterMarks = () => {
               <select
                 value={selectedSection}
                 onChange={handleSectionChange}
-                className="w-full p-3 bg-white border rounded text-gray-700"
+                className="w-full p-3 text-gray-700 bg-white border rounded"
               >
                 <option value="">Select Section</option>
                 {uniqueSections.map((section) => (
@@ -394,7 +362,7 @@ const EnterMarks = () => {
               <select
                 value={selectedExam?._id || ''}
                 onChange={handleExamChange}
-                className="w-full p-3 bg-white border rounded text-gray-700"
+                className="w-full p-3 text-gray-700 bg-white border rounded"
               >
                 <option value="">Select Exam</option>
                 {filteredExams.map((exam) => (
@@ -410,14 +378,14 @@ const EnterMarks = () => {
         {/* Marks Table */}
         {selectedExam && students.length > 0 && selectedExam?.subjects?.length > 0 && (
           <div className="mt-6 overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300 bg-white">
+            <table className="w-full bg-white border border-collapse border-gray-300">
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-300">
-                  <th className="p-4 text-left text-gray-700 font-semibold border-r border-gray-300">
+                  <th className="p-4 font-semibold text-left text-gray-700 border-r border-gray-300">
                     Student Name
                   </th>
                   {selectedExam.subjects.map(subject => (
-                    <th key={subject._id} className="p-4 text-left text-gray-700 font-semibold border-r border-gray-300">
+                    <th key={subject._id} className="p-4 font-semibold text-left text-gray-700 border-r border-gray-300">
                       <div>{subject.name}</div>
                       <div className="text-xs text-gray-500">
                         Max: {subject.marks} | Pass: {subject.passMarks}
@@ -429,7 +397,7 @@ const EnterMarks = () => {
               <tbody>
                 {students.map((student, idx) => (
                   <tr key={student._id} className={idx !== students.length - 1 ? 'border-b border-gray-300' : ''}>
-                    <td className="p-4 text-gray-700 font-medium border-r border-gray-300">
+                    <td className="p-4 font-medium text-gray-700 border-r border-gray-300">
                       {student.name}
                     </td>
                     {selectedExam.subjects.map(subject => (
@@ -440,7 +408,7 @@ const EnterMarks = () => {
                           onChange={(e) => handleMarksChange(student._id, subject, e.target.value)}
                           min="0"
                           max={subject.marks}
-                          className="w-full bg-transparent border-none text-gray-700 focus:outline-none text-center"
+                          className="w-full text-center text-gray-700 bg-transparent border-none focus:outline-none"
                           placeholder="0"
                         />
                       </td>
@@ -452,7 +420,7 @@ const EnterMarks = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full mt-6 px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              className="w-full px-6 py-3 mt-6 text-white transition-colors bg-blue-500 rounded hover:bg-blue-600"
             >
               Submit Marks
             </button>

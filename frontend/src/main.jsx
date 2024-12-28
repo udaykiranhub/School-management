@@ -40,6 +40,8 @@ import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 
 import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
+import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx";
+import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -121,6 +123,17 @@ const Router = createBrowserRouter([
           {
             path: "view-timetable",
             element: <ViewTimeTable/>
+          }]
+          },
+          {
+            path: "syllabus",
+            children : [{
+              path: "create",
+              element: <CreateSyllabus/>
+            },
+          {
+            path: "view",
+            element: <ViewSyllabus/>
           }]
           },
 

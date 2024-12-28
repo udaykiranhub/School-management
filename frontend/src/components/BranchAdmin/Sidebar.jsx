@@ -48,7 +48,7 @@ const BranchAdminSidebar = () => {
         <img
           src="/path-to-logo.png"
           alt="School Logo"
-          className="h-10 w-10 rounded-full mr-2"
+          className="w-10 h-10 mr-2 rounded-full"
         />
         <span className="text-xl font-semibold">Branch Admin</span>
       </div>
@@ -287,6 +287,38 @@ const BranchAdminSidebar = () => {
           )}
         </div>
 
+        <div>
+          <button
+            onClick={() => handleMenuClick("syllabus")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+              activeMenu === "syllabus"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+            }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+            Syllabus
+          </button>
+          {activeMenu === "syllabus" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to={`/branch-admin/syllabus/create`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Create Syllabus
+              </Link>
+              <Link
+                to={`/branch-admin/syllabus/view`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                View TimeTable
+              </Link>
+            </div>
+          )}
+        </div>
+
 
 
         <div>
@@ -334,7 +366,7 @@ const BranchAdminSidebar = () => {
 
       {/* Logout Button */}
       <button
-        className="flex items-center p-2 my-4 mx-4 bg-red-500 text-white hover:bg-red-700 rounded shadow-lg"
+        className="flex items-center p-2 mx-4 my-4 text-white bg-red-500 rounded shadow-lg hover:bg-red-700"
         onClick={handleLogout}
       >
         <FaSignOutAlt className="mr-3" />
