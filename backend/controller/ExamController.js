@@ -6,18 +6,18 @@ const AcademicYear = require("../models/Acyear");
 // Add a new exam
 exports.addExam = async (req, res) => {
   try {
-    const { branchId, examName, classId, examType, academicId, sectionId, subjects } = req.body;
+    const { branchId, examName, classId, academicId, sectionId, subjects } = req.body;
 
-    // Check if an exam with the same name and section already exists
+    // Check if an exam with the same name, section, and academic year already exists
     const existingExam = await Exam.findOne({
-      branchId,
       examName,
       sectionId,
+      academicId,
     });
     if (existingExam) {
       return res.status(400).json({
         success: false,
-        message: "Exam already exists for this section",
+        message: "Exam already exists for this section in the academic year",
       });
     }
 
@@ -27,9 +27,8 @@ exports.addExam = async (req, res) => {
       examName,
       academicId,
       classId,
-      examType,
-      subjects,
       sectionId,
+      subjects,
     });
 
     const savedExam = await newExam.save();
@@ -45,6 +44,7 @@ exports.addExam = async (req, res) => {
       data: savedExam,
     });
   } catch (error) {
+    console.error("Error adding exam: ", error);
     return res.status(500).json({
       success: false,
       message: "Failed to add exam",

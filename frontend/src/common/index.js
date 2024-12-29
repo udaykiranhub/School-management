@@ -227,6 +227,15 @@ const Allapi = {
       `${backapi}/api/marks/report/${examId}/${classId}/${sectionId}/${branchId}`,
     method: "GET",
   },
+  addSyllabus: {
+    url: (bid) => `${backapi}/api/syllabus/${bid}/syllabus`,
+    method: "POST"
+  },
+  getAllSyllabus: {
+    url: (bid, acid) => `${backapi}/api/syllabus/${bid}/syllabus/${acid}`,
+    method: "GET"
+  },
+
   // Teacher endpoints
   addTeacher: {
     url: `${backapi}/api/teachers/add-teacher`,

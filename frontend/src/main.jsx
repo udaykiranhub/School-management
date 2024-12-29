@@ -43,7 +43,8 @@ import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
 import HallTicket from "./components/BranchAdmin/Hallticket/Hallticket.jsx";
 import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
 import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
-
+import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx";
+import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -137,6 +138,17 @@ const Router = createBrowserRouter([
           {
             path: "view-teachers",
             element: <ViewTeachers />
+          },
+          {
+            path: "syllabus",
+            children: [{
+              path: "create",
+              element: <CreateSyllabus />
+            },
+            {
+              path: "view",
+              element: <ViewSyllabus />
+            }]
           },
 
 
