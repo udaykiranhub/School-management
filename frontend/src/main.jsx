@@ -53,6 +53,10 @@ import AddEnquiry from "./components/BranchAdmin/Enquiry/AddEnquiry.jsx";
 import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
 
 
+import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
+import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
+
+
 
 const Router = createBrowserRouter([
   {
@@ -174,7 +178,19 @@ const Router = createBrowserRouter([
 
 
 
-          
+          {
+            path: "teachers",
+            children : [{
+              path: "add-teacher",
+              element: <AddTeacher/>
+            },
+          {
+            path: "view-teachers",
+            element: <ViewTeachers/>
+          }]
+          },
+
+     
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,

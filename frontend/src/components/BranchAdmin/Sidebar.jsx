@@ -370,14 +370,14 @@ const BranchAdminSidebar = () => {
           {activeMenu === "teachers" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to={`/branch-admin/add-teacher`}
+                to={`/branch-admin/teachers/add-teacher`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />
                 Add Teacher
               </Link>
               <Link
-                to={`/branch-admin/view-teachers`}
+                to={`/branch-admin/teachers/view-teachers`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
