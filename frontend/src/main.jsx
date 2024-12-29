@@ -41,6 +41,19 @@ import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
 
+
+
+import CreateHallTicket from "./components/BranchAdmin/Marks/CreateHallTicket.jsx";
+
+
+
+
+
+import AddEnquiry from "./components/BranchAdmin/Enquiry/AddEnquiry.jsx";
+import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
+
+
+
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -134,12 +147,34 @@ const Router = createBrowserRouter([
           {
             path: "view",
             element: <ViewMarks/>
+          },
+
+       {
+
+
+            path:"create",
+            element:<CreateHallTicket/>
+
+          },   
+        ]
+          },
+
+
+          {
+            path: "enquiry",
+            children : [{
+              path: "create-enquiry",
+              element: <AddEnquiry/>
+            },
+          {
+            path: "view-enquiry",
+            element: <ViewEnquiry/>
           }]
           },
 
 
-          
 
+          
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,

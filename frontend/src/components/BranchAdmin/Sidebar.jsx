@@ -283,9 +283,14 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 View TimeTable
               </Link>
+
+
+
             </div>
           )}
         </div>
+
+
 
 
 
@@ -317,9 +322,121 @@ const BranchAdminSidebar = () => {
         <FaEdit className="mr-2" />
         View Marks
       </Link>
+
+
+
+
+
+
+
+
+
+      <Link
+                to={`/branch-admin/marks/create`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                Create Hall Ticket
+              </Link>
+
+
+
+
+
+
+
     </div>
   )}
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+          <button
+            onClick={() => handleMenuClick("enquiry")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+              activeMenu === "enquiry"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+            }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+                Enquiry
+          </button>
+          {activeMenu === "enquiry" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to={`/branch-admin/enquiry/create-enquiry`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Add Enquiry
+              </Link>
+              <Link
+                to={`/branch-admin/enquiry/view-enquiry`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                View Enquiry
+              </Link>
+
+
+
+            </div>
+          )}
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
