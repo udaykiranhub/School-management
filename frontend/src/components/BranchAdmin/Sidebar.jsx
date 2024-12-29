@@ -313,7 +313,7 @@ const BranchAdminSidebar = () => {
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
-                View TimeTable
+                View Syllabus
               </Link>
             </div>
           )}
@@ -341,6 +341,13 @@ const BranchAdminSidebar = () => {
       >
         <FaPlus className="mr-2" />
         Enter Marks
+      </Link>
+      <Link
+        to={`/branch-admin/marks/update`} // Link to the "Enter Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaPlus className="mr-2" />
+        Update Marks
       </Link>
       <Link
         to={`/branch-admin/marks/view`} // Link to the "View Marks" page

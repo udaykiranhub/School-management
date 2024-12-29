@@ -42,6 +42,7 @@ import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
 import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx";
 import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
+import UpdateMarks from "./components/BranchAdmin/Marks/UpdateMarks.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -143,6 +144,10 @@ const Router = createBrowserRouter([
             children : [{
               path: "enter",
               element: <EnterMarks/>
+            },
+            {
+              path: "update",
+              element: <UpdateMarks/>
             },
           {
             path: "view",

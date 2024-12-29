@@ -223,6 +223,10 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/marks/${branchId}`,
     method: "POST",
   },
+  updateMarks: {
+    url: (id,bid)=>`${backapi}/api/marks/${id}/${bid}`,
+    method: "PUT"
+  },
   getAllMarks: {
     url: (branchId) => `${backapi}/api/marks/${branchId}`,
     method: "GET",
@@ -247,6 +251,10 @@ const Allapi = {
   deleteSyllabus:{
     url:(id)=>`${backapi}/api/syllabus/${id}`,
     method:"DELETE"
+  },
+  getExamById:{
+    url:(exid,bid)=>`${backapi}/api/marks/exam/${exid}/${bid}`,
+    method: "GET"
   }
 };
 
