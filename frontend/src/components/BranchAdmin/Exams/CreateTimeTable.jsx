@@ -17,6 +17,7 @@ const CreateTimeTable = () => {
   const [selectedSection, setSelectedSection] = useState('');
   const [sections, setSections] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [availableSubjects, setAvailableSubjects] = useState([]); // New state for filtered subjects
 
   // Schedule states
   const [schedule, setSchedule] = useState([]);
@@ -24,7 +25,7 @@ const CreateTimeTable = () => {
   const [totalMarks, setTotalMarks] = useState('');
   const [passMarks, setPassMarks] = useState('');
   const [date, setDate] = useState('');
-  const [time, setTime] = useState(''); // New time state
+  const [time, setTime] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
 
   const curracad = async (bid) => {
@@ -70,7 +71,6 @@ const CreateTimeTable = () => {
       const result = await response.json();
       if (result.success) {
         setWholeData(result.data);
-        console.log("clSS details",result)
       } else {
         toast.error(result.message || "Failed to fetch class data");
       }
@@ -114,6 +114,7 @@ const CreateTimeTable = () => {
         ...(selectedClassData.subjects.additionalSubjects || [])
       ];
       setSubjects(allSubjects);
+      setAvailableSubjects(allSubjects); // Initialize available subjects
     }
   };
 
@@ -136,11 +137,19 @@ const CreateTimeTable = () => {
     }
   }, [selectedClass]);
 
+  // Update available subjects whenever schedule changes
+  useEffect(() => {
+    const scheduledSubjects = schedule.map(item => item.name);
+    const filteredSubjects = subjects.filter(subject => !scheduledSubjects.includes(subject));
+    setAvailableSubjects(filteredSubjects);
+  }, [schedule, subjects]);
+
   const handleClassChange = (e) => {
     const classId = e.target.value;
     setSelectedClass(classId);
     setSelectedSection('');
     setSubjects([]);
+    setSchedule([]); // Clear schedule when class changes
   };
 
   const addSchedule = () => {
@@ -195,7 +204,7 @@ const CreateTimeTable = () => {
     }
 
     const examData = {
-      branchId: branchdet._id, // Added branchId
+      branchId: branchdet._id,
       examName,
       classId: selectedClass,
       sectionId: selectedSection,
@@ -243,7 +252,7 @@ const CreateTimeTable = () => {
             type="text"
             value={currentAcademicYear}
             disabled
-            className="w-full p-3 bg-gray-100 text-gray-900 border rounded focus:ring-2 focus:ring-indigo-500"
+            className="w-full p-3 text-gray-900 bg-gray-100 border rounded focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -314,7 +323,7 @@ const CreateTimeTable = () => {
                 className="w-full p-3 border rounded focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Subject</option>
-                {subjects.map((subject, index) => (
+                {availableSubjects.map((subject, index) => (
                   <option key={index} value={subject}>
                     {subject}
                   </option>
@@ -385,33 +394,46 @@ const CreateTimeTable = () => {
         {schedule.length > 0 && (
           <div className="mt-6">
             <h3 className="mb-4 text-xl font-semibold text-gray-800">Schedule List</h3>
-            <div className="space-y-3">
-              {schedule.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-gray-600">
-                      Subject: {item.name} | Marks: {item.marks} | Pass Marks: {item.passMarks} | 
-                      Date: {new Date(item.date).toLocaleDateString()} | 
-                      Time: {item.time}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => editSchedule(index)}
-                      className="p-1 text-blue-500 hover:text-blue-700"
-                    >
-                      <FaEdit size={18} />
-                    </button>
-                    <button
-                      onClick={() => deleteSchedule(index)}
-                      className="p-1 text-red-500 hover:text-red-700"
-                    >
-                      <FaTrashAlt size={18} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="overflow-x-auto">
+              <table className="w-full overflow-hidden bg-white border-collapse rounded-lg">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Subject</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Total Marks</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Pass Marks</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Date</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Time</th>
+                    <th className="px-6 py-3 text-sm font-semibold text-left text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {schedule.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{item.marks}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{item.passMarks}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        {new Date(item.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{item.time}</td>
+                      <td className="px-6 py-4 space-x-2 text-sm">
+                        <button
+                          onClick={() => editSchedule(index)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          onClick={() => deleteSchedule(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <FaTrashAlt size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

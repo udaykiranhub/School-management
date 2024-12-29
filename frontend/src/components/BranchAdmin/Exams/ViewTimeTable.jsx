@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +12,7 @@ const ViewTimeTable = () => {
   const [wholeData, setWholeData] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
+  const [selectedExam, setSelectedExam] = useState('');
   const [sections, setSections] = useState([]);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -90,7 +92,7 @@ const ViewTimeTable = () => {
   };
 
   const fetchExams = async () => {
-    if (!selectedClass || !selectedSection  || !branchdet?._id) return;
+    if (!selectedClass || !selectedSection || !branchdet?._id) return;
     
     setLoading(true);
     try {
@@ -128,7 +130,8 @@ const ViewTimeTable = () => {
       const result = await response.json();
       if (result.success) {
         toast.success("Exam deleted successfully");
-        fetchExams(); // Refresh the list
+        fetchExams();
+        setSelectedExam('');
       } else {
         toast.error(result.message || "Failed to delete exam");
       }
@@ -153,6 +156,7 @@ const ViewTimeTable = () => {
     if (selectedClass) {
       fetchSections(selectedClass);
       setSelectedSection('');
+      setSelectedExam('');
       setExams([]);
     }
   }, [selectedClass]);
@@ -160,15 +164,26 @@ const ViewTimeTable = () => {
   useEffect(() => {
     if (selectedClass && selectedSection) {
       fetchExams();
+      setSelectedExam('');
     }
   }, [selectedClass, selectedSection]);
-  console.log("exams data is: ",exams);
+
+  const selectedExamData = exams.find(exam => exam._id === selectedExam);
+
+  const getSortedSubjects = (subjects) => {
+    return [...subjects].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA.getTime() - dateB.getTime();
+    });
+  };
+
   return (
     <div className="min-h-screen px-4 py-8 bg-gray-100">
       <div className="max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
         <h2 className="mb-6 text-3xl font-bold text-indigo-700">View Exam TimeTable</h2>
 
-        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-3">
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Class
@@ -205,68 +220,84 @@ const ViewTimeTable = () => {
               ))}
             </select>
           </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Exam
+            </label>
+            <select
+              value={selectedExam}
+              onChange={(e) => setSelectedExam(e.target.value)}
+              className="w-full p-3 border rounded focus:ring-2 focus:ring-indigo-500"
+              disabled={!selectedSection || exams.length === 0}
+            >
+              <option value="">Select Exam</option>
+              {exams.map((exam) => (
+                <option key={exam._id} value={exam._id}>
+                  {exam.examName}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <div className="w-16 h-16 border-4 border-indigo-500 rounded-full animate-spin border-t-transparent"></div>
           </div>
-        ) : exams.length > 0 ? (
+        ) : selectedExamData ? (
           <div className="mt-6">
-            {exams.map((exam) => (
-              <div key={exam._id} className="mb-8 overflow-hidden bg-white rounded-lg shadow">
-                <div className="flex items-center justify-between px-6 py-4 bg-indigo-50">
-                  <div>
-                    <h3 className="text-xl font-semibold text-indigo-700">{exam.examName}</h3>
-                    <p className="text-sm text-gray-600">
-                      Class: {exam.classId.name} | Section: {exam.sectionId.name} | 
-                      Academic Year: {exam.academicId.year}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteExam(exam._id)}
-                    className="p-2 text-red-500 transition-colors rounded-full hover:bg-red-50"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+            <div className="overflow-hidden bg-white rounded-lg shadow">
+              <div className="flex items-center justify-between px-6 py-4 bg-indigo-50">
+                <div>
+                  <h3 className="text-xl font-semibold text-indigo-700">{selectedExamData.examName}</h3>
+                  <p className="text-sm text-gray-600">
+                    Class: {selectedExamData.classId.name} | Section: {selectedExamData.sectionId.name} | 
+                    Academic Year: {selectedExamData.academicId.year}
+                  </p>
                 </div>
-                
-                <div className="p-6">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-500">
-                      <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3">Subject</th>
-                          <th className="px-6 py-3">Total Marks</th>
-                          <th className="px-6 py-3">Pass Marks</th>
-                          <th className="px-6 py-3">Date</th>
-                          <th className="px-6 py-3">Time</th>
+                <button
+                  onClick={() => handleDeleteExam(selectedExamData._id)}
+                  className="p-2 text-red-500 transition-colors rounded-full hover:bg-red-50"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left text-gray-500">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3">Subject</th>
+                        <th className="px-6 py-3">Total Marks</th>
+                        <th className="px-6 py-3">Pass Marks</th>
+                        <th className="px-6 py-3">Date</th>
+                        <th className="px-6 py-3">Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {getSortedSubjects(selectedExamData.subjects).map((subject, index) => (
+                        <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                          <td className="px-6 py-4 font-medium text-gray-900">{subject.name}</td>
+                          <td className="px-6 py-4">{subject.marks}</td>
+                          <td className="px-6 py-4">{subject.passMarks}</td>
+                          <td className="px-6 py-4">{new Date(subject.date).toLocaleDateString()}</td>
+                          <td className="px-6 py-4">{subject.time}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {exam.subjects.map((subject, index) => (
-                          <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                            <td className="px-6 py-4 font-medium text-gray-900">{subject.name}</td>
-                            <td className="px-6 py-4">{subject.marks}</td>
-                            <td className="px-6 py-4">{subject.passMarks}</td>
-                            <td className="px-6 py-4">{new Date(subject.date).toLocaleDateString()}</td>
-                            <td className="px-6 py-4">{subject.time}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : selectedClass && selectedSection ? (
-          <div className="py-8 text-center text-gray-500">
-            No exam timetables found for the selected class and section.
+            </div>
           </div>
         ) : (
           <div className="py-8 text-center text-gray-500">
-            Please select a class and section to view exam timetables.
+            {!selectedClass ? "Please select a class to view exam timetables" :
+             !selectedSection ? "Please select a section to view exam timetables" :
+             !exams.length ? "No exam timetables found for the selected class and section" :
+             "Please select an exam to view its timetable"}
           </div>
         )}
 

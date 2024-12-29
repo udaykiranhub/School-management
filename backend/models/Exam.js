@@ -60,8 +60,8 @@ const examSchema = new mongoose.Schema(
 
 // Unique index to ensure the combination of examName and sectionId is unique
 examSchema.index(
-  { examName: 1, sectionId: 1 },
-  { unique: true, partialFilterExpression: { examName: { $exists: true }, sectionId: { $exists: true } } }
+  { examName: 1, sectionId: 1 ,academicId:1},
+  { unique: true }
 );
 
 module.exports = mongoose.model("Exam", examSchema);
