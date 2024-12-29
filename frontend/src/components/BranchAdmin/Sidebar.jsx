@@ -57,9 +57,8 @@ const BranchAdminSidebar = () => {
         {/* Dashboard Link */}
         <Link
           to="/branch-admin"
-          className={`flex items-center p-2 rounded hover:bg-gray-700  ${
-            location.pathname === "/branch-admin" ? "bg-gray-700" : ""
-          }`}
+          className={`flex items-center p-2 rounded hover:bg-gray-700  ${location.pathname === "/branch-admin" ? "bg-gray-700" : ""
+            }`}
         >
           <FaHome className="mr-3" />
           Dashboard
@@ -69,9 +68,8 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("academic-year")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "academic-year" ? "bg-gray-700 text-white" : ""
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "academic-year" ? "bg-gray-700 text-white" : ""
+              }`}
           >
             <FaCalendarAlt className="mr-3" />
             Academic Year
@@ -100,9 +98,8 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("classes")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "classes" ? "bg-gray-700 text-black" : "text-black"
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "classes" ? "bg-gray-700 text-black" : "text-black"
+              }`}
           >
             <FaChalkboardTeacher className="mr-3" />
             Class Management
@@ -110,22 +107,20 @@ const BranchAdminSidebar = () => {
           {activeMenu === "classes" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to={`/branch-admin/academic-year/add-class/${
-                  branchdet.academicYears.length <= 0
-                    ? ""
-                    : branchdet.academicYears[0]
-                }`}
+                to={`/branch-admin/academic-year/add-class/${branchdet.academicYears.length <= 0
+                  ? ""
+                  : branchdet.academicYears[0]
+                  }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />
                 Add Class
               </Link>
               <Link
-                to={`/branch-admin/class/view-all/${
-                  branchdet.academicYears.length <= 0
-                    ? ""
-                    : branchdet.academicYears[0]
-                }`}
+                to={`/branch-admin/class/view-all/${branchdet.academicYears.length <= 0
+                  ? ""
+                  : branchdet.academicYears[0]
+                  }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
@@ -139,9 +134,8 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("sections")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "sections" ? "bg-gray-700 text-white" : ""
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "sections" ? "bg-gray-700 text-white" : ""
+              }`}
           >
             <FaChalkboardTeacher className="mr-3" />
             Section Management
@@ -161,9 +155,8 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("Fee-controller")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "Fee-controller" ? "bg-gray-700 text-white" : ""
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "Fee-controller" ? "bg-gray-700 text-white" : ""
+              }`}
           >
             <FaMoneyCheckAlt className="mr-3" />
             Fee controller
@@ -171,11 +164,10 @@ const BranchAdminSidebar = () => {
           {activeMenu === "Fee-controller" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to={`/branch-admin/fee-type/${
-                  branchdet.academicYears.length <= 0
-                    ? ""
-                    : branchdet.academicYears[0]
-                }`}
+                to={`/branch-admin/fee-type/${branchdet.academicYears.length <= 0
+                  ? ""
+                  : branchdet.academicYears[0]
+                  }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />
@@ -187,11 +179,10 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("transport")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "transport"
-                ? "bg-gray-700 text-black"
-                : "text-black"
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "transport"
+              ? "bg-gray-700 text-black"
+              : "text-black"
+              }`}
           >
             <FaChalkboardTeacher className="mr-3" />
             Transport
@@ -218,11 +209,10 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("students")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "students"
-                ? "bg-gray-700 text-black"
-                : "text-black"
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "students"
+              ? "bg-gray-700 text-black"
+              : "text-black"
+              }`}
           >
             <FaChalkboardTeacher className="mr-3" />
             Students
@@ -230,22 +220,20 @@ const BranchAdminSidebar = () => {
           {activeMenu === "students" && (
             <div className="flex flex-col pl-6 mt-2 space-y-2">
               <Link
-                to={`/branch-admin/add-student/${
-                  branchdet.academicYears.length <= 0
-                    ? ""
-                    : branchdet.academicYears[0]
-                }`}
+                to={`/branch-admin/add-student/${branchdet.academicYears.length <= 0
+                  ? ""
+                  : branchdet.academicYears[0]
+                  }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaPlus className="mr-2" />
                 Add Students
               </Link>
               <Link
-                to={`/branch-admin/students-report/${
-                  branchdet.academicYears.length <= 0
-                    ? ""
-                    : branchdet.academicYears[0]
-                }`}
+                to={`/branch-admin/students-report/${branchdet.academicYears.length <= 0
+                  ? ""
+                  : branchdet.academicYears[0]
+                  }`}
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
@@ -258,11 +246,10 @@ const BranchAdminSidebar = () => {
         <div>
           <button
             onClick={() => handleMenuClick("exams")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-              activeMenu === "exams"
-                ? "bg-gray-700 text-black"
-                : "text-black"
-            }`}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "exams"
+              ? "bg-gray-700 text-black"
+              : "text-black"
+              }`}
           >
             <FaChalkboardTeacher className="mr-3" />
             Exams
@@ -283,6 +270,9 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 View TimeTable
               </Link>
+
+
+
             </div>
           )}
         </div>
@@ -321,7 +311,10 @@ const BranchAdminSidebar = () => {
 
 
 
+
+
         <div>
+
   <button
     onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
     className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
@@ -356,9 +349,139 @@ const BranchAdminSidebar = () => {
         <FaEdit className="mr-2" />
         View Marks
       </Link>
+
+      <Link
+                to={`/branch-admin/marks/create`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                Create Hall Ticket
+              </Link>
     </div>
   )}
 </div>
+           
+
+
+
+        {/* tecachers */}
+        <div>
+          <button
+            onClick={() => handleMenuClick("teachers")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "teachers" ? "bg-gray-700 text-black" : "text-black"
+              }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+            Teachers
+          </button>
+          {activeMenu === "teachers" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to={`/branch-admin/teachers/add-teacher`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Add Teacher
+              </Link>
+              <Link
+                to={`/branch-admin/teachers/view-teachers`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                View Teacher
+              </Link>
+            </div>
+          )}
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+          <button
+            onClick={() => handleMenuClick("enquiry")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+              activeMenu === "enquiry"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+            }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+                Enquiry
+          </button>
+          {activeMenu === "enquiry" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to={`/branch-admin/enquiry/create-enquiry`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Add Enquiry
+              </Link>
+              <Link
+                to={`/branch-admin/enquiry/view-enquiry`}
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                View Enquiry
+              </Link>
+
+
+
+            </div>
+          )}
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

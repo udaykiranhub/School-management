@@ -1,7 +1,3 @@
-// import { getBranchAdmin } from "../../../backend/controller/Usercontroller";
-
-// import { getStudentCountByAcademicYear } from "../../../backend/controller/Academicyearcontroller";
-
 const backapi = "http://localhost:3490";
 
 const Allapi = {
@@ -13,7 +9,6 @@ const Allapi = {
     url: `${backapi}/api/addadmin`,
     method: "Post",
   },
-
   createBranch: {
     url: `${backapi}/api/branch/create-branch`,
     method: "Post",
@@ -30,7 +25,6 @@ const Allapi = {
     url: `${backapi}/api/branch/update-branch`,
     method: "PUT",
   },
-
   assignAdmin: {
     url: `${backapi}/api/branch/assign-admin`,
     method: "POST",
@@ -39,7 +33,6 @@ const Allapi = {
     url: `${backapi}/api/branch/alladmins`,
     method: "GET",
   },
-
   deleteBranchAdmin: {
     url: (adminId) => `${backapi}/api/branch/del-admin/${adminId}`,
     method: "DELETE",
@@ -56,12 +49,10 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/branch/get-branch/${branchId}`,
     method: "GET",
   },
-
   addAcademicYear: {
     url: (branchId) => `${backapi}/api/academic/add/${branchId}`,
     method: "POST",
   },
-
   getAcademicYears: {
     url: (branchId) => `${backapi}/api/academic/view/${branchId}`,
     method: "GET",
@@ -240,13 +231,13 @@ const Allapi = {
       `${backapi}/api/marks/report/${examId}/${classId}/${sectionId}/${branchId}`,
     method: "GET",
   },
-  addSyllabus:{
-    url:(bid)=> `${backapi}/api/syllabus/${bid}/syllabus`,
-    method:"POST"
+  addSyllabus: {
+    url: (bid) => `${backapi}/api/syllabus/${bid}/syllabus`,
+    method: "POST"
   },
-  getAllSyllabus:{
-    url:(bid,acid)=>`${backapi}/api/syllabus/${bid}/syllabus/${acid}`,
-    method:"GET"
+  getAllSyllabus: {
+    url: (bid, acid) => `${backapi}/api/syllabus/${bid}/syllabus/${acid}`,
+    method: "GET"
   },
   deleteSyllabus:{
     url:(id)=>`${backapi}/api/syllabus/${id}`,
@@ -254,8 +245,57 @@ const Allapi = {
   },
   getExamById:{
     url:(exid,bid)=>`${backapi}/api/marks/exam/${exid}/${bid}`,
+    method: "GET"},
+
+  // Teacher endpoints
+  addTeacher: {
+    url: `${backapi}/api/teachers/add-teacher`,
+    method: "POST"  // Make sure method is uppercase
+  },
+  getTeachers: {
+    url: (academicId) => `${backapi}/api/teachers/all-teachers/${academicId}`,
     method: "GET"
+  },
+  getTeacherById: {
+    url: (teacherId) => `${backapi}/api/teachers/get-teacher/${teacherId}`,
+    method: "GET"
+  },
+  updateTeacher: {
+    url: (teacherId) => `${backapi}/api/teachers/edit-teacher/${teacherId}`,
+    method: "PUT"
+  },
+  deleteTeacher: {
+    url: (teacherId) => `${backapi}/api/teachers/delete-teacher/${teacherId}`,
+    method: "DELETE"
+  },
+
+  addEnquiry: {
+    url: `${backapi}/api/enquiry`,
+    method: "POST"
+  },
+  getEnquiries: {
+    url: (branchId) => `${backapi}/api/enquiry/branch/${branchId}`,
+    method: "GET"
+  },
+  getEnquiry: {
+    url: (id) => `${backapi}/api/enquiry/${id}`,
+    method: "GET"
+  },
+  updateEnquiryStatus: {
+    url: (id) => `${backapi}/api/enquiry/${id}/status`,
+    method: "PATCH"
   }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 export default Allapi;

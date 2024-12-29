@@ -44,6 +44,23 @@ import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx
 import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
 import UpdateMarks from "./components/BranchAdmin/Marks/UpdateMarks.jsx";
 
+
+
+import CreateHallTicket from "./components/BranchAdmin/Marks/CreateHallTicket.jsx";
+
+
+
+
+
+import AddEnquiry from "./components/BranchAdmin/Enquiry/AddEnquiry.jsx";
+import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
+
+
+import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
+import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
+
+
+
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -126,17 +143,6 @@ const Router = createBrowserRouter([
             element: <ViewTimeTable/>
           }]
           },
-          {
-            path: "syllabus",
-            children : [{
-              path: "create",
-              element: <CreateSyllabus/>
-            },
-          {
-            path: "view",
-            element: <ViewSyllabus/>
-          }]
-          },
 
 
           {
@@ -152,12 +158,46 @@ const Router = createBrowserRouter([
           {
             path: "view",
             element: <ViewMarks/>
+          },
+
+       {
+
+
+            path:"create",
+            element:<CreateHallTicket/>
+
+          },   
+        ]
+          },
+
+
+          {
+            path: "enquiry",
+            children : [{
+              path: "create-enquiry",
+              element: <AddEnquiry/>
+            },
+          {
+            path: "view-enquiry",
+            element: <ViewEnquiry/>
           }]
           },
 
 
-          
 
+          {
+            path: "teachers",
+            children : [{
+              path: "add-teacher",
+              element: <AddTeacher/>
+            },
+          {
+            path: "view-teachers",
+            element: <ViewTeachers/>
+          }]
+          },
+
+     
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,
