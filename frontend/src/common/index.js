@@ -256,7 +256,35 @@ const Allapi = {
   deleteTeacher: {
     url: (teacherId) => `${backapi}/api/teachers/delete-teacher/${teacherId}`,
     method: "DELETE"
+  },
+
+  addEnquiry: {
+    url: `${backapi}/api/enquiry`,
+    method: "POST"
+  },
+  getEnquiries: {
+    url: (branchId) => `${backapi}/api/enquiry/branch/${branchId}`,
+    method: "GET"
+  },
+  getEnquiry: {
+    url: (id) => `${backapi}/api/enquiry/${id}`,
+    method: "GET"
+  },
+  updateEnquiryStatus: {
+    url: (id) => `${backapi}/api/enquiry/${id}/status`,
+    method: "PATCH"
   }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 export default Allapi;

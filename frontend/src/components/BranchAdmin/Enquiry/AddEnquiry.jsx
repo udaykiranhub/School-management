@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+ import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { mycon } from '../../../store/Mycontext';
@@ -11,6 +11,7 @@ const AddEnquiry = () => {
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
   const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]); // New state for teachers
   const [studentDetails, setStudentDetails] = useState(null);
   
   const [formData, setFormData] = useState({
@@ -20,6 +21,35 @@ const AddEnquiry = () => {
     student: '',
     reference: ''
   });
+
+  // Fetch teachers when component mounts
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      if (!branchdet?.academicYears?.[0]) return;
+
+      try {
+        const response = await fetch(
+          Allapi.getTeachers.url(branchdet.academicYears[0]),
+          {
+            method: Allapi.getTeachers.method,
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        const result = await response.json();
+        if (result.success) {
+          setTeachers(result.data.sort((a, b) => a.name.localeCompare(b.name)));
+        }
+      } catch (error) {
+        toast.error('Error fetching teachers');
+      }
+    };
+
+    fetchTeachers();
+  }, [branchdet]);
 
   // Fetch academic years on component mount
   useEffect(() => {
@@ -176,15 +206,14 @@ const AddEnquiry = () => {
 
         const result = await response.json();
         if (result.success) {
-          // Extract the required fields from the response
           const { name, fatherName, whatsappNo, address } = result.data;
           setStudentDetails({
             name,
             fatherName,
-            phoneNo: whatsappNo, // Use whatsappNo as phoneNo
-            town: address?.city || 'N/A', // Use city as town
+            phoneNo: whatsappNo,
+            town: address?.city || 'N/A',
             street: address?.street || 'N/A',
-            street2: address?.doorNo || 'N/A' // Use doorNo as street2
+            street2: address?.doorNo || 'N/A'
           });
         }
       } catch (error) {
@@ -203,7 +232,6 @@ const AddEnquiry = () => {
     setFormData(prev => {
       const newData = { ...prev, [name]: value };
 
-      // Reset dependent fields when parent field changes
       if (name === 'academicYear') {
         newData.class = '';
         newData.section = '';
@@ -249,7 +277,6 @@ const AddEnquiry = () => {
       const result = await response.json();
       if (result.success) {
         toast.success('Enquiry submitted successfully!');
-        // Reset form except academic year
         setFormData(prev => ({
           academicYear: prev.academicYear,
           class: '',
@@ -409,15 +436,21 @@ const AddEnquiry = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Reference
+              Reference Teacher
             </label>
-            <input
-              type="text"
+            <select
               name="reference"
               value={formData.reference}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
+            >
+              <option value="">Select Reference Teacher</option>
+              {teachers.map((teacher) => (
+                <option key={teacher._id} value={teacher.name}>
+                  {teacher.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex justify-end">

@@ -45,3 +45,9 @@ database().then(
     console.log("server is running");
   })
 );
+
+// Add this line with your other route imports
+const enquiryRoutes = require("./routers/enquiryRoutes");
+
+// Add this line with your other app.use statements
+app.use("/api/enquiry", protect.authMiddleware, enquiryRoutes);
