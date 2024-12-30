@@ -156,17 +156,16 @@ const Router = createBrowserRouter([
               path: "view",
               element: <ViewMarks />
             },
-<<<<<<< HEAD
-=======
+
             {
               path: "update",
-              element: <UpdateMarks/>
+              element: <UpdateMarks />
             },
-          {
-            path: "view",
-            element: <ViewMarks/>
-          },
->>>>>>> 3c33cd338dcd41a3d0808c83ac36984f74901be3
+            {
+              path: "view",
+              element: <ViewMarks />
+            },
+
 
             {
 
