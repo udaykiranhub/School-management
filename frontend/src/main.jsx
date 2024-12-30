@@ -174,6 +174,18 @@ const Router = createBrowserRouter([
             element: <ViewEnquiry/>
           }]
           },
+          {
+            path:"syllabus",
+            children : [{
+              path:"create",
+              element:<CreateSyllabus/>
+            },
+          {
+            path:"view",
+            element:<ViewSyllabus/>
+          }]
+
+          },
 
 
 
