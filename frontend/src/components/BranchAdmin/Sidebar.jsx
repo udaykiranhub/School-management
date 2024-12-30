@@ -392,6 +392,13 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 AssignTeacher
               </Link>
+              <Link
+                to="/branch-admin/teachers/view-perfomance"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                ViewPerfomance
+              </Link>
             </div>
           )}
         </div>
