@@ -307,14 +307,7 @@ const BranchAdminSidebar = () => {
             </div>
           )}
         </div>
-
-
-
-
-
         <div>
-
-<<<<<<< HEAD
           <button
             onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
             className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "marks"
@@ -341,159 +334,120 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 View Marks
               </Link>
-=======
-  <button
-    onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
-    className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
-      activeMenu === "marks"
-        ? "bg-gray-700 text-black"
-        : "text-black"
-    }`}
-  >
-    <FaChalkboardTeacher className="mr-3" />
-    Marks
-  </button>
-  {activeMenu === "marks" && ( // Change "exams" to "marks"
-    <div className="flex flex-col pl-6 mt-2 space-y-2">
-      <Link
-        to={`/branch-admin/marks/enter`} // Link to the "Enter Marks" page
-        className="flex items-center p-2 rounded hover:bg-gray-600"
-      >
-        <FaPlus className="mr-2" />
-        Enter Marks
-      </Link>
-      <Link
-        to={`/branch-admin/marks/update`} // Link to the "Enter Marks" page
-        className="flex items-center p-2 rounded hover:bg-gray-600"
-      >
-        <FaPlus className="mr-2" />
-        Update Marks
-      </Link>
-      <Link
-        to={`/branch-admin/marks/view`} // Link to the "View Marks" page
-        className="flex items-center p-2 rounded hover:bg-gray-600"
-      >
-        <FaEdit className="mr-2" />
-        View Marks
-      </Link>
->>>>>>> 3c33cd338dcd41a3d0808c83ac36984f74901be3
-
-              <Link
-                to={`/branch-admin/marks/create`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
+              <div />
+              <button
+                onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
+                className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "marks"
+                  ? "bg-gray-700 text-black"
+                  : "text-black"
+                  }`}
               >
-                <FaEdit className="mr-2" />
-                Create Hall Ticket
-              </Link>
+                <FaChalkboardTeacher className="mr-3" />
+                Marks
+              </button>
+              {activeMenu === "marks" && ( // Change "exams" to "marks"
+                <div className="flex flex-col pl-6 mt-2 space-y-2">
+                  <Link
+                    to={`/branch-admin/marks/enter`} // Link to the "Enter Marks" page
+                    className="flex items-center p-2 rounded hover:bg-gray-600"
+                  >
+                    <FaPlus className="mr-2" />
+                    Enter Marks
+                  </Link>
+                  <Link
+                    to={`/branch-admin/marks/update`} // Link to the "Enter Marks" page
+                    className="flex items-center p-2 rounded hover:bg-gray-600"
+                  >
+                    <FaPlus className="mr-2" />
+                    Update Marks
+                  </Link>
+                  <Link
+                    to={`/branch-admin/marks/view`} // Link to the "View Marks" page
+                    className="flex items-center p-2 rounded hover:bg-gray-600"
+                  >
+                    <FaEdit className="mr-2" />
+                    View Marks
+                  </Link>
+
+                  <Link
+                    to={`/branch-admin/marks/create`}
+                    className="flex items-center p-2 rounded hover:bg-gray-600"
+                  >
+                    <FaEdit className="mr-2" />
+                    Create Hall Ticket
+                  </Link>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-
-
-
-
         {/* tecachers */}
-        <div>
-          <button
-            onClick={() => handleMenuClick("teachers")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "teachers" ? "bg-gray-700 text-black" : "text-black"
-              }`}
-          >
-            <FaChalkboardTeacher className="mr-3" />
-            Teachers
-          </button>
-          {activeMenu === "teachers" && (
-            <div className="flex flex-col pl-6 mt-2 space-y-2">
-              <Link
-                to={`/branch-admin/teachers/add-teacher`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Add Teacher
-              </Link>
-              <Link
-                to={`/branch-admin/teachers/view-teachers`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaEdit className="mr-2" />
-                View Teacher
-              </Link>
-              <Link
-                to={`/branch-admin/teachers/assign-teachers`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaEdit className="mr-2" />
-                AssignTeacher
-              </Link>
-            </div>
-          )}
-        </div>
-        <div>
-          <button
-            onClick={() => handleMenuClick("enquiry")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
-              ? "bg-gray-700 text-black"
-              : "text-black"
-              }`}
-          >
-            <FaChalkboardTeacher className="mr-3" />
-            Enquiry
-          </button>
-          {activeMenu === "enquiry" && (
-            <div className="flex flex-col pl-6 mt-2 space-y-2">
-              <Link
-                to={`/branch-admin/enquiry/create-enquiry`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Add Enquiry
-              </Link>
-              <Link
-                to={`/branch-admin/enquiry/view-enquiry`}
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaEdit className="mr-2" />
-                View Enquiry
-              </Link>
+          <div>
+            <button
+              onClick={() => handleMenuClick("teachers")}
+              className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "teachers" ? "bg-gray-700 text-black" : "text-black"
+                }`}
+            >
+              <FaChalkboardTeacher className="mr-3" />
+              Teachers
+            </button>
+            {activeMenu === "teachers" && (
+              <div className="flex flex-col pl-6 mt-2 space-y-2">
+                <Link
+                  to={`/branch-admin/teachers/add-teacher`}
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaPlus className="mr-2" />
+                  Add Teacher
+                </Link>
+                <Link
+                  to={`/branch-admin/teachers/view-teachers`}
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaEdit className="mr-2" />
+                  View Teacher
+                </Link>
+                <Link
+                  to={`/branch-admin/teachers/assign-teachers`}
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaEdit className="mr-2" />
+                  AssignTeacher
+                </Link>
+              </div>
+            )}
+          </div>
+          <div>
+            <button
+              onClick={() => handleMenuClick("enquiry")}
+              className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+                }`}
+            >
+              <FaChalkboardTeacher className="mr-3" />
+              Enquiry
+            </button>
+            {activeMenu === "enquiry" && (
+              <div className="flex flex-col pl-6 mt-2 space-y-2">
+                <Link
+                  to={`/branch-admin/enquiry/create-enquiry`}
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaPlus className="mr-2" />
+                  Add Enquiry
+                </Link>
+                <Link
+                  to={`/branch-admin/enquiry/view-enquiry`}
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaEdit className="mr-2" />
+                  View Enquiry
+                </Link>
 
 
 
-            </div>
-          )}
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              </div>
+            )}
+          </div>
       </nav>
 
       {/* Logout Button */}
