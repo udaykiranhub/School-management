@@ -55,7 +55,7 @@ import ViewPerformance from "./components/BranchAdmin/Teachers/ViewPerfomance.js
 import CreateWorkingDays from "./components/BranchAdmin/WorkingDays/CreateWorkingDays.jsx";
 import ViewWorkingDays from "./components/BranchAdmin/WorkingDays/ViewWorkingDays.jsx";
 
-
+import ShowReport from "./components/BranchAdmin/VehicleReport/ShowReport.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -199,6 +199,19 @@ const Router = createBrowserRouter([
           }]
 
           },
+
+
+          {
+              path:"vehicle",
+              children:[{
+                path:"create",
+                element:<ShowReport/>
+              }]
+
+          },
+
+
+
 
 
 

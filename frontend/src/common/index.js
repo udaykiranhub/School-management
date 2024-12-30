@@ -313,7 +313,16 @@ const Allapi = {
   updateWorkingDays:{
     url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
     method: "PUT"
+  },
+
+
+  getVehicleStudents: {
+    url: (busId) => `${backapi}/api/buses/vehicle-students/${busId}`,
+    method: "GET"
   }
+  
+
+  
 };
 
 

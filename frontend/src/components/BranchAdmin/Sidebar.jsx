@@ -433,10 +433,7 @@ const BranchAdminSidebar = () => {
               </Link>
             </div>
           )}
-        </div>
-
-
-        <div>
+          <div>
           <button
             onClick={() => handleMenuClick("workingdays")}
             className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
@@ -465,6 +462,31 @@ const BranchAdminSidebar = () => {
               </Link>
             </div>
           )}
+        </div>
+        <div>
+          <button
+            onClick={() => handleMenuClick("vehicle")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "exams"
+              ? "bg-gray-700 text-black"
+              : "text-black"
+              }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+            Vehicle Reports
+          </button>
+          {activeMenu === "vehicle" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to="/branch-admin/vehicle/create"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Show Report
+              </Link>
+            </div>
+          )}
+        </div>
+
         </div>
       </nav>
 
