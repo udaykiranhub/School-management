@@ -37,26 +37,16 @@ import StudentEdit from "./components/BranchAdmin/Students/StudentEdit.jsx";
 import CreateTimeTable from "./components/BranchAdmin/Exams/CreateTimeTable.jsx";
 import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 
-
 import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
 
-
-
 import CreateHallTicket from "./components/BranchAdmin/Marks/CreateHallTicket.jsx";
-
-
-
-
 
 import AddEnquiry from "./components/BranchAdmin/Enquiry/AddEnquiry.jsx";
 import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
 
-
 import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
 import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
-
-
 
 const Router = createBrowserRouter([
   {
@@ -131,66 +121,65 @@ const Router = createBrowserRouter([
           },
           {
             path: "exam",
-            children : [{
-              path: "create-timetable",
-              element: <CreateTimeTable/>
-            },
-          {
-            path: "view-timetable",
-            element: <ViewTimeTable/>
-          }]
+            children: [
+              {
+                path: "create-timetable",
+                element: <CreateTimeTable />,
+              },
+              {
+                path: "view-timetable",
+                element: <ViewTimeTable />,
+              },
+            ],
           },
-
 
           {
             path: "marks",
-            children : [{
-              path: "enter",
-              element: <EnterMarks/>
-            },
-          {
-            path: "view",
-            element: <ViewMarks/>
+            children: [
+              {
+                path: "enter",
+                element: <EnterMarks />,
+              },
+              {
+                path: "view",
+                element: <ViewMarks />,
+              },
+
+              {
+                path: "create",
+                element: <CreateHallTicket />,
+              },
+            ],
           },
-
-       {
-
-
-            path:"create",
-            element:<CreateHallTicket/>
-
-          },   
-        ]
-          },
-
 
           {
             path: "enquiry",
-            children : [{
-              path: "create-enquiry",
-              element: <AddEnquiry/>
-            },
-          {
-            path: "view-enquiry",
-            element: <ViewEnquiry/>
-          }]
+            children: [
+              {
+                path: "create-enquiry",
+                element: <AddEnquiry />,
+              },
+              {
+                path: "view-enquiry",
+                element: <ViewEnquiry />,
+              },
+            ],
           },
-
-
 
           {
             path: "teachers",
-            children : [{
-              path: "add-teacher",
-              element: <AddTeacher/>
-            },
-          {
-            path: "view-teachers",
-            element: <ViewTeachers/>
-          }]
+            children: [
+              {
+                path: "add-teacher",
+                element: <AddTeacher />,
+              },
+              {
+                path: "view-teachers",
+                element: <ViewTeachers />,
+              },
+            ],
           },
 
-     
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,
