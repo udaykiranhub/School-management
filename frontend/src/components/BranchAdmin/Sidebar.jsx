@@ -434,6 +434,38 @@ const BranchAdminSidebar = () => {
             </div>
           )}
         </div>
+
+
+        <div>
+          <button
+            onClick={() => handleMenuClick("workingdays")}
+            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
+              ? "bg-gray-700 text-black"
+              : "text-black"
+              }`}
+          >
+            <FaChalkboardTeacher className="mr-3" />
+            Working Days
+          </button>
+          {activeMenu === "workingdays" && (
+            <div className="flex flex-col pl-6 mt-2 space-y-2">
+              <Link
+                to="/branch-admin/workingdays/create"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaPlus className="mr-2" />
+                Create Working Days
+              </Link>
+              <Link
+                to="/branch-admin/workingdays/view"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                View & Update
+              </Link>
+            </div>
+          )}
+        </div>
       </nav>
 
       {/* Logout Button */}

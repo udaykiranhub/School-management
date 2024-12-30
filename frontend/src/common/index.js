@@ -301,6 +301,18 @@ const Allapi = {
   removeTeacherAssignment: {
     url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
     method: "DELETE"
+  },
+  addWorkingDays:{
+    url : `${backapi}/api/workingdays`,
+    method: "POST"
+  },
+  getWorkingDays:{
+    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+    method: "GET"
+  },
+  updateWorkingDays:{
+    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+    method: "PUT"
   }
 };
 

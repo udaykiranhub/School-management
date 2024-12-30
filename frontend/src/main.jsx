@@ -52,6 +52,8 @@ import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
 import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
 import AssignTeachers from "./components/BranchAdmin/Teachers/AssignTeachers.jsx";
 import ViewPerformance from "./components/BranchAdmin/Teachers/ViewPerfomance.jsx";
+import CreateWorkingDays from "./components/BranchAdmin/WorkingDays/CreateWorkingDays.jsx";
+import ViewWorkingDays from "./components/BranchAdmin/WorkingDays/ViewWorkingDays.jsx";
 
 
 
@@ -135,6 +137,17 @@ const Router = createBrowserRouter([
           {
             path: "view-timetable",
             element: <ViewTimeTable/>
+          }]
+          },
+          {
+            path: "workingdays",
+            children : [{
+              path: "create",
+              element: <CreateWorkingDays/>
+            },
+          {
+            path: "view",
+            element: <ViewWorkingDays/>
           }]
           },
 
