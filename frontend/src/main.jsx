@@ -39,6 +39,9 @@ import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 
 import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
+import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx";
+import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
+import UpdateMarks from "./components/BranchAdmin/Marks/UpdateMarks.jsx";
 
 import CreateHallTicket from "./components/BranchAdmin/Marks/CreateHallTicket.jsx";
 
@@ -141,6 +144,10 @@ const Router = createBrowserRouter([
                 element: <EnterMarks />,
               },
               {
+                path: "update",
+                element: <UpdateMarks />,
+              },
+              {
                 path: "view",
                 element: <ViewMarks />,
               },
@@ -162,6 +169,19 @@ const Router = createBrowserRouter([
               {
                 path: "view-enquiry",
                 element: <ViewEnquiry />,
+              },
+            ],
+          },
+          {
+            path: "syllabus",
+            children: [
+              {
+                path: "create",
+                element: <CreateSyllabus />,
+              },
+              {
+                path: "view",
+                element: <ViewSyllabus />,
               },
             ],
           },

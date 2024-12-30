@@ -214,6 +214,10 @@ const Allapi = {
     url: (branchId) => `${backapi}/api/marks/${branchId}`,
     method: "POST",
   },
+  updateMarks: {
+    url: (id,bid)=>`${backapi}/api/marks/${id}/${bid}`,
+    method: "PUT"
+  },
   getAllMarks: {
     url: (branchId) => `${backapi}/api/marks/${branchId}`,
     method: "GET",
@@ -235,6 +239,13 @@ const Allapi = {
     url: (bid, acid) => `${backapi}/api/syllabus/${bid}/syllabus/${acid}`,
     method: "GET"
   },
+  deleteSyllabus:{
+    url:(id)=>`${backapi}/api/syllabus/${id}`,
+    method:"DELETE"
+  },
+  getExamById:{
+    url:(exid,bid)=>`${backapi}/api/marks/exam/${exid}/${bid}`,
+    method: "GET"},
 
   // Teacher endpoints
   addTeacher: {
@@ -256,7 +267,35 @@ const Allapi = {
   deleteTeacher: {
     url: (teacherId) => `${backapi}/api/teachers/delete-teacher/${teacherId}`,
     method: "DELETE"
+  },
+
+  addEnquiry: {
+    url: `${backapi}/api/enquiry`,
+    method: "POST"
+  },
+  getEnquiries: {
+    url: (branchId) => `${backapi}/api/enquiry/branch/${branchId}`,
+    method: "GET"
+  },
+  getEnquiry: {
+    url: (id) => `${backapi}/api/enquiry/${id}`,
+    method: "GET"
+  },
+  updateEnquiryStatus: {
+    url: (id) => `${backapi}/api/enquiry/${id}/status`,
+    method: "PATCH"
   }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 export default Allapi;

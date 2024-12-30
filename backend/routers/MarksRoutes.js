@@ -5,7 +5,8 @@ const {
   getMarksByStudent,
   updateMarks,
   deleteMarks,
-  getMarksReport
+  getMarksReport,
+  getExamById
 } = require("../controller/MarksController");
 const protect = require("../middleware/Authtoken");
 
@@ -22,6 +23,8 @@ router.get("/:branchId", protect.authMiddleware, getAllMarks);
 
 // Get marks by student
 router.get("/:studentId/:branchId", protect.authMiddleware, getMarksByStudent);
+
+router.get('/exam/:examId/:branchId', getExamById);
 
 // Update marks
 router.put("/:id/:branchId", protect.authMiddleware, updateMarks);
