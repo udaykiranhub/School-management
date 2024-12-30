@@ -59,6 +59,7 @@ import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
 import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
 import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
 import AssignTeachers from "./components/BranchAdmin/Teachers/AssignTeachers.jsx";
+import ViewPerformance from "./components/BranchAdmin/Teachers/ViewPerfomance.jsx";
 
 
 
@@ -204,6 +205,9 @@ const Router = createBrowserRouter([
             }, {
               path: "assign-teachers",
               element: <AssignTeachers />
+            }, {
+              path: "view-perfomance",
+              element: <ViewPerformance />
             }]
           },
 
