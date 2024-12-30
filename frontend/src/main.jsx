@@ -40,6 +40,9 @@ import ViewTimeTable from "./components/BranchAdmin/Exams/ViewTimeTable.jsx";
 
 import EnterMarks from "./components/BranchAdmin/Marks/EnterMarks.jsx";
 import ViewMarks from "./components/BranchAdmin/Marks/ViewMarks.jsx";
+import CreateSyllabus from "./components/BranchAdmin/Syllabus/CreateSyllabus.jsx";
+import ViewSyllabus from "./components/BranchAdmin/Syllabus/ViewSyllabus.jsx";
+import UpdateMarks from "./components/BranchAdmin/Marks/UpdateMarks.jsx";
 
 
 
@@ -55,6 +58,8 @@ import ViewEnquiry from "./components/BranchAdmin/Enquiry/ViewEnquiry.jsx";
 
 import AddTeacher from "./components/BranchAdmin/Teachers/AddTeacher.jsx";
 import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
+import AssignTeachers from "./components/BranchAdmin/Teachers/AssignTeachers.jsx";
+import ViewPerformance from "./components/BranchAdmin/Teachers/ViewPerfomance.jsx";
 
 
 
@@ -131,66 +136,82 @@ const Router = createBrowserRouter([
           },
           {
             path: "exam",
-            children : [{
+            children: [{
               path: "create-timetable",
-              element: <CreateTimeTable/>
+              element: <CreateTimeTable />
             },
-          {
-            path: "view-timetable",
-            element: <ViewTimeTable/>
-          }]
+            {
+              path: "view-timetable",
+              element: <ViewTimeTable />
+            }]
           },
 
 
           {
             path: "marks",
-            children : [{
+            children: [{
               path: "enter",
-              element: <EnterMarks/>
+              element: <EnterMarks />
             },
-          {
-            path: "view",
-            element: <ViewMarks/>
-          },
+            {
+              path: "view",
+              element: <ViewMarks />
+            },
 
-       {
+            {
+              path: "update",
+              element: <UpdateMarks />
+            },
+            {
+              path: "view",
+              element: <ViewMarks />
+            },
 
 
-            path:"create",
-            element:<CreateHallTicket/>
+            {
 
-          },   
-        ]
+
+              path: "create",
+              element: <CreateHallTicket />
+
+            },
+            ]
           },
 
 
           {
             path: "enquiry",
-            children : [{
+            children: [{
               path: "create-enquiry",
-              element: <AddEnquiry/>
+              element: <AddEnquiry />
             },
-          {
-            path: "view-enquiry",
-            element: <ViewEnquiry/>
-          }]
+            {
+              path: "view-enquiry",
+              element: <ViewEnquiry />
+            }]
           },
 
 
 
           {
             path: "teachers",
-            children : [{
+            children: [{
               path: "add-teacher",
-              element: <AddTeacher/>
+              element: <AddTeacher />
             },
-          {
-            path: "view-teachers",
-            element: <ViewTeachers/>
-          }]
+            {
+              path: "view-teachers",
+              element: <ViewTeachers />
+            }, {
+              path: "assign-teachers",
+              element: <AssignTeachers />
+            }, {
+              path: "view-perfomance",
+              element: <ViewPerformance />
+            }]
           },
 
-     
+
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,
