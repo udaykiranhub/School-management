@@ -19,6 +19,7 @@ const examRoutes = require("./routers/ExamRoutes");
 const marksRoutes = require("./routers/MarksRoutes");
 const syllabusRoutes = require("./routers/SyllabusRoutes.js")
 const teacherRoutes = require("./routers/TeacherRoutes");
+const teacherAssignRoutes = require("./routers/TeacherAssignRoutes.js");
 
 app.use(cors());
 app.use(cookieParser());
@@ -38,6 +39,7 @@ app.use("/api/exams", protect.authMiddleware, examRoutes);
 app.use("/api/marks", protect.authMiddleware, marksRoutes);
 app.use("/api/syllabus", protect.authMiddleware, syllabusRoutes)
 app.use("/api/teachers", protect.authMiddleware, teacherRoutes);
+app.use("/api/teachersassingn", protect.authMiddleware, teacherAssignRoutes);
 
 
 database().then(
