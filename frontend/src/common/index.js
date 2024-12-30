@@ -285,14 +285,24 @@ const Allapi = {
     url: (id) => `${backapi}/api/enquiry/${id}/status`,
     method: "PATCH"
   }
+  ,
+  assignTeacher: {
+    url: `${backapi}/api/teachersassingn/assign`,
+    method: "POST"
+  },
+  getTeacherAssignments: {
+    url: (academicYear) => `${backapi}/api/teachersassingn/assignments?academicYear=${academicYear}`,
+    method: "GET"
+  },
+  updateTeacherAssignment: {
+    url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
+    method: "PUT"
+  },
+  removeTeacherAssignment: {
+    url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
+    method: "DELETE"
+  }
 };
-
-
-
-
-
-
-
 
 
 

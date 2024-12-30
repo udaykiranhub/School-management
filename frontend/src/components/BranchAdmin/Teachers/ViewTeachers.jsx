@@ -11,6 +11,7 @@ const ViewTeachers = () => {
     const [filteredTeachers, setFilteredTeachers] = useState([]);
     const [editingTeacher, setEditingTeacher] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [teacherAssignments, setTeacherAssignments] = useState({});
     const [editFormData, setEditFormData] = useState({
         name: '',
         phone: '',
@@ -30,8 +31,45 @@ const ViewTeachers = () => {
     useEffect(() => {
         if (branchdet?.academicYears?.[0]) {
             fetchTeachers();
+            fetchTeacherAssignments();
         }
     }, [branchdet]);
+
+    useEffect(() => {
+        if (selectedSubject) {
+            const filtered = teachers.filter(teacher =>
+                teacher.teachingSubjects.some(subject => subject.name === selectedSubject)
+            );
+            setFilteredTeachers(filtered);
+        } else {
+            setFilteredTeachers([]);
+        }
+    }, [selectedSubject, teachers]);
+
+    const fetchTeacherAssignments = async () => {
+        try {
+            const response = await fetch(
+                Allapi.getTeacherAssignments.url(branchdet.academicYears[0]),
+                {
+                    method: Allapi.getTeacherAssignments.method,
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            const result = await response.json();
+            if (result.success) {
+                const assignmentMap = {};
+                result.data.forEach(assignment => {
+                    assignmentMap[assignment.teacherId] = assignment;
+                });
+                setTeacherAssignments(assignmentMap);
+            }
+        } catch (error) {
+            toast.error('Error fetching teacher assignments');
+        }
+    };
 
     const fetchTeachers = async () => {
         try {
@@ -63,41 +101,64 @@ const ViewTeachers = () => {
         }
     };
 
-    useEffect(() => {
-        if (selectedSubject) {
-            const filtered = teachers.filter(teacher =>
-                teacher.teachingSubjects.some(subject => subject.name === selectedSubject)
-            );
-            setFilteredTeachers(filtered);
-        } else {
-            setFilteredTeachers([]);
-        }
-    }, [selectedSubject, teachers]);
+    const isTeacherAssigned = (teacherId, subjectName) => {
+        const assignment = teacherAssignments[teacherId];
+        if (!assignment) return false;
 
-    const handleEdit = (teacher) => {
-        setEditingTeacher(teacher);
-        setEditFormData({
-            name: teacher.name,
-            phone: teacher.phone,
-            address: { ...teacher.address },
-            qualification: teacher.qualification,
-            experience: teacher.experience,
-            teachingSubjects: [...teacher.teachingSubjects],
-            joiningDate: teacher.joiningDate ? teacher.joiningDate.split('T')[0] : '',
-            aadharNumber: teacher.aadharNumber
-        });
-        setIsEditModalOpen(true);
+        return assignment.classAssignments.some(classAssign =>
+            classAssign.sections.some(section =>
+                section.subject === subjectName
+            )
+        );
     };
 
-    // Modified to remove only the selected subject
+    const handleDeleteTeacher = async (teacherId) => {
+        const teacher = teachers.find(t => t._id === teacherId);
+        if (!teacher) return;
+
+        if (teacher.teachingSubjects.length > 0) {
+            toast.error('Cannot delete teacher. Please remove all subjects first.');
+            return;
+        }
+
+        if (!window.confirm(`Are you sure you want to delete ${teacher.name}?`)) return;
+
+        try {
+            const response = await fetch(
+                Allapi.deleteTeacher.url(teacherId),
+                {
+                    method: Allapi.deleteTeacher.method,
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            const result = await response.json();
+            if (result.success) {
+                toast.success('Teacher deleted successfully');
+                fetchTeachers();
+            } else {
+                toast.error(result.message || 'Failed to delete teacher');
+            }
+        } catch (error) {
+            toast.error('Error deleting teacher');
+        }
+    };
+
     const handleDelete = async (teacherId, subjectToRemove) => {
+        const teacher = teachers.find(t => t._id === teacherId);
+        if (!teacher) return;
+
+        if (isTeacherAssigned(teacherId, subjectToRemove)) {
+            toast.error('Cannot remove subject. Teacher is currently assigned to teach this subject. Please remove class assignments first.');
+            return;
+        }
+
         if (!window.confirm(`Are you sure you want to remove ${subjectToRemove} from this teacher's subjects?`)) return;
 
         try {
-            const teacher = teachers.find(t => t._id === teacherId);
-            if (!teacher) return;
-
-            // Filter out the selected subject
             const updatedSubjects = teacher.teachingSubjects.filter(
                 subject => subject.name !== subjectToRemove
             );
@@ -130,14 +191,28 @@ const ViewTeachers = () => {
         }
     };
 
+    const handleEdit = (teacher) => {
+        setEditingTeacher(teacher);
+        setEditFormData({
+            name: teacher.name,
+            phone: teacher.phone,
+            address: { ...teacher.address },
+            qualification: teacher.qualification,
+            experience: teacher.experience,
+            teachingSubjects: [...teacher.teachingSubjects],
+            joiningDate: teacher.joiningDate ? teacher.joiningDate.split('T')[0] : '',
+            aadharNumber: teacher.aadharNumber
+        });
+        setIsEditModalOpen(true);
+    };
+
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            // Keep original phone and aadharNumber
             const updatedData = {
                 ...editFormData,
-                phone: editingTeacher.phone, // Keep original phone
-                aadharNumber: editingTeacher.aadharNumber, // Keep original aadhar
+                phone: editingTeacher.phone,
+                aadharNumber: editingTeacher.aadharNumber,
                 academic_id: branchdet.academicYears[0]
             };
 
@@ -169,7 +244,6 @@ const ViewTeachers = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'phone' || name === 'aadharNumber') {
-            // Prevent changes to phone and aadharNumber
             return;
         }
 
@@ -218,7 +292,7 @@ const ViewTeachers = () => {
                                 <div key={teacher._id} className="border rounded-lg p-4 bg-gray-50">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="text-lg  text-black">{teacher.name}</h3>
+                                            <h3 className="text-lg text-black">{teacher.name}</h3>
                                             <p className="text-gray-600">Phone: {teacher.phone}</p>
                                             <p className="text-gray-600">Qualification: {teacher.qualification}</p>
                                             <p className="text-gray-600">Experience: {teacher.experience} years</p>
@@ -249,6 +323,14 @@ const ViewTeachers = () => {
                                             >
                                                 Remove Subject
                                             </button>
+                                            {teacher.teachingSubjects.length === 0 && (
+                                                <button
+                                                    onClick={() => handleDeleteTeacher(teacher._id)}
+                                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                                >
+                                                    Delete Teacher
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -304,7 +386,6 @@ const ViewTeachers = () => {
                                         </div>
                                     </div>
 
-                                    {/* Address Fields */}
                                     <div className="space-y-4">
                                         <label className="block text-sm font-medium text-gray-700">Address</label>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
