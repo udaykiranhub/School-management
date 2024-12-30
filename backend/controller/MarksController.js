@@ -3,6 +3,7 @@ const Student = require("../models/student");
 const Exam = require("../models/Exam");
 const Class = require("../models/Classes");
 const Section = require("../models/sections");
+// const Subject = require("../models/Subject");
 
 // Add new marks
 exports.addMarks = async (req, res) => {
@@ -234,7 +235,6 @@ exports.getMarksByStudent = async (req, res) => {
       .populate("examId", "examName")
       .populate("classId", "name")
       .populate("sectionId", "name")
-      .populate("subjectMarks.subjectId", "name");
 
     if (!marks.length) {
       return res.status(404).json({
@@ -312,6 +312,37 @@ exports.deleteMarks = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete marks",
+      error: error.message
+    });
+  }
+};
+
+//geteexambyID
+exports.getExamById = async (req, res) => {
+  try {
+    const { examId, branchId } = req.params;
+
+    const exam = await Exam.findOne({ _id: examId, branchId })
+      .populate('subjects')
+      .populate('classId', 'name')
+      .populate('sectionId', 'name');
+
+    if (!exam) {
+      return res.status(404).json({
+        success: false,
+        message: "Exam not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Exam retrieved successfully",
+      data: exam
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve exam",
       error: error.message
     });
   }

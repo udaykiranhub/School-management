@@ -302,7 +302,7 @@ const BranchAdminSidebar = () => {
                 className="flex items-center p-2 rounded hover:bg-gray-600"
               >
                 <FaEdit className="mr-2" />
-                View TimeTable
+                View Syllabus
               </Link>
             </div>
           )}
@@ -314,6 +314,7 @@ const BranchAdminSidebar = () => {
 
         <div>
 
+<<<<<<< HEAD
           <button
             onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
             className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "marks"
@@ -340,6 +341,42 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 View Marks
               </Link>
+=======
+  <button
+    onClick={() => handleMenuClick("marks")} // Change "exams" to "marks"
+    className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${
+      activeMenu === "marks"
+        ? "bg-gray-700 text-black"
+        : "text-black"
+    }`}
+  >
+    <FaChalkboardTeacher className="mr-3" />
+    Marks
+  </button>
+  {activeMenu === "marks" && ( // Change "exams" to "marks"
+    <div className="flex flex-col pl-6 mt-2 space-y-2">
+      <Link
+        to={`/branch-admin/marks/enter`} // Link to the "Enter Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaPlus className="mr-2" />
+        Enter Marks
+      </Link>
+      <Link
+        to={`/branch-admin/marks/update`} // Link to the "Enter Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaPlus className="mr-2" />
+        Update Marks
+      </Link>
+      <Link
+        to={`/branch-admin/marks/view`} // Link to the "View Marks" page
+        className="flex items-center p-2 rounded hover:bg-gray-600"
+      >
+        <FaEdit className="mr-2" />
+        View Marks
+      </Link>
+>>>>>>> 3c33cd338dcd41a3d0808c83ac36984f74901be3
 
               <Link
                 to={`/branch-admin/marks/create`}
