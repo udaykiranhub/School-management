@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+ import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ArrowLeft, Printer } from 'lucide-react';
@@ -229,70 +229,86 @@ const CreateHallTicket = () => {
     const totalDue = calculateTotalDue(details.feeDetails);
     
     return (
-      <div className="bg-white p-6 border border-gray-300 rounded-lg shadow-lg print:shadow-none print:border print:mb-8 w-[210mm] mx-auto print:break-after-page">
-        <div className="text-center border-b pb-4">
-          <h1 className="text-2xl font-bold text-red-600">SRI VIDYANIDHI EM SCHOOL</h1>
-          <h2 className="text-lg text-green-600 mt-1">PEDDAPURAM</h2>
-          <div className="mt-2 text-xl font-bold text-gray-800">{selectedExam?.examName} - Hall Ticket</div>
+      <div className="bg-white border border-gray-300 h-[138mm] overflow-hidden">
+        {/* Header Section */}
+        <div className="text-center border-b py-2">
+          <h1 className="text-xl font-bold text-red-600 leading-tight">SRI VIDYANIDHI EM SCHOOL</h1>
+          <h2 className="text-base text-green-600 leading-tight">PEDDAPURAM</h2>
+          <div className="text-lg font-bold text-gray-800 leading-tight mt-1">{selectedExam?.examName} - Hall Ticket</div>
         </div>
-
-        <div className="grid grid-cols-3 gap-6 mt-6">
-          <div className="col-span-2">
-            <div className="flex items-start gap-6">
-              <img
-                src={details.photo || "/placeholder.jpg"}
-                alt={student.name}
-                className="w-28 h-28 rounded-lg object-cover"
-              />
-              <div className="space-y-3">
-                <p className="text-gray-700 text-lg">Name: <span className="font-semibold">{student.name}</span></p>
-                <p className="text-gray-700">Class: <span className="font-semibold">{className}</span></p>
-                <p className="text-gray-700">Section: <span className="font-semibold">{sectionName}</span></p>
-                <p className="text-gray-700">Father: <span className="font-semibold">{details.fatherName || 'N/A'}</span></p>
-              </div>
+    
+        {/* Student Details Section */}
+        <div className="px-3 py-2">
+          <div className="flex items-start gap-3">
+            <img
+              src={details.photo || "/placeholder.jpg"}
+              alt={student.name}
+              className="w-20 h-20 rounded object-cover border border-gray-300"
+            />
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 w-full text-sm">
+              <p className="text-gray-700">
+                <span className="font-semibold">Name:</span> {student.name}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Class:</span> {className}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Section:</span> {sectionName}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Father:</span> {details.fatherName || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Academic Year:</span> {currentAcademicYear}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Fee Due:</span> ₹{totalDue}
+              </p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-gray-700">Academic Year: <span className="font-semibold">{currentAcademicYear}</span></p>
-            <p className="text-red-600 font-bold mt-3 text-lg">Due: ₹{totalDue}</p>
-          </div>
         </div>
-
-        <div className="mt-8">
-          <table className="w-full border-collapse">
+    
+        {/* Subjects Table */}
+        <div className="px-3 mt-2">
+          <table className="w-full border border-gray-300 text-sm">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-gray-300 p-3 text-left">Subject</th>
-                <th className="border border-gray-300 p-3 text-left">Date</th>
-                <th className="border border-gray-300 p-3 text-left">Time</th>
+                <th className="border border-gray-300 py-1 px-2 text-left">Subjects</th>
+                <th className="border border-gray-300 py-1 px-2 text-left">Date</th>
               </tr>
             </thead>
             <tbody>
               {selectedExam?.subjects.map((subject) => (
                 <tr key={subject._id}>
-                  <td className="border border-gray-300 p-3">{subject.name}</td>
-                  <td className="border border-gray-300 p-3">
-                    {new Date(subject.date).toLocaleDateString('en-GB')}
+                  <td className="border border-gray-300 py-1 px-2">{subject.name}</td>
+                  <td className="border border-gray-300 py-1 px-2">
+                    {new Date(subject.date).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="border border-gray-300 p-3">{subject.time}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        <div className="flex justify-between mt-12">
-          <div className="text-center">
-            <div className="border-t border-gray-300 w-40"></div>
-            <p className="mt-2">Class Teacher</p>
-          </div>
-          <div className="text-center">
-            <div className="border-t border-gray-300 w-40"></div>
-            <p className="mt-2">Principal</p>
-          </div>
-        </div>
       </div>
     );
+  };
+
+  const renderHallTicketPairs = () => {
+    const studentPairs = [];
+    const studentsToRender = selectedStudent 
+      ? [selectedStudent] 
+      : students.filter(s => selectedStudents.includes(s._id));
+
+    for (let i = 0; i < studentsToRender.length; i += 2) {
+      studentPairs.push(studentsToRender.slice(i, i + 2));
+    }
+
+    return studentPairs.map((pair, index) => (
+      <div key={index} className="w-[210mm] mx-auto flex flex-col gap-[1mm] p-[5mm] print:p-[5mm] page-break-after-always">
+        <HallTicket student={pair[0]} />
+        {pair[1] && <HallTicket student={pair[1]} />}
+      </div>
+    ));
   };
 
   return (
@@ -418,7 +434,7 @@ const CreateHallTicket = () => {
             )}
           </div>
         ) : (
-          <div>
+          <div className="print:m-0 print:p-0">
             <button
               onClick={() => {
                 setShowHallTickets(false);
@@ -430,17 +446,8 @@ const CreateHallTicket = () => {
               Back to List
             </button>
             
-            <div className="space-y-8">
-              {selectedStudent ? (
-                <HallTicket student={selectedStudent} />
-              ) : (
-                selectedStudents.map((studentId) => {
-                  const student = students.find(s => s._id === studentId);
-                  return student ? (
-                    <HallTicket key={student._id} student={student} />
-                  ) : null;
-                })
-              )}
+            <div>
+              {renderHallTicketPairs()}
             </div>
 
             <div className="mt-6 text-center print:hidden">
@@ -461,9 +468,11 @@ const CreateHallTicket = () => {
         @media print {
           @page {
             size: A4;
-            margin: 0.5cm;
+            margin: 0;
           }
           body {
+            margin: 0;
+            padding: 0;
             background: white !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -471,11 +480,8 @@ const CreateHallTicket = () => {
           .print\\:hidden {
             display: none !important;
           }
-          .print\\:mb-8 {
-            margin-bottom: 2rem !important;
-          }
-          .print\\:break-after-page {
-            break-after: page !important;
+          .page-break-after-always {
+            page-break-after: always;
           }
         }
       `}</style>
