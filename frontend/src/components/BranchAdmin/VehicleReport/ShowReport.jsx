@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { mycon } from '../../../store/Mycontext';
-import Allapi from '../../../common';
+import React, { useState, useEffect, useContext } from "react";
+import { mycon } from "../../../store/Mycontext";
+import Allapi from "../../../common";
 
 const ShowReport = () => {
   const { branchdet } = useContext(mycon);
-  const curr_Acad = branchdet?.academicYears?.[0] || '';
-  const token = localStorage.getItem('token');
+  const curr_Acad = branchdet?.academicYears?.[0] || "";
+  const token = localStorage.getItem("token");
 
   const [buses, setBuses] = useState([]);
-  const [selectedBus, setSelectedBus] = useState('');
+  const [selectedBus, setSelectedBus] = useState("");
   const [vehicleReport, setVehicleReport] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,15 +24,15 @@ const ShowReport = () => {
     try {
       setLoading(true);
       const response = await fetch(Allapi.getAllBuses.url(curr_Acad), {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch buses');
+        throw new Error("Failed to fetch buses");
       }
 
       const res = await response.json();
@@ -40,7 +40,7 @@ const ShowReport = () => {
         setBuses(res.data);
       }
     } catch (error) {
-      console.error('Error fetching buses:', error);
+      console.error("Error fetching buses:", error);
     } finally {
       setLoading(false);
     }
@@ -53,25 +53,29 @@ const ShowReport = () => {
     const fetchVehicleReport = async () => {
       try {
         setLoading(true);
-        const response = await fetch(Allapi.getVehicleStudents.url(selectedBus), {
-          method: Allapi.getVehicleStudents.method,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          Allapi.getVehicleStudents.url(selectedBus),
+          {
+            method: Allapi.getVehicleStudents.method,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch vehicle report');
+          throw new Error("Failed to fetch vehicle report");
         }
 
         const data = await response.json();
         if (data.success) {
           const processedData = processReportData(data.data);
+          console.log("processed data", processedData);
           setVehicleReport(processedData);
         }
       } catch (error) {
-        console.error('Error fetching vehicle report:', error);
+        console.error("Error fetching vehicle report:", error);
       } finally {
         setLoading(false);
       }
@@ -95,22 +99,25 @@ const ShowReport = () => {
         };
       }
       acc[sectionKey].studentCount++;
-      
+
       // Check transport type from halt field
       if (student.transportDetails?.halt) {
-        if (student.transportDetails.halt.toLowerCase().includes('town')) {
+        if (student.transportDetails.halt.toLowerCase().includes("town")) {
           acc[sectionKey].townCount++;
         } else {
           acc[sectionKey].holtCount++;
         }
       }
-      
+
       // Calculate fee due from transport fee details
-      const transportFee = student.feeDetails?.find(fee => fee.name === 'Transport-fee');
+      const transportFee = student.feeDetails?.find(
+        (fee) => fee.name === "Transport-fee"
+      );
       if (transportFee) {
-        acc[sectionKey].feeDue += transportFee.amount - (transportFee.paid || 0);
+        acc[sectionKey].feeDue +=
+          transportFee.amount - (transportFee.paid || 0);
       }
-      
+
       return acc;
     }, {});
 
@@ -123,11 +130,16 @@ const ShowReport = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Vehicle Wise Report</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">
+        Vehicle Wise Report
+      </h1>
 
       {/* Vehicle Selection Dropdown */}
       <div className="mb-6">
-        <label className="block text-gray-700 font-medium mb-2" htmlFor="busSelect">
+        <label
+          className="block text-gray-700 font-medium mb-2"
+          htmlFor="busSelect"
+        >
           Select Vehicle
         </label>
         <select
@@ -211,7 +223,10 @@ const ShowReport = () => {
                   -
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {vehicleReport.reduce((sum, row) => sum + row.studentCount, 0)}
+                  {vehicleReport.reduce(
+                    (sum, row) => sum + row.studentCount,
+                    0
+                  )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {vehicleReport.reduce((sum, row) => sum + row.townCount, 0)}
@@ -220,7 +235,10 @@ const ShowReport = () => {
                   {vehicleReport.reduce((sum, row) => sum + row.holtCount, 0)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  ₹{vehicleReport.reduce((sum, row) => sum + row.feeDue, 0).toLocaleString()}
+                  ₹
+                  {vehicleReport
+                    .reduce((sum, row) => sum + row.feeDue, 0)
+                    .toLocaleString()}
                 </td>
               </tr>
             </tbody>
