@@ -57,6 +57,8 @@ import ViewWorkingDays from "./components/BranchAdmin/WorkingDays/ViewWorkingDay
 
 import ShowReport from "./components/BranchAdmin/VehicleReport/ShowReport.jsx";
 import StrengthReports from "./components/BranchAdmin/StrengthReports/StrengthReports.jsx";
+import AddAttendance from "./components/BranchAdmin/Attendance/AddAttendance.jsx";
+import ViewAttendance from "./components/BranchAdmin/Attendance/ViewAttendance.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -149,6 +151,17 @@ const Router = createBrowserRouter([
             {
               path: "view",
               element: <ViewWorkingDays />
+            }]
+          },
+          {
+            path: "attendance",
+            children: [{
+              path: "add/:acid",
+              element: <AddAttendance />
+            },
+            {
+              path: "view/:acid",
+              element: <ViewAttendance />
             }]
           },
 

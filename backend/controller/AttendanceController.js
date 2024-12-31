@@ -30,10 +30,6 @@ const addAttendance = async (req, res) => {
   }
 };
 
-
-
-const Attendance = require('../models/Attendance');
-
 // 1. Get Absentees by branchId, academicId, classId, sectionId, date
 const getAbsentees = async (req, res) => {
   const { branchId, academicId, classId, sectionId, date } = req.query;
