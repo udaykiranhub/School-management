@@ -301,7 +301,16 @@ const Allapi = {
   removeTeacherAssignment: {
     url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
     method: "DELETE"
+  },
+
+
+  getVehicleStudents: {
+    url: (busId) => `${backapi}/api/buses/vehicle-students/${busId}`,
+    method: "GET"
   }
+  
+
+  
 };
 
 

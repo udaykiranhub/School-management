@@ -1,5 +1,6 @@
 const Bus = require("../models/Bus");
 const AcademicYear = require("../models/Acyear");
+const Student = require("../models/student"); // Add this import
 
 // Add a new bus
 exports.addBus = async (req, res) => {
@@ -70,10 +71,11 @@ exports.getAllBuses = async (req, res) => {
     });
   }
 };
+
 exports.searchBusesByPlace = async (req, res) => {
   try {
     const { academicId } = req.params;
-    const { place } = req.body; // Expecting a single place name in the request body
+    const { place } = req.body;
 
     // Validate input
     if (typeof place !== 'string' || place.trim() === '') {
@@ -86,7 +88,7 @@ exports.searchBusesByPlace = async (req, res) => {
     // Find buses that have the specified place in the viaTowns array and match the academic year ID
     const buses = await Bus.find({
       academicId,
-      viaTowns: { $elemMatch: { $eq: place } } // Check if the place exists in the viaTowns array
+      viaTowns: { $elemMatch: { $eq: place } }
     });
 
     if (buses.length === 0) {
@@ -105,7 +107,6 @@ exports.searchBusesByPlace = async (req, res) => {
     });
   }
 };
-
 
 // Update a bus
 exports.updateBus = async (req, res) => {
@@ -159,6 +160,55 @@ exports.deleteBus = async (req, res) => {
       success: false,
       message: "Failed to delete bus",
       error: error.message,
+    });
+  }
+};
+
+// Get vehicle students
+exports.getVehicleStudents = async (req, res) => {
+  try {
+    const { busId } = req.params;
+    
+    // Find students who use this bus
+    const students = await Student.find({
+      'transport': true,
+      'transportDetails.bus': busId
+    })
+    .populate('class.id', 'name') // Populate class name
+    .populate('section.id', 'name'); // Populate section name
+
+    if (!students || students.length === 0) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+        message: 'No students found for this vehicle'
+      });
+    }
+
+    // Transform the data to match the expected format
+    const transformedStudents = students.map(student => ({
+      ...student.toObject(),
+      class: {
+        name: student.class.id?.name || student.class.name,
+        id: student.class.id?._id || student.class.id
+      },
+      section: {
+        name: student.section.id?.name || student.section.name,
+        id: student.section.id?._id || student.section.id
+      }
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: transformedStudents
+    });
+
+  } catch (error) {
+    console.error('Error fetching vehicle students:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching vehicle students',
+      error: error.message
     });
   }
 };

@@ -61,7 +61,7 @@ import ViewTeachers from "./components/BranchAdmin/Teachers/ViewTeachers.jsx";
 import AssignTeachers from "./components/BranchAdmin/Teachers/AssignTeachers.jsx";
 import ViewPerformance from "./components/BranchAdmin/Teachers/ViewPerfomance.jsx";
 
-
+import ShowReport from "./components/BranchAdmin/VehicleReport/ShowReport.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -190,6 +190,19 @@ const Router = createBrowserRouter([
               element: <ViewEnquiry />
             }]
           },
+
+
+          {
+              path:"vehicle",
+              children:[{
+                path:"create",
+                element:<ShowReport/>
+              }]
+
+          },
+
+
+
 
 
 
