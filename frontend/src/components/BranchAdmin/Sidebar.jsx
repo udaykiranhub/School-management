@@ -399,6 +399,13 @@ const BranchAdminSidebar = () => {
                 <FaEdit className="mr-2" />
                 ViewPerfomance
               </Link>
+              <Link
+                to="/branch-admin/teachers/view-perfomance"
+                className="flex items-center p-2 rounded hover:bg-gray-600"
+              >
+                <FaEdit className="mr-2" />
+                ViewPerfomance
+              </Link>
             </div>
           )}
         </div>
@@ -434,60 +441,86 @@ const BranchAdminSidebar = () => {
             </div>
           )}
           <div>
-          <button
-            onClick={() => handleMenuClick("workingdays")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
-              ? "bg-gray-700 text-black"
-              : "text-black"
-              }`}
-          >
-            <FaChalkboardTeacher className="mr-3" />
-            Working Days
-          </button>
-          {activeMenu === "workingdays" && (
-            <div className="flex flex-col pl-6 mt-2 space-y-2">
-              <Link
-                to="/branch-admin/workingdays/create"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Create Working Days
-              </Link>
-              <Link
-                to="/branch-admin/workingdays/view"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaEdit className="mr-2" />
-                View & Update
-              </Link>
-            </div>
-          )}
-        </div>
-        <div>
-          <button
-            onClick={() => handleMenuClick("vehicle")}
-            className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "exams"
-              ? "bg-gray-700 text-black"
-              : "text-black"
-              }`}
-          >
-            <FaChalkboardTeacher className="mr-3" />
-            Vehicle Reports
-          </button>
-          {activeMenu === "vehicle" && (
-            <div className="flex flex-col pl-6 mt-2 space-y-2">
-              <Link
-                to="/branch-admin/vehicle/create"
-                className="flex items-center p-2 rounded hover:bg-gray-600"
-              >
-                <FaPlus className="mr-2" />
-                Show Report
-              </Link>
-            </div>
-          )}
-        </div>
+            <button
+              onClick={() => handleMenuClick("workingdays")}
+              className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "enquiry"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+                }`}
+            >
+              <FaChalkboardTeacher className="mr-3" />
+              Working Days
+            </button>
+            {activeMenu === "workingdays" && (
+              <div className="flex flex-col pl-6 mt-2 space-y-2">
+                <Link
+                  to="/branch-admin/workingdays/create"
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaPlus className="mr-2" />
+                  Create Working Days
+                </Link>
+                <Link
+                  to="/branch-admin/workingdays/view"
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaEdit className="mr-2" />
+                  View & Update
+                </Link>
+              </div>
+            )}
+          </div>
+          <div>
+            <button
+              onClick={() => handleMenuClick("vehicle")}
+              className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "exams"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+                }`}
+            >
+              <FaChalkboardTeacher className="mr-3" />
+              Vehicle Reports
+            </button>
+            {activeMenu === "vehicle" && (
+              <div className="flex flex-col pl-6 mt-2 space-y-2">
+                <Link
+                  to="/branch-admin/vehicle/create"
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaPlus className="mr-2" />
+                  Show Report
+                </Link>
+              </div>
+
+            )}
+          </div>
+          <div>
+            <button
+              onClick={() => handleMenuClick("strengthreports")}
+              className={`flex items-center w-full p-2 rounded bg-gray-700 text-black hover:bg-gray-700 hover:text-slate-300 ${activeMenu === "exams"
+                ? "bg-gray-700 text-black"
+                : "text-black"
+                }`}
+            >
+              <FaChalkboardTeacher className="mr-3" />
+              Strength Reports
+            </button>
+            {activeMenu === "strengthreports" && (
+              <div className="flex flex-col pl-6 mt-2 space-y-2">
+                <Link
+                  to="/branch-admin/strengthreports/create"
+                  className="flex items-center p-2 rounded hover:bg-gray-600"
+                >
+                  <FaPlus className="mr-2" />
+                  Show Reports
+                </Link>
+              </div>
+
+            )}
+          </div>
 
         </div>
+
       </nav>
 
       {/* Logout Button */}

@@ -56,6 +56,7 @@ import CreateWorkingDays from "./components/BranchAdmin/WorkingDays/CreateWorkin
 import ViewWorkingDays from "./components/BranchAdmin/WorkingDays/ViewWorkingDays.jsx";
 
 import ShowReport from "./components/BranchAdmin/VehicleReport/ShowReport.jsx";
+import StrengthReports from "./components/BranchAdmin/StrengthReports/StrengthReports.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -130,83 +131,91 @@ const Router = createBrowserRouter([
           },
           {
             path: "exam",
-            children : [{
+            children: [{
               path: "create-timetable",
-              element: <CreateTimeTable/>
+              element: <CreateTimeTable />
             },
-          {
-            path: "view-timetable",
-            element: <ViewTimeTable/>
-          }]
+            {
+              path: "view-timetable",
+              element: <ViewTimeTable />
+            }]
           },
           {
             path: "workingdays",
-            children : [{
+            children: [{
               path: "create",
-              element: <CreateWorkingDays/>
+              element: <CreateWorkingDays />
             },
-          {
-            path: "view",
-            element: <ViewWorkingDays/>
-          }]
+            {
+              path: "view",
+              element: <ViewWorkingDays />
+            }]
           },
 
           {
             path: "marks",
-            children : [{
+            children: [{
               path: "enter",
-              element: <EnterMarks/>
+              element: <EnterMarks />
             },
             {
               path: "update",
-              element: <UpdateMarks/>
+              element: <UpdateMarks />
             },
-          {
-            path: "view",
-            element: <ViewMarks/>
-          },
+            {
+              path: "view",
+              element: <ViewMarks />
+            },
 
-       {
+            {
 
 
-            path:"create",
-            element:<CreateHallTicket/>
+              path: "create",
+              element: <CreateHallTicket />
 
-          },   
-        ]
+            },
+            ]
           },
 
           {
             path: "enquiry",
-            children : [{
+            children: [{
               path: "create-enquiry",
-              element: <AddEnquiry/>
+              element: <AddEnquiry />
             },
-          {
-            path: "view-enquiry",
-            element: <ViewEnquiry/>
-          }]
+            {
+              path: "view-enquiry",
+              element: <ViewEnquiry />
+            }]
           },
           {
-            path:"syllabus",
-            children : [{
-              path:"create",
-              element:<CreateSyllabus/>
+            path: "syllabus",
+            children: [{
+              path: "create",
+              element: <CreateSyllabus />
             },
-          {
-            path:"view",
-            element:<ViewSyllabus/>
-          }]
+            {
+              path: "view",
+              element: <ViewSyllabus />
+            }]
 
           },
 
 
           {
-              path:"vehicle",
-              children:[{
-                path:"create",
-                element:<ShowReport/>
-              }]
+            path: "vehicle",
+            children: [{
+              path: "create",
+              element: <ShowReport />
+            }]
+
+          }, {
+            path: "strengthreports",
+            children: [{
+              path: "create",
+              element: <StrengthReports />
+            }]
+
 
           },
 
@@ -217,9 +226,9 @@ const Router = createBrowserRouter([
 
           {
             path: "teachers",
-            children : [{
+            children: [{
               path: "add-teacher",
-              element: <AddTeacher/>
+              element: <AddTeacher />
             },
             {
               path: "view-teachers",
@@ -227,13 +236,13 @@ const Router = createBrowserRouter([
             }, {
               path: "assign-teachers",
               element: <AssignTeachers />
-            },{
+            }, {
               path: "view-perfomance",
               element: <ViewPerformance />
             }]
           },
 
-     
+
           {
             path: "class/view-all/:acid",
             element: <ViewAll />,
