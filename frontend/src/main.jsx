@@ -59,6 +59,7 @@ import ShowReport from "./components/BranchAdmin/VehicleReport/ShowReport.jsx";
 import StrengthReports from "./components/BranchAdmin/StrengthReports/StrengthReports.jsx";
 import AddAttendance from "./components/BranchAdmin/Attendance/AddAttendance.jsx";
 import ViewAttendance from "./components/BranchAdmin/Attendance/ViewAttendance.jsx";
+import ProgressReport from "./components/BranchAdmin/ProgressReport/ProgressReport.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -228,15 +229,15 @@ const Router = createBrowserRouter([
               path: "create",
               element: <StrengthReports />
             }]
-
-
+          }, {
+            path: "progressreports",
+            children: [
+              {
+                path: "create",
+                element: <ProgressReport />
+              },
+            ]
           },
-
-
-
-
-
-
           {
             path: "teachers",
             children: [{
