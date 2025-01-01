@@ -302,12 +302,36 @@ const Allapi = {
     url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
     method: "DELETE"
   },
-
-
+  addWorkingDays:{
+    url : `${backapi}/api/workingdays`,
+    method: "POST"
+  },
+  getWorkingDays:{
+    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+    method: "GET"
+  },
+  updateWorkingDays:{
+    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+    method: "PUT"
+  },
   getVehicleStudents: {
     url: (busId) => `${backapi}/api/buses/vehicle-students/${busId}`,
     method: "GET"
+  },
+  addAttendance:{
+    url: `${backapi}/api/attendance/add`,
+    method : "POST"
+  },
+  getAbsentees:{
+    url: `${backapi}/api/attendance/get-absentees`,
+    method : "GET"
+  },
+  getMonthlyAbsents:{
+    url :`${backapi}/api/attendance/monthly-absents`,
+    method :"GET"
   }
+
+
   
 
   

@@ -20,6 +20,8 @@ const marksRoutes = require("./routers/MarksRoutes");
 const syllabusRoutes = require("./routers/SyllabusRoutes.js")
 const teacherRoutes = require("./routers/TeacherRoutes");
 const teacherAssignRoutes = require("./routers/TeacherAssignRoutes.js");
+const workingdays = require("./routers/WorkingDaysRoutes.js")
+const attendanceRoutes = require("./routers/AttendanceRoutes.js")
 
 app.use(cors());
 app.use(cookieParser());
@@ -40,6 +42,8 @@ app.use("/api/marks", protect.authMiddleware, marksRoutes);
 app.use("/api/syllabus", protect.authMiddleware, syllabusRoutes)
 app.use("/api/teachers", protect.authMiddleware, teacherRoutes);
 app.use("/api/teachersassingn", protect.authMiddleware, teacherAssignRoutes);
+app.use("/api/workingdays",protect.authMiddleware,workingdays);
+app.use("/api/attendance",protect.authMiddleware,attendanceRoutes);
 
 
 database().then(
