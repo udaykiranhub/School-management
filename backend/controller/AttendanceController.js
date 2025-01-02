@@ -2,10 +2,53 @@
 const Attendance = require('../models/Attendance');
 
 // Controller to add attendance
+// const addAttendance = async (req, res) => {
+//   const { academicId, branchId, classId, sectionId, date, absentees } = req.body;
+
+//   try {
+//     const attendance = new Attendance({
+//       academicId,
+//       branchId,
+//       classId,
+//       sectionId,
+//       date,
+//       absentees
+//     });
+
+//     const savedAttendance = await attendance.save();
+//     res.status(201).json({
+//       success: true,
+//       data: savedAttendance,
+//       message: 'Attendance saved successfully!'
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: 'Error saving attendance data',
+//       error: error.message
+//     });
+//   }
+// };
 const addAttendance = async (req, res) => {
   const { academicId, branchId, classId, sectionId, date, absentees } = req.body;
 
   try {
+    // Check if attendance already exists for the given branchId, classId, sectionId, and date
+    const existingAttendance = await Attendance.findOne({
+      branchId,
+      classId,
+      sectionId,
+      date
+    });
+
+    if (existingAttendance) {
+      return res.status(400).json({
+        success: false,
+        message: 'Attendance already exists for this date in that class & section',
+      });
+    }
+
+    // If no existing attendance, create a new record
     const attendance = new Attendance({
       academicId,
       branchId,
@@ -16,6 +59,7 @@ const addAttendance = async (req, res) => {
     });
 
     const savedAttendance = await attendance.save();
+
     res.status(201).json({
       success: true,
       data: savedAttendance,

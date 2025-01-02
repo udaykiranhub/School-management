@@ -1,4 +1,5 @@
 import React, { useState, useEffect , useContext } from "react";
+import { toast, ToastContainer } from 'react-toastify';
 import { useParams } from "react-router-dom";
 import Allapi from "../../../common/index";
 import { mycon } from "../../../store/Mycontext";
@@ -143,7 +144,7 @@ const AddAttendance = () => {
 
   const handleSubmit = async () => {
     if (!selectedClass || !selectedSection || !date) {
-      alert("Please select class, section and date");
+      toast.error("Please select class, section and date");
       return;
     }
 
@@ -167,25 +168,26 @@ const AddAttendance = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Attendance marked successfully!");
+        toast.success("Attendance marked successfully!");
         setAbsentees([]); // Reset absentees after successful submission
       } else {
-        alert(data.message || "Failed to mark attendance");
+        toast.error(data.message || "Failed to mark attendance");
       }
     } catch (error) {
       console.error("Error marking attendance:", error);
-      alert("Error marking attendance");
+      toast.error("Error marking attendance");
     }
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen ">
-      <h1 className="text-2xl font-bold mb-6">Mark Attendance</h1>
+    <div className="min-h-screen p-6 bg-gray-100 ">
+    <ToastContainer/>
+      <h1 className="mb-6 text-2xl font-bold">Mark Attendance</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
         {/* Date Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             Date
           </label>
           <input
@@ -198,7 +200,7 @@ const AddAttendance = () => {
 
         {/* Class Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             Select Class
           </label>
           <select
@@ -217,7 +219,7 @@ const AddAttendance = () => {
 
         {/* Section Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             Select Section
           </label>
           <select
@@ -240,7 +242,7 @@ const AddAttendance = () => {
         <div className="text-center">Loading...</div>
       ) : students.length > 0 ? (
         <div className="overflow-x-auto text-black">
-          <table className="min-w-full bg-white shadow-md rounded">
+          <table className="min-w-full bg-white rounded shadow-md">
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left">S.No</th>
@@ -260,7 +262,7 @@ const AddAttendance = () => {
                       type="checkbox"
                       checked={absentees.includes(student._id)}
                       onChange={() => handleCheckboxChange(student._id)}
-                      className="h-4 w-4 text-blue-600"
+                      className="w-4 h-4 text-blue-600"
                     />
                   </td>
                 </tr>
@@ -271,7 +273,7 @@ const AddAttendance = () => {
           <div className="mt-6 text-center">
             <button
               onClick={handleSubmit}
-              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+              className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
             >
               Submit Attendance
             </button>
