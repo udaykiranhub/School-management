@@ -16,6 +16,14 @@ const ViewPerformance = () => {
     const [loading, setLoading] = useState(false);
     const [assignmentDetails, setAssignmentDetails] = useState(null);
 
+    // Helper function to normalize subjects (convert to lowercase and remove duplicates)
+    const normalizeSubjects = (subjectList) => {
+        const uniqueSubjects = new Set(
+            subjectList.map(subject => subject.toLowerCase())
+        );
+        return Array.from(uniqueSubjects).sort();
+    };
+
     useEffect(() => {
         if (branchdet?.academicYears?.[0]) {
             fetchSubjects();
@@ -54,14 +62,20 @@ const ViewPerformance = () => {
             );
             const result = await response.json();
             if (result.success) {
-                const allSubjects = new Set();
+                const allSubjects = [];
                 result.data.forEach(cls => {
                     if (cls.subjects) {
-                        cls.subjects.mainSubjects?.forEach(subject => allSubjects.add(subject));
-                        cls.subjects.additionalSubjects?.forEach(subject => allSubjects.add(subject));
+                        if (cls.subjects.mainSubjects) {
+                            allSubjects.push(...cls.subjects.mainSubjects);
+                        }
+                        if (cls.subjects.additionalSubjects) {
+                            allSubjects.push(...cls.subjects.additionalSubjects);
+                        }
                     }
                 });
-                setSubjects(Array.from(allSubjects));
+                // Normalize subjects to lowercase and remove duplicates
+                const normalizedSubjects = normalizeSubjects(allSubjects);
+                setSubjects(normalizedSubjects);
             }
         } catch (error) {
             toast.error('Error fetching subjects');
@@ -86,7 +100,8 @@ const ViewPerformance = () => {
                 result.data.forEach(assignment => {
                     assignment.classAssignments.forEach(ca => {
                         ca.sections.forEach(section => {
-                            if (section.subject === selectedSubject) {
+                            // Case-insensitive comparison for subject matching
+                            if (section.subject.toLowerCase() === selectedSubject.toLowerCase()) {
                                 teachersForSubject.push({
                                     teacherId: assignment.teacherId,
                                     teacherName: assignment.name,
@@ -189,7 +204,10 @@ const ViewPerformance = () => {
         const allStudents = [...data.passStudents, ...data.failStudents];
 
         const processedStudents = allStudents.map(student => {
-            const subjectMarks = student.subjects.find(s => s.name === selectedSubject)?.marks || 0;
+            // Case-insensitive comparison for finding subject marks
+            const subjectMarks = student.subjects.find(
+                s => s.name.toLowerCase() === selectedSubject.toLowerCase()
+            )?.marks || 0;
             return {
                 ...student,
                 subjectMarks
@@ -396,8 +414,7 @@ const ViewPerformance = () => {
                                 <button
                                     onClick={fetchPerformanceData}
                                     disabled={!selectedExam || loading}
-                                    className={`mt-4 w-full px-4 py-2 rounded-md text-white font-medium ${!selectedExam || loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-                                        }`}
+                                    className={`mt-4 w-full px-4 py-2 rounded-md text-white font-medium ${!selectedExam || loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
                                 >
                                     {loading ? 'Loading...' : 'View Performance'}
                                 </button>
