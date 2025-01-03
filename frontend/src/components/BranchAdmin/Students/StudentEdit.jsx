@@ -1305,11 +1305,12 @@ const StudentEdit = () => {
                   required
                 >
                   <option value="">Select Bus</option>
-                  {buses.map((bus) => (
-                    <option key={bus._id} value={bus._id}>
-                      {bus.busNo}
-                    </option>
-                  ))}
+                  {buses &&
+                    buses.map((bus) => (
+                      <option key={bus._id} value={bus._id}>
+                        {bus.busNo}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
