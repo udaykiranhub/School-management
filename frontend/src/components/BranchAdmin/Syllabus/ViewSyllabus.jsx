@@ -19,6 +19,11 @@ const ViewSyllabus = () => {
   const [filteredExams, setFilteredExams] = useState([]);
   const [syllabusData, setSyllabusData] = useState(null);
 
+  //new
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedSyllabus, setEditedSyllabus] = useState({});
+
+
   const curracad = async (bid) => {
     try {
       const response = await fetch(Allapi.getAcademicYears.url(bid), {
@@ -155,6 +160,58 @@ const ViewSyllabus = () => {
     setSyllabusData(null);
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+    // Initialize edited syllabus with current values
+    const initialEditedSyllabus = {};
+    selectedExam.subjects.forEach((subject) => {
+      initialEditedSyllabus[subject._id] = syllabusData.syllabus[subject._id] || "";
+    });
+    setEditedSyllabus(initialEditedSyllabus);
+  };
+
+  const handleSyllabusChange = (subjectId, value) => {
+    setEditedSyllabus(prev => ({
+      ...prev,
+      [subjectId]: value
+    }));
+  };
+
+  const handleUpdateSyllabus = async () => {
+    console.log("subjed data._id: ",syllabusData._id);
+    try {
+      const response = await fetch(
+
+        Allapi.updateSyllabus.url(branchdet._id, syllabusData._id),
+        {
+          method: Allapi.updateSyllabus.method,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            syllabus: editedSyllabus
+          })
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          toast.success("Syllabus updated successfully");
+          setIsEditing(false);
+          // Refresh syllabus data
+          fetchSyllabus();
+        } else {
+          toast.error(result.message || "Failed to update syllabus");
+        }
+      } else {
+        toast.error("Failed to update syllabus");
+      }
+    } catch (error) {
+      toast.error("Error updating syllabus");
+    }
+  };
   useEffect(() => {
     if (branchdet?._id) {
       curracad(branchdet._id);
@@ -275,44 +332,79 @@ const ViewSyllabus = () => {
         </div>
 
         {syllabusData && selectedExam?.subjects?.length > 0 && (
-  <div className="mt-6">
-    <div className="overflow-x-auto">
-      <table className="w-full bg-white border border-collapse border-gray-300">
-        <thead>
-          <tr className="bg-gray-100 border-b border-gray-300">
-            <th className="p-4 font-semibold text-left text-gray-700 border-r border-gray-300">
-              Subject Name
-            </th>
-            <th className="p-4 font-semibold text-left text-gray-700">
-              Syllabus
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {selectedExam.subjects.map((subject) => (
-            <tr key={subject._id} className="border-b border-gray-300">
-              <td className="p-4 font-medium text-gray-700 border-r border-gray-300">
-                {subject.name}
-              </td>
-              <td className="p-4 text-gray-900">
-                {/* Accessing the syllabus data like a regular object */}
-                {syllabusData.syllabus[subject._id] || "No syllabus added"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          <div className="mt-6">
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white border border-collapse border-gray-300">
+                <thead>
+                  <tr className="bg-gray-100 border-b border-gray-300">
+                    <th className="p-4 font-semibold text-left text-gray-700 border-r border-gray-300">
+                      Subject Name
+                    </th>
+                    <th className="p-4 font-semibold text-left text-gray-700">
+                      Syllabus
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedExam.subjects.map((subject) => (
+                    <tr key={subject._id} className="border-b border-gray-300">
+                      <td className="p-4 font-medium text-gray-700 border-r border-gray-300">
+                        {subject.name}
+                      </td>
+                      <td className="p-4 text-gray-900">
+                        {isEditing ? (
+                          <textarea
+                              value={editedSyllabus[subject._id] || ""}
+                              onChange={(e) => handleSyllabusChange(subject._id, e.target.value)}
+                              className="w-full p-2 text-gray-900 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows="3"
+                            />
 
-    <button
-      onClick={handleDeleteSyllabus}
-      className="px-6 py-3 mt-6 text-white transition-colors bg-red-600 rounded hover:bg-red-700"
-    >
-      Delete Syllabus
-    </button>
-  </div>
-)}
+                        ) : (
+                          syllabusData.syllabus[subject._id] || "No syllabus added"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
+            <div className="flex gap-4 mt-6">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleUpdateSyllabus}
+                    className="px-6 py-3 text-white transition-colors bg-green-600 rounded hover:bg-green-700"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-6 py-3 text-white transition-colors bg-gray-600 rounded hover:bg-gray-700"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleEditClick}
+                    className="px-6 py-3 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
+                  >
+                    Edit Syllabus
+                  </button>
+                  <button
+                    onClick={handleDeleteSyllabus}
+                    className="px-6 py-3 text-white transition-colors bg-red-600 rounded hover:bg-red-700"
+                  >
+                    Delete Syllabus
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {selectedExam && !syllabusData && (
           <div className="p-4 mt-6 text-center text-gray-700 bg-gray-100 rounded">
@@ -327,3 +419,4 @@ const ViewSyllabus = () => {
 };
 
 export default ViewSyllabus;
+
