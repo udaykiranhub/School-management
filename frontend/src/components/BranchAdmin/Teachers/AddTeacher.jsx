@@ -25,7 +25,7 @@ const AddTeacher = () => {
         joiningDate: '',
         aadharNumber: '',
         academic_id: '',
-        role: 'Teacher'  // Changed from 'TEACHER' to 'Teacher'
+        role: 'Teacher'
     });
 
     useEffect(() => {
@@ -51,14 +51,21 @@ const AddTeacher = () => {
             const result = await response.json();
             if (result.success) {
                 setClasses(result.data);
-                const subjects = new Set();
+                // Create a Set to store unique lowercase subjects
+                const subjectsSet = new Set();
                 result.data.forEach(cls => {
                     if (cls.subjects) {
-                        cls.subjects.mainSubjects?.forEach(subject => subjects.add(subject));
-                        cls.subjects.additionalSubjects?.forEach(subject => subjects.add(subject));
+                        cls.subjects.mainSubjects?.forEach(subject =>
+                            subjectsSet.add(subject.toLowerCase())
+                        );
+                        cls.subjects.additionalSubjects?.forEach(subject =>
+                            subjectsSet.add(subject.toLowerCase())
+                        );
                     }
                 });
-                setAvailableSubjects(Array.from(subjects));
+                // Convert Set to sorted array
+                const sortedSubjects = Array.from(subjectsSet).sort();
+                setAvailableSubjects(sortedSubjects);
             }
         } catch (error) {
             toast.error('Error fetching subjects');
@@ -90,7 +97,9 @@ const AddTeacher = () => {
             return;
         }
 
-        if (formData.teachingSubjects.some(subject => subject.name === selectedSubject)) {
+        if (formData.teachingSubjects.some(subject =>
+            subject.name.toLowerCase() === selectedSubject.toLowerCase()
+        )) {
             toast.error('Subject already added');
             return;
         }
@@ -142,11 +151,10 @@ const AddTeacher = () => {
         if (!validateForm()) return;
 
         try {
-            // Format the data before sending
             const dataToSend = {
                 ...formData,
                 teachingSubjects: formData.teachingSubjects.map(subject => ({
-                    name: subject.name
+                    name: subject.name.toLowerCase() // Ensure subjects are stored in lowercase
                 }))
             };
 
@@ -160,11 +168,9 @@ const AddTeacher = () => {
             });
 
             const result = await response.json();
-            console.log("formadata", result);
 
             if (result.success) {
                 toast.success('Teacher added successfully!');
-                // Reset form
                 setFormData({
                     name: '',
                     phone: '',

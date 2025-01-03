@@ -28,6 +28,14 @@ const ViewTeachers = () => {
         aadharNumber: ''
     });
 
+    // Helper function to normalize subjects (convert to lowercase and remove duplicates)
+    const normalizeSubjects = (subjectList) => {
+        const uniqueSubjects = new Set(
+            subjectList.map(subject => subject.toLowerCase())
+        );
+        return Array.from(uniqueSubjects).sort();
+    };
+
     useEffect(() => {
         if (branchdet?.academicYears?.[0]) {
             fetchTeachers();
@@ -38,7 +46,9 @@ const ViewTeachers = () => {
     useEffect(() => {
         if (selectedSubject) {
             const filtered = teachers.filter(teacher =>
-                teacher.teachingSubjects.some(subject => subject.name === selectedSubject)
+                teacher.teachingSubjects.some(subject =>
+                    subject.name.toLowerCase() === selectedSubject.toLowerCase()
+                )
             );
             setFilteredTeachers(filtered);
         } else {
@@ -88,13 +98,17 @@ const ViewTeachers = () => {
             if (result.success) {
                 setTeachers(result.data);
 
-                const subjects = new Set();
+                // Extract and normalize subjects
+                const allSubjects = [];
                 result.data.forEach(teacher => {
                     teacher.teachingSubjects.forEach(subject => {
-                        subjects.add(subject.name);
+                        allSubjects.push(subject.name);
                     });
                 });
-                setAvailableSubjects(Array.from(subjects));
+
+                // Normalize subjects to lowercase and remove duplicates
+                const normalizedSubjects = normalizeSubjects(allSubjects);
+                setAvailableSubjects(normalizedSubjects);
             }
         } catch (error) {
             toast.error('Error fetching teachers');
@@ -107,7 +121,7 @@ const ViewTeachers = () => {
 
         return assignment.classAssignments.some(classAssign =>
             classAssign.sections.some(section =>
-                section.subject === subjectName
+                section.subject.toLowerCase() === subjectName.toLowerCase()
             )
         );
     };
@@ -160,7 +174,7 @@ const ViewTeachers = () => {
 
         try {
             const updatedSubjects = teacher.teachingSubjects.filter(
-                subject => subject.name !== subjectToRemove
+                subject => subject.name.toLowerCase() !== subjectToRemove.toLowerCase()
             );
 
             const response = await fetch(
