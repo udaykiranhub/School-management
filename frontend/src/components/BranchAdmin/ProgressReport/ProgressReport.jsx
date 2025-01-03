@@ -5,7 +5,6 @@ import { Printer } from 'lucide-react';
 import Allapi from '../../../common';
 import { mycon } from '../../../store/Mycontext';
 
-// Print styles
 const printStyles = `
   @media print {
     @page { 
@@ -36,64 +35,65 @@ const ProgressReport = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [selectedExams, setSelectedExams] = useState([]);
   const [availableExams, setAvailableExams] = useState([]);
+  const [examDates, setExamDates] = useState({});
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [studentData, setStudentData] = useState(null);
   const [examResults, setExamResults] = useState([]);
-  const [attendance, setAttendance] = useState({});
+  const [attendanceData, setAttendanceData] = useState([]);
 
-  // Get current academic year
   useEffect(() => {
     if (branchdet?._id) {
-      const fetchAcademicYear = async () => {
-        try {
-          const response = await fetch(Allapi.getAcademicYears.url(branchdet._id), {
-            method: Allapi.getAcademicYears.method,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-
-          const res = await response.json();
-          if (res.success && res.data.length > 0) {
-            const latestYear = res.data.sort((a, b) => {
-              const [startA] = a.year.split("-").map(Number);
-              const [startB] = b.year.split("-").map(Number);
-              return startB - startA;
-            })[0];
-
-            setAcid(latestYear._id);
-          }
-        } catch (error) {
-          toast.error("Failed to fetch academic year");
-        }
-      };
       fetchAcademicYear();
     }
   }, [branchdet]);
 
-  // Fetch classes when academic year is set
   useEffect(() => {
     if (acid) {
-      const fetchClasses = async () => {
-        try {
-          const response = await fetch(Allapi.getClasses.url(acid), {
-            method: Allapi.getClasses.method,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-          const result = await response.json();
-          if (result.success) {
-            setClasses(result.data);
-          }
-        } catch (error) {
-          toast.error("Failed to fetch classes");
-        }
-      };
       fetchClasses();
     }
   }, [acid]);
+
+  const fetchAcademicYear = async () => {
+    try {
+      const response = await fetch(Allapi.getAcademicYears.url(branchdet._id), {
+        method: Allapi.getAcademicYears.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const res = await response.json();
+      if (res.success && res.data.length > 0) {
+        const latestYear = res.data.sort((a, b) => {
+          const [startA] = a.year.split("-").map(Number);
+          const [startB] = b.year.split("-").map(Number);
+          return startB - startA;
+        })[0];
+
+        setAcid(latestYear._id);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch academic year");
+    }
+  };
+
+  const fetchClasses = async () => {
+    try {
+      const response = await fetch(Allapi.getClasses.url(acid), {
+        method: Allapi.getClasses.method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const result = await response.json();
+      if (result.success) {
+        setClasses(result.data);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch classes");
+    }
+  };
 
   const handleClassChange = async (classId) => {
     setSelectedClass(classId);
@@ -101,6 +101,7 @@ const ProgressReport = () => {
     setSelectedStudent(null);
     setSelectedExams([]);
     setAvailableExams([]);
+    setExamDates({});
 
     if (!classId) return;
 
@@ -127,6 +128,7 @@ const ProgressReport = () => {
     setSelectedSection(sectionId);
     setSelectedExams([]);
     setSelectedStudent(null);
+    setExamDates({});
 
     if (!sectionId || !selectedClass) return;
 
@@ -142,7 +144,31 @@ const ProgressReport = () => {
       );
       const result = await response.json();
       if (result.success) {
-        setAvailableExams(result.data);
+        const exams = result.data;
+        setAvailableExams(exams);
+        
+        // Fetch exam dates for each exam
+        const dates = {};
+        for (const exam of exams) {
+          const examDetailsResponse = await fetch(
+            Allapi.getExamById.url(exam._id, branchdet._id),
+            {
+              method: Allapi.getExamById.method,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          const examDetails = await examDetailsResponse.json();
+          if (examDetails.success) {
+            dates[exam._id] = examDetails.data.subjects.map(subject => ({
+              name: subject.name,
+              date: new Date(subject.date).toLocaleDateString(),
+              time: subject.time
+            }));
+          }
+        }
+        setExamDates(dates);
       }
     } catch (error) {
       toast.error("Failed to fetch exams");
@@ -173,11 +199,73 @@ const ProgressReport = () => {
     }
   };
 
+  const fetchAttendanceData = async (studentId) => {
+    try {
+      const monthlyData = [];
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      
+      // Fetch working days first
+      const workingDaysResponse = await fetch(
+        Allapi.getWorkingDays.url(branchdet._id, acid),
+        {
+          method: Allapi.getWorkingDays.method,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      
+      const workingDaysData = await workingDaysResponse.json();
+      const workingDays = workingDaysData.success ? workingDaysData.data?.workingDays || 20 : 20;
+
+      // Fetch attendance for each month
+      for (let month = 1; month <= currentMonth; month++) {
+        try {
+          const attendanceResponse = await fetch(
+            `${Allapi.getMonthlyAbsents.url}/${branchdet._id}/${acid}/${selectedClass}/${selectedSection}/${month}`,
+            {
+              method: Allapi.getMonthlyAbsents.method,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          
+          if (attendanceResponse.ok) {
+            const data = await attendanceResponse.json();
+            if (data.success && data.data) {
+              const studentAttendance = data.data.find(item => item.studentId === studentId);
+              if (studentAttendance) {
+                const monthName = new Date(2024, month - 1).toLocaleString('default', { month: 'long' });
+                const absentCount = studentAttendance.absentCount || 0;
+                const daysPresent = workingDays - absentCount;
+                
+                monthlyData.push({
+                  month: monthName,
+                  workingDays: workingDays,
+                  daysPresent: daysPresent,
+                  absentCount: absentCount
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching attendance for month ${month}:`, error);
+        }
+      }
+      
+      setAttendanceData(monthlyData);
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+      toast.error('Failed to fetch attendance data');
+    }
+  };
+
   const fetchExamResults = async (studentId) => {
     try {
       setLoading(true);
       const promises = selectedExams.map(async (exam) => {
-        // First get exam details to get subject information
         const examDetailsResponse = await fetch(
           Allapi.getExamById.url(exam._id, branchdet._id),
           {
@@ -193,7 +281,6 @@ const ProgressReport = () => {
           throw new Error('Failed to fetch exam details');
         }
 
-        // Then get student's marks for this exam
         const marksResponse = await fetch(
           Allapi.getMarksByStudent.url(studentId, branchdet._id),
           {
@@ -209,24 +296,10 @@ const ProgressReport = () => {
           throw new Error('Failed to fetch marks');
         }
 
-        // Find the marks for this specific exam
         const examMarks = marksResult.data.find(mark => mark.examId._id === exam._id);
         
-        if (!examMarks) {
-          return {
-            examType: exam.examName,
-            subjects: examDetails.data.subjects.map(subject => ({
-              name: subject.name,
-              marks: 0,
-              maxMarks: subject.marks,
-              passMarks: subject.passMarks
-            }))
-          };
-        }
-
-        // Map the marks to subjects
         const subjectResults = examDetails.data.subjects.map(subject => {
-          const subjectMark = examMarks.subjectMarks.find(
+          const subjectMark = examMarks?.subjectMarks.find(
             mark => mark.subjectId === subject._id
           );
 
@@ -234,18 +307,31 @@ const ProgressReport = () => {
             name: subject.name,
             marks: subjectMark ? subjectMark.marksObtained : 0,
             maxMarks: subject.marks,
-            passMarks: subject.passMarks
+            passMarks: subject.passMarks,
+            date: new Date(subject.date).toLocaleDateString(),
+            time: subject.time
           };
         });
 
+        const total = subjectResults.reduce((sum, subject) => sum + subject.marks, 0);
+        const maxTotal = subjectResults.reduce((sum, subject) => sum + subject.maxMarks, 0);
+
         return {
           examType: exam.examName,
-          subjects: subjectResults
+          examDate: examDetails.data.date,
+          subjects: subjectResults,
+          total,
+          maxTotal,
+          percentage: ((total / maxTotal) * 100).toFixed(2)
         };
       });
 
       const results = await Promise.all(promises);
       setExamResults(results);
+
+      // Fetch attendance data
+      await fetchAttendanceData(studentId);
+
     } catch (error) {
       console.error('Error fetching exam results:', error);
       toast.error('Failed to fetch exam results');
@@ -270,7 +356,6 @@ const ProgressReport = () => {
       if (result.success) {
         setStudentData(result.data);
         await fetchExamResults(studentId);
-        // Fetch attendance data here if needed
       }
     } catch (error) {
       toast.error("Failed to fetch student details");
@@ -322,14 +407,13 @@ const ProgressReport = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <style>{printStyles}</style>
+      <ToastContainer />
       
       {!showReport ? (
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-6">Progress Report Generator</h2>
           
-          {/* Selection Form */}
           <div className="space-y-6">
-            {/* Class Selection */}
             <div>
               <label className="block text-sm font-medium mb-2">Class</label>
               <select
@@ -344,7 +428,6 @@ const ProgressReport = () => {
               </select>
             </div>
 
-            {/* Section Selection */}
             {selectedClass && (
               <div>
                 <label className="block text-sm font-medium mb-2">Section</label>
@@ -361,7 +444,6 @@ const ProgressReport = () => {
               </div>
             )}
 
-            {/* Exam Selection */}
             {selectedSection && (
               <div>
                 <label className="block text-sm font-medium mb-2">Exams</label>
@@ -381,19 +463,40 @@ const ProgressReport = () => {
                 </select>
 
                 {selectedExams.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="mt-4">
                     {selectedExams.map((exam) => (
-                      <div
-                        key={exam._id}
-                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center gap-2"
-                      >
-                        <span>{exam.examName}</span>
-                        <button
-                          onClick={() => removeExam(exam._id)}
-                          className="hover:text-blue-900"
-                        >
-                          ×
-                        </button>
+                      <div key={exam._id} className="mb-4 bg-gray-50 p-4 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-semibold text-lg">{exam.examName}</h4>
+                          <button
+                            onClick={() => removeExam(exam._id)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        {examDates[exam._id] && (
+                          <div className="text-sm">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="bg-gray-100">
+                                  <th className="py-2 px-4 text-left">Subject</th>
+                                  <th className="py-2 px-4 text-left">Date</th>
+                                  <th className="py-2 px-4 text-left">Time</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {examDates[exam._id].map((subject, idx) => (
+                                  <tr key={idx} className="border-t">
+                                    <td className="py-2 px-4">{subject.name}</td>
+                                    <td className="py-2 px-4">{subject.date}</td>
+                                    <td className="py-2 px-4">{subject.time}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -401,7 +504,6 @@ const ProgressReport = () => {
               </div>
             )}
 
-            {/* Students List */}
             {students.length > 0 && (
               <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-4">Select Student</h3>
@@ -447,9 +549,7 @@ const ProgressReport = () => {
           </div>
         </div>
       ) : (
-        // Report View
         <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8">
-          {/* Report Header */}
           <div className="flex justify-between items-center mb-6 print:hidden">
             <button
               onClick={() => setShowReport(false)}
@@ -468,7 +568,6 @@ const ProgressReport = () => {
 
           {studentData && (
             <>
-              {/* Student Details */}
               <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold mb-4">Progress Report</h1>
                 <div className="grid grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
@@ -483,7 +582,6 @@ const ProgressReport = () => {
                 </div>
               </div>
 
-              {/* Exam Results */}
               <div className="mb-8">
                 <h2 className="text-xl font-bold mb-4">Academic Performance</h2>
                 <div className="overflow-x-auto">
@@ -491,9 +589,10 @@ const ProgressReport = () => {
                     <thead>
                       <tr className="bg-gray-50">
                         <th className="px-4 py-2 border">Subject</th>
-                        {selectedExams.map(exam => (
-                          <th key={exam._id} className="px-4 py-2 border">
-                            {exam.examName}
+                        <th className="px-4 py-2 border">Date & Time</th>
+                        {examResults.map(exam => (
+                          <th key={exam.examType} className="px-4 py-2 border">
+                            <div>{exam.examType}</div>
                           </th>
                         ))}
                       </tr>
@@ -503,6 +602,9 @@ const ProgressReport = () => {
                         <tr key={subject.name}>
                           <td className="px-4 py-2 border font-medium">
                             {subject.name}
+                          </td>
+                          <td className="px-4 py-2 border">
+                            {subject.date} {subject.time}
                           </td>
                           {examResults.map(result => {
                             const subjectResult = result.subjects[index];
@@ -518,12 +620,52 @@ const ProgressReport = () => {
                           })}
                         </tr>
                       ))}
+                      <tr className="bg-gray-50 font-semibold">
+                        <td colSpan={2} className="px-4 py-2 border text-right">Total</td>
+                        {examResults.map(result => (
+                          <td key={result.examType} className="px-4 py-2 border text-center">
+                            <div>{result.total}/{result.maxTotal}</div>
+                            <div className="text-sm text-gray-600">
+                              {result.percentage}% ({calculateGrade(parseFloat(result.percentage))})
+                            </div>
+                          </td>
+                        ))}
+                      </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
 
-              {/* Grade Scale */}
+              {attendanceData.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-4">Attendance Record</h2>
+                  <table className="min-w-full border border-gray-200">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-4 py-2 border">Month</th>
+                        <th className="px-4 py-2 border">Working Days</th>
+                        <th className="px-4 py-2 border">Days Present</th>
+                        <th className="px-4 py-2 border">Days Absent</th>
+                        <th className="px-4 py-2 border">Percentage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {attendanceData.map((month) => (
+                        <tr key={month.month}>
+                          <td className="px-4 py-2 border">{month.month}</td>
+                          <td className="px-4 py-2 border text-center">{month.workingDays}</td>
+                          <td className="px-4 py-2 border text-center">{month.daysPresent}</td>
+                          <td className="px-4 py-2 border text-center">{month.absentCount}</td>
+                          <td className="px-4 py-2 border text-center">
+                            {((month.daysPresent / month.workingDays) * 100).toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
               <div className="mt-8 print:mt-4">
                 <h3 className="text-lg font-semibold mb-2">Grading Scale</h3>
                 <table className="w-full text-sm border-collapse border border-gray-200">
@@ -556,7 +698,6 @@ const ProgressReport = () => {
                 </table>
               </div>
 
-              {/* Signatures */}
               <div className="mt-12 grid grid-cols-3 gap-8 print:mt-8">
                 <div className="text-center">
                   <div className="h-16"></div>
@@ -581,7 +722,6 @@ const ProgressReport = () => {
           )}
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };

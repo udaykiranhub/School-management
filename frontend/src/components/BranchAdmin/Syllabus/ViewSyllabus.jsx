@@ -420,3 +420,4 @@ const ViewSyllabus = () => {
 
 export default ViewSyllabus;
 
+
