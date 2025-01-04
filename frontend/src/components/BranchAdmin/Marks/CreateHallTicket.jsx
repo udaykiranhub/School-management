@@ -262,7 +262,7 @@ const CreateHallTicket = () => {
                 <span className="font-semibold">Academic Year:</span> {currentAcademicYear}
               </p>
               <p className="text-gray-700">
-                <span className="font-semibold">Fee Due:</span> ₹{totalDue}
+                <span className="font-semibold">FD:</span> ₹
               </p>
             </div>
           </div>
@@ -275,6 +275,8 @@ const CreateHallTicket = () => {
               <tr className="bg-gray-50">
                 <th className="border border-gray-300 py-1 px-2 text-left">Subjects</th>
                 <th className="border border-gray-300 py-1 px-2 text-left">Date</th>
+                <th className="border border-gray-300 py-1 px-2 text-left">Time</th>
+                 
               </tr>
             </thead>
             <tbody>
@@ -284,10 +286,25 @@ const CreateHallTicket = () => {
                   <td className="border border-gray-300 py-1 px-2">
                     {new Date(subject.date).toLocaleDateString("en-GB")}
                   </td>
+                  <td className="border border-gray-300 py-1 px-2">{subject.time}</td>
+                 
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+  
+        {/* Signature Section */}
+        <div className="absolute bottom-10 w-full px-3">
+          <div className="flex justify-between items-center">
+            <div className="text-center ">
+              <div className="border-t border-gray-400 w-32 mt-20 mb-1"></div>
+              <p className="text-sm font-medium"> Teacher's Sign</p> 
+            </div>
+          </div>
+          <div className="text-center">   
+              <p className="text-sm font-medium">Head Mistress</p>
+            </div>
         </div>
       </div>
     );
@@ -490,3 +507,17 @@ const CreateHallTicket = () => {
 };
 
 export default CreateHallTicket;
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+  

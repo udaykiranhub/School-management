@@ -239,6 +239,10 @@ const Allapi = {
     url: (bid, acid) => `${backapi}/api/syllabus/${bid}/syllabus/${acid}`,
     method: "GET"
   },
+  updateSyllabus: {
+    url: (bid, sid) => `${backapi}/api/syllabus/${bid}/syllabus/${sid}`,
+    method: "PUT"
+  },
   deleteSyllabus:{
     url:(id)=>`${backapi}/api/syllabus/${id}`,
     method:"DELETE"

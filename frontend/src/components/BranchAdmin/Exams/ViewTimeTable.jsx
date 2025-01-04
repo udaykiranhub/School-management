@@ -1,8 +1,7 @@
-
 import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Printer } from 'lucide-react';
 import Allapi from '../../../common';
 import { mycon } from '../../../store/Mycontext';
 
@@ -140,6 +139,10 @@ const ViewTimeTable = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   useEffect(() => {
     if (branchdet?._id) {
       curracad(branchdet._id);
@@ -179,11 +182,11 @@ const ViewTimeTable = () => {
   };
 
   return (
-    <div className="min-h-screen px-4 py-8 bg-gray-100">
-      <div className="max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
-        <h2 className="mb-6 text-3xl font-bold text-indigo-700">View Exam TimeTable</h2>
+    <div className="min-h-screen px-4 py-8 bg-gray-100 print:bg-white print:px-0 print:py-0">
+      <div className="max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg print:shadow-none print:p-0">
+        <h2 className="mb-6 text-3xl font-bold text-indigo-700 print:text-center">View Exam TimeTable</h2>
 
-        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-3 print:hidden">
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Class
@@ -246,9 +249,9 @@ const ViewTimeTable = () => {
             <div className="w-16 h-16 border-4 border-indigo-500 rounded-full animate-spin border-t-transparent"></div>
           </div>
         ) : selectedExamData ? (
-          <div className="mt-6">
-            <div className="overflow-hidden bg-white rounded-lg shadow">
-              <div className="flex items-center justify-between px-6 py-4 bg-indigo-50">
+          <div className="mt-6" id="printableArea">
+            <div className="overflow-hidden bg-white rounded-lg shadow print:shadow-none">
+              <div className="flex items-center justify-between px-6 py-4 bg-indigo-50 print:bg-white print:border-b">
                 <div>
                   <h3 className="text-xl font-semibold text-indigo-700">{selectedExamData.examName}</h3>
                   <p className="text-sm text-gray-600">
@@ -256,34 +259,43 @@ const ViewTimeTable = () => {
                     Academic Year: {selectedExamData.academicId.year}
                   </p>
                 </div>
-                <button
-                  onClick={() => handleDeleteExam(selectedExamData._id)}
-                  className="p-2 text-red-500 transition-colors rounded-full hover:bg-red-50"
-                >
-                  <Trash2 size={20} />
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePrint}
+                    className="p-2 text-indigo-500 transition-colors rounded-full hover:bg-indigo-50 print:hidden"
+                    title="Print Timetable"
+                  >
+                    <Printer size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteExam(selectedExamData._id)}
+                    className="p-2 text-red-500 transition-colors rounded-full hover:bg-red-50 print:hidden"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                </div>
               </div>
               
-              <div className="p-6">
+              <div className="p-6 print:p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 print:bg-white">
                       <tr>
-                        <th className="px-6 py-3">Subject</th>
-                        <th className="px-6 py-3">Total Marks</th>
-                        <th className="px-6 py-3">Pass Marks</th>
-                        <th className="px-6 py-3">Date</th>
-                        <th className="px-6 py-3">Time</th>
+                        <th className="px-6 py-3 border">Subject</th>
+                        <th className="px-6 py-3 border">Total Marks</th>
+                        <th className="px-6 py-3 border">Pass Marks</th>
+                        <th className="px-6 py-3 border">Date</th>
+                        <th className="px-6 py-3 border">Time</th>
                       </tr>
                     </thead>
                     <tbody>
                       {getSortedSubjects(selectedExamData.subjects).map((subject, index) => (
-                        <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                          <td className="px-6 py-4 font-medium text-gray-900">{subject.name}</td>
-                          <td className="px-6 py-4">{subject.marks}</td>
-                          <td className="px-6 py-4">{subject.passMarks}</td>
-                          <td className="px-6 py-4">{new Date(subject.date).toLocaleDateString()}</td>
-                          <td className="px-6 py-4">{subject.time}</td>
+                        <tr key={index} className="bg-white border-b hover:bg-gray-50 print:hover:bg-white">
+                          <td className="px-6 py-4 font-medium text-gray-900 border">{subject.name}</td>
+                          <td className="px-6 py-4 border">{subject.marks}</td>
+                          <td className="px-6 py-4 border">{subject.passMarks}</td>
+                          <td className="px-6 py-4 border">{new Date(subject.date).toLocaleDateString()}</td>
+                          <td className="px-6 py-4 border">{subject.time}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -293,7 +305,7 @@ const ViewTimeTable = () => {
             </div>
           </div>
         ) : (
-          <div className="py-8 text-center text-gray-500">
+          <div className="py-8 text-center text-gray-500 print:hidden">
             {!selectedClass ? "Please select a class to view exam timetables" :
              !selectedSection ? "Please select a section to view exam timetables" :
              !exams.length ? "No exam timetables found for the selected class and section" :
@@ -303,6 +315,25 @@ const ViewTimeTable = () => {
 
         <ToastContainer />
       </div>
+
+      <style jsx global>{`
+        @media print {
+          @page {
+            size: A4;
+            margin: 15mm;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            background: white !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .print\\:hidden {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
