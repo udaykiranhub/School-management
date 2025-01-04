@@ -249,7 +249,7 @@ const AddTeacher = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Password
+                                Aadhar Number
                             </label>
                             <input
                                 type="password"
@@ -257,7 +257,8 @@ const AddTeacher = () => {
                                 value={formData.password}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter password"
+                                placeholder="Enter aadhar"
+                                 maxLength={12}
                             />
                         </div>
 
@@ -276,20 +277,7 @@ const AddTeacher = () => {
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Aadhar Number
-                            </label>
-                            <input
-                                type="text"
-                                name="aadharNumber"
-                                value={formData.aadharNumber}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="12-digit Aadhar number"
-                                maxLength={12}
-                            />
-                        </div>
+                        
                     </div>
 
                     {/* Address Fields */}
