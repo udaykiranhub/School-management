@@ -12,6 +12,8 @@ const AddTeacher = () => {
 
     const [formData, setFormData] = useState({
         name: '',
+        username: '',
+        password: '',
         phone: '',
         address: {
             doorNo: '',
@@ -51,7 +53,6 @@ const AddTeacher = () => {
             const result = await response.json();
             if (result.success) {
                 setClasses(result.data);
-                // Create a Set to store unique lowercase subjects
                 const subjectsSet = new Set();
                 result.data.forEach(cls => {
                     if (cls.subjects) {
@@ -63,7 +64,6 @@ const AddTeacher = () => {
                         );
                     }
                 });
-                // Convert Set to sorted array
                 const sortedSubjects = Array.from(subjectsSet).sort();
                 setAvailableSubjects(sortedSubjects);
             }
@@ -123,6 +123,14 @@ const AddTeacher = () => {
             toast.error('Name is required');
             return false;
         }
+        if (!formData.username.trim()) {
+            toast.error('Username is required');
+            return false;
+        }
+        if (!formData.password.trim()) {
+            toast.error('Password is required');
+            return false;
+        }
         if (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone)) {
             toast.error('Please enter a valid 10-digit phone number');
             return false;
@@ -151,20 +159,13 @@ const AddTeacher = () => {
         if (!validateForm()) return;
 
         try {
-            const dataToSend = {
-                ...formData,
-                teachingSubjects: formData.teachingSubjects.map(subject => ({
-                    name: subject.name.toLowerCase() // Ensure subjects are stored in lowercase
-                }))
-            };
-
             const response = await fetch(Allapi.addTeacher.url, {
                 method: Allapi.addTeacher.method,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dataToSend)
+                body: JSON.stringify(formData)
             });
 
             const result = await response.json();
@@ -173,6 +174,8 @@ const AddTeacher = () => {
                 toast.success('Teacher added successfully!');
                 setFormData({
                     name: '',
+                    username: '',
+                    password: '',
                     phone: '',
                     address: {
                         doorNo: '',
@@ -232,6 +235,34 @@ const AddTeacher = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Username
+                            </label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter username"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter password"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Phone Number
                             </label>
                             <input
@@ -242,6 +273,21 @@ const AddTeacher = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="10-digit phone number"
                                 maxLength={10}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Aadhar Number
+                            </label>
+                            <input
+                                type="text"
+                                name="aadharNumber"
+                                value={formData.aadharNumber}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="12-digit Aadhar number"
+                                maxLength={12}
                             />
                         </div>
                     </div>
@@ -329,21 +375,6 @@ const AddTeacher = () => {
                                 value={formData.joiningDate}
                                 onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Aadhar Number
-                            </label>
-                            <input
-                                type="text"
-                                name="aadharNumber"
-                                value={formData.aadharNumber}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="12-digit Aadhar number"
-                                maxLength={12}
                             />
                         </div>
                     </div>

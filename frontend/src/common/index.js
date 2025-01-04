@@ -215,7 +215,7 @@ const Allapi = {
     method: "POST",
   },
   updateMarks: {
-    url: (id,bid)=>`${backapi}/api/marks/${id}/${bid}`,
+    url: (id, bid) => `${backapi}/api/marks/${id}/${bid}`,
     method: "PUT"
   },
   getAllMarks: {
@@ -243,13 +243,14 @@ const Allapi = {
     url: (bid, sid) => `${backapi}/api/syllabus/${bid}/syllabus/${sid}`,
     method: "PUT"
   },
-  deleteSyllabus:{
-    url:(id)=>`${backapi}/api/syllabus/${id}`,
-    method:"DELETE"
+  deleteSyllabus: {
+    url: (id) => `${backapi}/api/syllabus/${id}`,
+    method: "DELETE"
   },
-  getExamById:{
-    url:(exid,bid)=>`${backapi}/api/marks/exam/${exid}/${bid}`,
-    method: "GET"},
+  getExamById: {
+    url: (exid, bid) => `${backapi}/api/marks/exam/${exid}/${bid}`,
+    method: "GET"
+  },
 
   // Teacher endpoints
   addTeacher: {
@@ -266,7 +267,7 @@ const Allapi = {
   },
   updateTeacher: {
     url: (teacherId) => `${backapi}/api/teachers/edit-teacher/${teacherId}`,
-    method: "PUT"
+    method: 'PUT'
   },
   deleteTeacher: {
     url: (teacherId) => `${backapi}/api/teachers/delete-teacher/${teacherId}`,
@@ -306,39 +307,39 @@ const Allapi = {
     url: (assignmentId) => `${backapi}/api/teachersassingn/assignment/${assignmentId}`,
     method: "DELETE"
   },
-  addWorkingDays:{
-    url : `${backapi}/api/workingdays`,
+  addWorkingDays: {
+    url: `${backapi}/api/workingdays`,
     method: "POST"
   },
-  getWorkingDays:{
-    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+  getWorkingDays: {
+    url: (bid, acid) => `${backapi}/api/workingdays/${bid}/${acid}`,
     method: "GET"
   },
-  updateWorkingDays:{
-    url : (bid,acid)=>`${backapi}/api/workingdays/${bid}/${acid}`,
+  updateWorkingDays: {
+    url: (bid, acid) => `${backapi}/api/workingdays/${bid}/${acid}`,
     method: "PUT"
   },
   getVehicleStudents: {
     url: (busId) => `${backapi}/api/buses/vehicle-students/${busId}`,
     method: "GET"
   },
-  addAttendance:{
+  addAttendance: {
     url: `${backapi}/api/attendance/add`,
-    method : "POST"
+    method: "POST"
   },
-  getAbsentees:{
+  getAbsentees: {
     url: `${backapi}/api/attendance/get-absentees`,
-    method : "GET"
+    method: "GET"
   },
-  getMonthlyAbsents:{
-    url :`${backapi}/api/attendance/monthly-absents`,
-    method :"GET"
+  getMonthlyAbsents: {
+    url: `${backapi}/api/attendance/monthly-absents`,
+    method: "GET"
   }
 
 
-  
 
-  
+
+
 };
 
 
