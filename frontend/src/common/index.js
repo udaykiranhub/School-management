@@ -334,10 +334,16 @@ const Allapi = {
   getMonthlyAbsents: {
     url: `${backapi}/api/attendance/monthly-absents`,
     method: "GET"
+  },
+  updateAbsentees: {
+    url: `${backapi}/api/attendance/update-absentees`,
+    method: "PUT"
+  },
+  getMonthlyAbsents: {
+    url: `${backapi}/api/attendance/monthly-absents`,
+    method: "GET"
+
   }
-
-
-
 
 
 };

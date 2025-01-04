@@ -1,4 +1,4 @@
- import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ArrowLeft, Printer } from 'lucide-react';
@@ -229,23 +229,21 @@ const CreateHallTicket = () => {
     const totalDue = calculateTotalDue(details.feeDetails);
     
     return (
-      <div className="bg-white border border-gray-300 h-[138mm] overflow-hidden">
-        {/* Header Section */}
-        <div className="text-center border-b py-2">
+      <div className="bg-white border border-gray-300 h-[138mm] w-[190mm] mx-auto overflow-hidden relative">
+        <div className="text-center border-b py-4">
           <h1 className="text-xl font-bold text-red-600 leading-tight">SRI VIDYANIDHI EM SCHOOL</h1>
           <h2 className="text-base text-green-600 leading-tight">PEDDAPURAM</h2>
-          <div className="text-lg font-bold text-gray-800 leading-tight mt-1">{selectedExam?.examName} - Hall Ticket</div>
+          <div className="text-lg font-bold text-gray-800 leading-tight mt-2">{selectedExam?.examName} - Hall Ticket</div>
         </div>
     
-        {/* Student Details Section */}
-        <div className="px-3 py-2">
-          <div className="flex items-start gap-3">
+        <div className="px-6 py-4">
+          <div className="flex items-start gap-4">
             <img
               src={details.photo || "/placeholder.jpg"}
               alt={student.name}
-              className="w-20 h-20 rounded object-cover border border-gray-300"
+              className="w-24 h-24 rounded object-cover border border-gray-300"
             />
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 w-full text-sm">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 w-full text-sm">
               <p className="text-gray-700">
                 <span className="font-semibold">Name:</span> {student.name}
               </p>
@@ -262,262 +260,329 @@ const CreateHallTicket = () => {
                 <span className="font-semibold">Academic Year:</span> {currentAcademicYear}
               </p>
               <p className="text-gray-700">
-                <span className="font-semibold">FD:</span> ₹
+                <span className="font-semibold">Fee Due:</span> ₹{totalDue}
               </p>
             </div>
           </div>
         </div>
-    
-        {/* Subjects Table */}
-        <div className="px-3 mt-2">
+  
+        <div className="px-6">
           <table className="w-full border border-gray-300 text-sm">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-gray-300 py-1 px-2 text-left">Subjects</th>
-                <th className="border border-gray-300 py-1 px-2 text-left">Date</th>
-                <th className="border border-gray-300 py-1 px-2 text-left">Time</th>
-                 
+                <th className="border border-gray-300 py-2 px-4 text-left">Subjects</th>
+                <th className="border border-gray-300 py-2 px-4 text-left">Date</th>
+                <th className="border border-gray-300 py-2 px-4 text-left">Time</th>
               </tr>
             </thead>
             <tbody>
               {selectedExam?.subjects.map((subject) => (
                 <tr key={subject._id}>
-                  <td className="border border-gray-300 py-1 px-2">{subject.name}</td>
-                  <td className="border border-gray-300 py-1 px-2">
+                  <td className="border border-gray-300 py-2 px-4">{subject.name}</td>
+                  <td className="border border-gray-300 py-2 px-4">
                     {new Date(subject.date).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="border border-gray-300 py-1 px-2">{subject.time}</td>
-                 
+                  <td className="border border-gray-300 py-2 px-4">{subject.time}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
   
-        {/* Signature Section */}
-        <div className="absolute bottom-10 w-full px-3">
-          <div className="flex justify-between items-center">
-            <div className="text-center ">
-              <div className="border-t border-gray-400 w-32 mt-20 mb-1"></div>
-              <p className="text-sm font-medium"> Teacher's Sign</p> 
+          <div className="absolute bottom-1 left-0 right-0 px-6">
+            <div className="flex justify-between items-center">
+              <div className="text-left">
+                <div className="border-t border-gray-400 mt-2 pt-1 w-32">
+                  <p className="text-sm font-medium text-center">Teacher's Sign</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="border-t border-gray-400 mt-2 pt-1 w-32">
+                  <p className="text-sm font-medium text-center">Head Mistress</p>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="text-center">   
-              <p className="text-sm font-medium">Head Mistress</p>
-            </div>
         </div>
       </div>
     );
   };
-
+  
   const renderHallTicketPairs = () => {
     const studentPairs = [];
     const studentsToRender = selectedStudent 
       ? [selectedStudent] 
       : students.filter(s => selectedStudents.includes(s._id));
-
+  
     for (let i = 0; i < studentsToRender.length; i += 2) {
       studentPairs.push(studentsToRender.slice(i, i + 2));
     }
-
+  
     return studentPairs.map((pair, index) => (
-      <div key={index} className="w-[210mm] mx-auto flex flex-col gap-[1mm] p-[5mm] print:p-[5mm] page-break-after-always">
+      <div key={index} className="w-[210mm] mx-auto flex flex-col items-center justify-center gap-8 page-break-after-always">
         <HallTicket student={pair[0]} />
         {pair[1] && <HallTicket student={pair[1]} />}
       </div>
     ));
   };
-
   return (
-    <div className="min-h-screen px-4 py-8 bg-gray-100">
-      <div className="max-w-7xl mx-auto">
-        {!showHallTickets ? (
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8">Generate Hall Tickets</h2>
+    <>
+      {/* Main content - hidden during print */}
+      <div id="main-content" className="min-h-screen px-4 py-8 bg-gray-100 print:hidden">
+        <div className="max-w-7xl mx-auto">
+          {!showHallTickets ? (
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <h2 className="text-3xl font-bold text-gray-800 mb-8">Generate Hall Tickets</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
-                <input
-                  type="text"
-                  value={currentAcademicYear}
-                  disabled
-                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+                  <input
+                    type="text"
+                    value={currentAcademicYear}
+                    disabled
+                    className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                  <select
+                    value={selectedClass}
+                    onChange={(e) => handleClassChange(e.target.value)}
+                    className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Class</option>
+                    {classes.map((cls) => (
+                      <option key={cls._id} value={cls._id}>{cls.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Section</label>
+                  <select
+                    value={selectedSection}
+                    onChange={(e) => handleSectionChange(e.target.value)}
+                    className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+                    disabled={!selectedClass}
+                  >
+                    <option value="">Select Section</option>
+                    {sections.map((section) => (
+                      <option key={section._id} value={section._id}>{section.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Exam</label>
+                  <select
+                    value={examId}
+                    onChange={(e) => handleExamChange(e.target.value)}
+                    className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+                    disabled={!selectedSection}
+                  >
+                    <option value="">Select Exam</option>
+                    {exams.map((exam) => (
+                      <option key={exam._id} value={exam._id}>{exam.examName}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
-                <select
-                  value={selectedClass}
-                  onChange={(e) => handleClassChange(e.target.value)}
-                  className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+              {students.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border">
+                  <div className="p-4 bg-gray-50 border-b flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedStudents.length === students.length}
+                        onChange={handleSelectAll}
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                      />
+                      <span className="font-medium text-gray-700">Select All Students</span>
+                    </div>
+                    {selectedStudents.length > 0 && (
+                      <button
+                        onClick={() => setShowHallTickets(true)}
+                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        <Printer className="w-5 h-5 mr-2" />
+                        Print Selected ({selectedStudents.length})
+                      </button>
+                    )}
+                  </div>
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="w-16 p-4 text-left">Select</th>
+                        <th className="w-16 p-4 text-left">S.No</th>
+                        <th className="p-4 text-left font-medium text-gray-700">Name</th>
+                        <th className="p-4 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {students.map((student, index) => (
+                        <tr key={student._id} className="border-t hover:bg-gray-50">
+                          <td className="p-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedStudents.includes(student._id)}
+                              onChange={() => handleStudentSelection(student._id)}
+                              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                            />
+                          </td>
+                          <td className="p-4">{index + 1}</td>
+                          <td className="p-4 font-medium text-gray-700">{student.name}</td>
+                          <td className="p-4 text-right">
+                            <button
+                              onClick={() => handleViewHallTicket(student)}
+                              className="px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              View Hall Ticket
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+            <div className="print:hidden">
+              <button
+                onClick={() => {
+                  setShowHallTickets(false);
+                  setSelectedStudent(null);
+                }}
+                className="mb-6 flex items-center text-blue-600 hover:text-blue-700"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Back to List
+              </button>
+              
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => window.print()}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  <option value="">Select Class</option>
-                  {classes.map((cls) => (
-                    <option key={cls._id} value={cls._id}>{cls.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Section</label>
-                <select
-                  value={selectedSection}
-                  onChange={(e) => handleSectionChange(e.target.value)}
-                  className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
-                  disabled={!selectedClass}
-                >
-                  <option value="">Select Section</option>
-                  {sections.map((section) => (
-                    <option key={section._id} value={section._id}>{section.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Exam</label>
-                <select
-                  value={examId}
-                  onChange={(e) => handleExamChange(e.target.value)}
-                  className="w-full p-3 bg-white border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
-                  disabled={!selectedSection}
-                >
-                  <option value="">Select Exam</option>
-                  {exams.map((exam) => (
-                    <option key={exam._id} value={exam._id}>{exam.examName}</option>
-                  ))}
-                </select>
+                  <Printer className="w-5 h-5 mr-2" />
+                  Print Hall Ticket{selectedStudent ? '' : 's'}
+                </button>
               </div>
             </div>
 
-            {students.length > 0 && (
-              <div className="bg-white rounded-lg shadow-sm border">
-                <div className="p-4 bg-gray-50 border-b flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedStudents.length === students.length}
-                      onChange={handleSelectAll}
-                      className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                    />
-                    <span className="font-medium text-gray-700">Select All Students</span>
-                  </div>
-                  {selectedStudents.length > 0 && (
-                    <button
-                      onClick={() => setShowHallTickets(true)}
-                      className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Printer className="w-5 h-5 mr-2" />
-                      Print Selected ({selectedStudents.length})
-                    </button>
-                  )}
-                </div>
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="w-16 p-4 text-left">Select</th>
-                      <th className="w-16 p-4 text-left">S.No</th>
-                      <th className="p-4 text-left font-medium text-gray-700">Name</th>
-                      <th className="p-4 text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {students.map((student, index) => (
-                      <tr key={student._id} className="border-t hover:bg-gray-50">
-                        <td className="p-4">
-                          <input
-                            type="checkbox"
-                            checked={selectedStudents.includes(student._id)}
-                            onChange={() => handleStudentSelection(student._id)}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                          />
-                        </td>
-                        <td className="p-4">{index + 1}</td>
-                        <td className="p-4 font-medium text-gray-700">{student.name}</td>
-                        <td className="p-4 text-right">
-                          <button
-                            onClick={() => handleViewHallTicket(student)}
-                            className="px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            View Hall Ticket
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="print:m-0 print:p-0">
-            <button
-              onClick={() => {
-                setShowHallTickets(false);
-                setSelectedStudent(null);
-              }}
-              className="mb-6 flex items-center text-blue-600 hover:text-blue-700 print:hidden"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to List
-            </button>
-            
-            <div>
+            <div className="print:block">
               {renderHallTicketPairs()}
             </div>
-
-            <div className="mt-6 text-center print:hidden">
-              <button
-                onClick={() => window.print()}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Printer className="w-5 h-5 mr-2" />
-                Print Hall Ticket{selectedStudent ? '' : 's'}
-              </button>
-            </div>
-          </div>
+          </>
         )}
       </div>
       <ToastContainer />
+      </div>
 
-      <style jsx global>{`
-        @media print {
-          @page {
-            size: A4;
-            margin: 0;
-          }
-          body {
-            margin: 0;
-            padding: 0;
-            background: white !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-          .print\\:hidden {
-            display: none !important;
-          }
-          .page-break-after-always {
-            page-break-after: always;
-          }
-        }
-      `}</style>
+         {/* Print-only content */}
+         {showHallTickets && (
+  <div id="print-content" className="hidden print:block print:bg-white w-full">
+    <div className="w-full flex flex-col items-center justify-center">
+      {renderHallTicketPairs()}
     </div>
+  </div>
+)};
+
+<style jsx global>{`
+  @media print {
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    #print-content {
+      background-color: white !important;
+      padding: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* Container for each pair of hall tickets */
+    .page-break-after-always {
+      width: 210mm;  /* A4 width */
+      min-height: 297mm; /* A4 height */
+      padding: 10mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      page-break-after: always;
+      break-after: page;
+      margin: 0 auto !important;
+      box-sizing: border-box;
+    }
+    
+    /* Individual hall ticket */
+    .page-break-after-always > div {
+      margin: 0 auto;
+      width: 190mm;  /* Slightly less than A4 to account for margins */
+    }
+    
+    .print\\:hidden {
+      display: none !important;
+    }
+    
+    nav, header, footer, aside {
+      display: none !important;
+    }
+    
+    /* Remove any unwanted backgrounds */
+    #main-content,
+    .bg-gray-100,
+    .bg-gray-50,
+    .bg-white {
+      background-color: white !important;
+    }
+    
+    /* Reset flex gap for print */
+    .gap-8 {
+      gap: 10mm !important;
+    }
+    
+    /* Maintain colors in print */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      background-color: white !important;
+    }
+    
+    /* Keep only essential borders */
+    .border {
+      border-color: #000 !important;
+    }
+    
+    /* Ensure proper margin between tickets */
+    #print-content > div > div {
+      margin-bottom: 10mm;
+    }
+    
+    /* Remove margin from last ticket in pair */
+    #print-content > div > div:last-child {
+      margin-bottom: 0;
+    }
+  }
+`}</style>
+    </>
+  
   );
 };
 
 export default CreateHallTicket;
-
-
-
-
-
-
-
-
-
-
-
- 
-
-  
