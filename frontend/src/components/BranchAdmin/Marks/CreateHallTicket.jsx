@@ -507,3 +507,17 @@ const CreateHallTicket = () => {
 };
 
 export default CreateHallTicket;
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+  
