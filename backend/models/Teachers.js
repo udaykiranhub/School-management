@@ -49,6 +49,11 @@ const teacherSchema = new mongoose.Schema({
             message: 'Aadhar number must be 12 digits'
         }
     },
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Branch',
+        required: true
+    },
     academic_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'AcademicYear',

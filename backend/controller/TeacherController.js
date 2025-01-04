@@ -154,7 +154,7 @@ exports.addTeacher = async (req, res) => {
     session.startTransaction();
 
     try {
-        const { username, password, aadharNumber, name } = req.body;
+        const { username, aadharNumber, name , branchId} = req.body;
 
         // Check for existing teacher
         const existingTeacher = await Teacher.findOne({ aadharNumber }).session(session);
@@ -187,18 +187,20 @@ exports.addTeacher = async (req, res) => {
             joiningDate: req.body.joiningDate,
             aadharNumber,
             academic_id: req.body.academic_id,
-            role: 'Teacher'
+            role: 'Teacher',
+            branchId: branchId
         };
 
         const newTeacher = new Teacher(teacherData);
         await newTeacher.save({ session });
 
         // Create user account with provided username/password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(aadharNumber, 10);
         const userData = {
             name,
             username,
             password: hashedPassword,
+            branch: branchId,
             role: 'Teacher'
         };
 
