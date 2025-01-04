@@ -80,9 +80,9 @@ const Sidebar = () => {
   const MenuItem = ({ to, icon: Icon, children }) => (
     <Link
       to={to}
-      className="flex items-center p-2 text-sm rounded-lg hover:bg-blue-800 transition-colors"
+      className="flex items-center p-2 text-sm transition-colors rounded-lg hover:bg-blue-800"
     >
-      <Icon className="h-4 w-4 mr-2" />
+      <Icon className="w-4 h-4 mr-2" />
       <span>{children}</span>
     </Link>
   );
@@ -92,20 +92,20 @@ const Sidebar = () => {
       <aside className={`fixed left-0 top-0 z-40 h-screen w-64 bg-gradient-to-b from-blue-950 to-blue-900 text-white shadow-xl transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex h-full flex-col">
+        <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-blue-800">
             <div className="flex items-center space-x-3">
-              <div className="h-10 w-10 rounded-full bg-blue-800 flex items-center justify-center">
-                <GraduationCap className="h-6 w-6" />
+              <div className="flex items-center justify-center w-10 h-10 bg-blue-800 rounded-full">
+                <GraduationCap className="w-6 h-6" />
               </div>
               <span className="text-xl font-bold tracking-wider">Branch Admin</span>
             </div>
             <button 
               onClick={() => setSidebarOpen(!isSidebarOpen)}
-              className="p-2 rounded-lg hover:bg-blue-800 transition-colors"
+              className="p-2 transition-colors rounded-lg hover:bg-blue-800"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="w-5 h-5" />
             </button>
           </div>
 
@@ -119,7 +119,7 @@ const Sidebar = () => {
                   location.pathname === "/branch-admin" ? menuItemActive : ""
                 }`}
               >
-                <Home className="h-5 w-5 mr-3" />
+                <Home className="w-5 h-5 mr-3" />
                 <span>Dashboard</span>
               </Link>
 
@@ -130,13 +130,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("academic")}
                 >
                   <div className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-3" />
+                    <Calendar className="w-5 h-5 mr-3" />
                     <span>Academic Year</span>
                   </div>
                   {activeMenu === "academic" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("academic")}>
@@ -158,13 +158,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("classes")}
                 >
                   <div className="flex items-center">
-                    <School className="h-5 w-5 mr-3" />
+                    <School className="w-5 h-5 mr-3" />
                     <span>Class Management</span>
                   </div>
                   {activeMenu === "classes" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("classes")}>
@@ -192,13 +192,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("sections")}
                 >
                   <div className="flex items-center">
-                    <Building className="h-5 w-5 mr-3" />
+                    <Building className="w-5 h-5 mr-3" />
                     <span>Section Management</span>
                   </div>
                   {activeMenu === "sections" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("sections")}>
@@ -217,13 +217,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("fees")}
                 >
                   <div className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-3" />
+                    <DollarSign className="w-5 h-5 mr-3" />
                     <span>Fee Controller</span>
                   </div>
                   {activeMenu === "fees" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("fees")}>
@@ -245,13 +245,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("transport")}
                 >
                   <div className="flex items-center">
-                    <Bus className="h-5 w-5 mr-3" />
+                    <Bus className="w-5 h-5 mr-3" />
                     <span>Transport</span>
                   </div>
                   {activeMenu === "transport" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("transport")}>
@@ -273,13 +273,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("students")}
                 >
                   <div className="flex items-center">
-                    <Users className="h-5 w-5 mr-3" />
+                    <Users className="w-5 h-5 mr-3" />
                     <span>Students</span>
                   </div>
                   {activeMenu === "students" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("students")}>
@@ -307,13 +307,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("teachers")}
                 >
                   <div className="flex items-center">
-                    <UserCheck className="h-5 w-5 mr-3" />
+                    <UserCheck className="w-5 h-5 mr-3" />
                     <span>Teachers</span>
                   </div>
                   {activeMenu === "teachers" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("teachers")}>
@@ -341,13 +341,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("exams")}
                 >
                   <div className="flex items-center">
-                    <ClipboardList className="h-5 w-5 mr-3" />
+                    <ClipboardList className="w-5 h-5 mr-3" />
                     <span>Exams</span>
                   </div>
                   {activeMenu === "exams" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("exams")}>
@@ -369,13 +369,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("syllabus")}
                 >
                   <div className="flex items-center">
-                    <BookMarked className="h-5 w-5 mr-3" />
+                    <BookMarked className="w-5 h-5 mr-3" />
                     <span>Syllabus</span>
                   </div>
                   {activeMenu === "syllabus" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("syllabus")}>
@@ -397,13 +397,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("marks")}
                 >
                   <div className="flex items-center">
-                    <Award className="h-5 w-5 mr-3" />
+                    <Award className="w-5 h-5 mr-3" />
                     <span>Marks</span>
                   </div>
                   {activeMenu === "marks" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("marks")}>
@@ -431,13 +431,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("enquiry")}
                 >
                   <div className="flex items-center">
-                    <MessageSquare className="h-5 w-5 mr-3" />
+                    <MessageSquare className="w-5 h-5 mr-3" />
                     <span>Enquiry</span>
                   </div>
                   {activeMenu === "enquiry" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("enquiry")}>
@@ -459,22 +459,19 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("workingdays")}
                 >
                   <div className="flex items-center">
-                    <CalendarDays className="h-5 w-5 mr-3" />
+                    <CalendarDays className="w-5 h-5 mr-3" />
                     <span>Working Days</span>
                   </div>
                   {activeMenu === "workingdays" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("workingdays")}>
                   <div className="pl-6 space-y-1">
                     <MenuItem to="/branch-admin/workingdays/create" icon={Plus}>
-                      Create Working Days
-                    </MenuItem>
-                    <MenuItem to="/branch-admin/workingdays/view" icon={FileText}>
-                      View & Update
+                       Working Days
                     </MenuItem>
                   </div>
                 </div>
@@ -487,13 +484,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("attendance")}
                 >
                   <div className="flex items-center">
-                    <ClipboardCheck className="h-5 w-5 mr-3" />
+                    <ClipboardCheck className="w-5 h-5 mr-3" />
                     <span>Attendance</span>
                   </div>
                   {activeMenu === "attendance" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("attendance")}>
@@ -521,13 +518,13 @@ const Sidebar = () => {
                   className={getMenuButtonClasses("reports")}
                 >
                   <div className="flex items-center">
-                    <BarChart2 className="h-5 w-5 mr-3" />
+                    <BarChart2 className="w-5 h-5 mr-3" />
                     <span>Reports</span>
                   </div>
                   {activeMenu === "reports" ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="w-4 h-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="w-4 h-4" />
                   )}
                 </button>
                 <div className={getSubmenuClasses("reports")}>
@@ -551,9 +548,9 @@ const Sidebar = () => {
           <div className="p-4 border-t border-blue-800">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center p-3 rounded-lg bg-red-300 hover:bg-red-700 transition-colors"
+              className="flex items-center justify-center w-full p-3 transition-colors bg-red-300 rounded-lg hover:bg-red-700"
             >
-              <LogOut className="h-5 w-5 mr-2" />
+              <LogOut className="w-5 h-5 mr-2" />
               <span>Logout</span>
             </button>
           </div>
