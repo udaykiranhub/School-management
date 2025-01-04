@@ -1,34 +1,7 @@
 // controllers/attendanceController.js
 const Attendance = require('../models/Attendance');
 
-// Controller to add attendance
-// const addAttendance = async (req, res) => {
-//   const { academicId, branchId, classId, sectionId, date, absentees } = req.body;
 
-//   try {
-//     const attendance = new Attendance({
-//       academicId,
-//       branchId,
-//       classId,
-//       sectionId,
-//       date,
-//       absentees
-//     });
-
-//     const savedAttendance = await attendance.save();
-//     res.status(201).json({
-//       success: true,
-//       data: savedAttendance,
-//       message: 'Attendance saved successfully!'
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Error saving attendance data',
-//       error: error.message
-//     });
-//   }
-// };
 const addAttendance = async (req, res) => {
   const { academicId, branchId, classId, sectionId, date, absentees } = req.body;
 
@@ -113,6 +86,45 @@ const getAbsentees = async (req, res) => {
   }
 };
 
+
+const updateAbsentees = async (req, res) => {
+  const { branchId, academicId, classId, sectionId, date } = req.body;
+  const { absentees } = req.body; // Array of student IDs to update
+
+  try {
+    // Check if attendance exists for the given filters
+    const attendance = await Attendance.findOne({
+      branchId,
+      academicId,
+      classId,
+      sectionId,
+      date
+    });
+
+    if (!attendance) {
+      return res.status(404).json({
+        success: false,
+        message: 'Attendance record not found for the given filters',
+      });
+    }
+
+    // Update the absentees list
+    attendance.absentees = absentees;
+    const updatedAttendance = await attendance.save();
+
+    res.status(200).json({
+      success: true,
+      data: updatedAttendance,
+      message: 'Absentees updated successfully!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating absentees',
+      error: error.message,
+    });
+  }
+};
 // 2. Get number of absents for each student in a given month
 const getMonthlyAbsents = async (req, res) => {
   const { branchId, academicId, classId, sectionId, month } = req.params;
@@ -169,5 +181,6 @@ const getMonthlyAbsents = async (req, res) => {
 module.exports = {
   getAbsentees,
   getMonthlyAbsents,
-  addAttendance
+  addAttendance,
+  updateAbsentees
 };
