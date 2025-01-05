@@ -10,5 +10,7 @@ router.get("/", homeworkController.getHomeworks);
 
 // Update Homework (PUT)
 router.put("/:id", homeworkController.updateHomework);
+// Delete Homework (DELETE)
+router.delete("/:id", homeworkController.deleteHomework);
 
 module.exports = router;

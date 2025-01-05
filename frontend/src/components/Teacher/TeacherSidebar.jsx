@@ -41,6 +41,11 @@ const TeacherSidebar = ({ isSidebarOpen, setSidebarOpen }) => {
       label: "Homework"
     },
     {
+      path: "/teacher/viewhomework",
+      icon: GraduationCap,
+      label: "View Homework"
+    },
+    {
       path: "/teacher/marks",
       icon: ClipboardList,
       label: "Marks"

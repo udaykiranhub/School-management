@@ -4,6 +4,7 @@ const Homework = require("../models/HomeWork");
 exports.createHomework = async (req, res) => {
   try {
     const { branchId, classId, sectionId, date, subject, homeWork, fileLink } = req.body;
+    console.log("body createhome work: ", req.body)
 
     // Validate required fields
     if (!branchId || !classId || !sectionId || !date || !subject || !homeWork) {
@@ -28,6 +29,33 @@ exports.createHomework = async (req, res) => {
       success: true,
       message: "Homework created successfully.",
       data: savedHomework,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Delete Homework (DELETE)
+exports.deleteHomework = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedHomework = await Homework.findByIdAndDelete(id);
+
+    if (!deletedHomework) {
+      return res.status(404).json({
+        success: false,
+        message: "Homework not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Homework deleted successfully.",
+      data: deletedHomework, // Returning the deleted document if needed
     });
   } catch (error) {
     res.status(500).json({

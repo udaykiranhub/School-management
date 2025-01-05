@@ -343,6 +343,18 @@ const Allapi = {
     url: `${backapi}/api/attendance/monthly-absents`,
     method: "GET"
 
+  },
+  createHomeWork:{
+    url: `${backapi}/api/homework/`,
+    method:"POST"
+  },
+  getHomeworks:{
+    url: `${backapi}/api/homework/`,
+    method:"GET"
+  },
+  deleteHomework:{
+      url: `${backapi}/api/homework/`,
+      method:"delete"
   }
 
 

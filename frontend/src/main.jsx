@@ -69,6 +69,7 @@ import TeacherLayout from "./components/Teacher/TeacherLayout.jsx";
 import TeacherDashboard from "./components/Teacher/Dashboard/TeacherDashboard.jsx";
 import ClassSchedule from "./components/Teacher/Classes/ClassSchedule.jsx";
 import CreateHomeWork from "./components/Teacher/Homework/CreateHomeWork.jsx";
+import ViewHomeWorks from "./components/Teacher/Homework/ViewHomeWork.jsx";
 
 
 
@@ -124,7 +125,12 @@ const Router = createBrowserRouter([
           {
             path:"homework",
             element: <CreateHomeWork/>
-          }
+          },
+          {
+            path:"viewhomework",
+            element: <ViewHomeWorks/>
+          },
+
           // Add more teacher routes here
         ],
       },
