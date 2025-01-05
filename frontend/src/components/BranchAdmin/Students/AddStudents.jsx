@@ -78,6 +78,7 @@ const AddStudents = () => {
   const motherOccupationOptions = ["Housewife", "Employee"];
   useEffect(() => {
     // Update feeDetails with default concession and calculated finalAmount
+    console.log("formdata feedetails", formData.feeDetails);
     const updatedFees = formData.feeDetails.map((fee) => {
       const concession = fee.concession || 0; // Default to 0 if concession is not set
       const finalAmount =
@@ -97,7 +98,7 @@ const AddStudents = () => {
       ...prev,
       feeDetails: updatedFees, // Update feeDetails with the new values
     }));
-  }, [feeTypes]);
+  }, [formData.section.id]);
   const curracad = async (bid) => {
     const response = await fetch(Allapi.getAcademicYears.url(bid), {
       method: Allapi.getAcademicYears.method,
@@ -1436,8 +1437,13 @@ const AddStudents = () => {
                           : fee.terms;
 
                         const concession = parseFloat(e.target.value) || 0;
-                        const finalAmount =
-                          fee.amount - (fee.amount * concession) / 100;
+                        const finalAmount = parseFloat(
+                          (
+                            fee.amount -
+                            (fee.amount * concession) / 100
+                          ).toFixed(2)
+                        );
+
                         const updatedFees = [...formData.feeDetails];
                         updatedFees[index] = {
                           ...fee,
@@ -1450,7 +1456,7 @@ const AddStudents = () => {
                     />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {fee.finalAmount ? fee.finalAmount.toFixed(2) : fee.amount}
+                    {fee.finalAmount ? fee.finalAmount : fee.amount}
                   </td>
                 </tr>
               ))}

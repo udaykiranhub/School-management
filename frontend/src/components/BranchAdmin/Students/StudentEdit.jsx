@@ -18,6 +18,7 @@ const StudentEdit = () => {
   const tableRef = useRef();
   const { branchdet } = useContext(mycon);
   const [hosteladd, sethosteladd] = useState(false);
+  const [feeTypes, setFeeTypes] = useState([]);
   const [photoPreview, setphotoPreview] = useState("");
   const [formData, setFormData] = useState({
     idNo: "",
@@ -79,6 +80,7 @@ const StudentEdit = () => {
         if (!response.ok) throw new Error("Failed to fetch student details");
 
         const datares = await response.json();
+        console.log("data res is", datares);
         setFormData((prev) => ({
           ...prev,
           ...datares.data, // Merge fetched data
@@ -96,7 +98,11 @@ const StudentEdit = () => {
 
     fetchStudent();
   }, [sid]);
-
+  // useEffect(() => {
+  //   if (acid) {
+  //     fetchFeeTypes(acid);
+  //   }
+  // }, [acid]);
   const [towns, setTowns] = useState([]);
   const [buses, setBuses] = useState([]);
   const [halts, setHalts] = useState([]);
@@ -256,6 +262,27 @@ const StudentEdit = () => {
       }
     }
   }, [curr_town, towns]);
+  const fetchFeeTypes = async (curr_Acad) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(Allapi.getAllFeeTypes.url(curr_Acad), {
+        method: Allapi.getAllFeeTypes.method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      if (result.success) {
+        setFeeTypes(result.feeTypes);
+      } else {
+        toast.error(result.message || "Failed to fetch fee types");
+      }
+    } catch (error) {
+      console.error("Error fetching fee types:", error);
+      toast.error("Error fetching fee types");
+    }
+  };
 
   const fetchTransportDetails = async () => {
     console.log("fecthing towns");
@@ -360,17 +387,13 @@ const StudentEdit = () => {
     // })}
     if (selectedSection.fees) {
       console.log("current sec fees are", selectedSection.fees);
-      selectedSection.fees.map((fees) => {
-        formData.feeDetails.push({
+      setFormData((prev) => ({
+        ...prev,
+        feeDetails: selectedSection.fees.map((fees) => ({
           name: fees.feeType,
           amount: fees.amount,
-        });
-        console.log("formadata is", formData);
-        Fees.push({
-          name: fees.feeType,
-          amount: fees.amount,
-        });
-      });
+        })),
+      }));
     }
     console.log(" curr fees are ", Fees);
   };
@@ -479,6 +502,7 @@ const StudentEdit = () => {
             {
               name: "Transport-fee",
               amount: parseInt(formData.transportDetails.amount),
+              terms: parseInt(formData.transportDetails.terms),
             },
           ],
         }));
@@ -502,6 +526,7 @@ const StudentEdit = () => {
           {
             name: "hostel-fee",
             amount: parseInt(formData.hostelDetails.hostelFee),
+            terms: parseInt(formData.hostelDetails.terms),
           },
         ],
       }));
@@ -647,10 +672,50 @@ const StudentEdit = () => {
       toast.error(error.message);
     }
   };
+  function findObjectByKey(array, key, value) {
+    console.log("Array is", array);
+    console.log("key is", key);
+    console.log("value is", value);
 
+    const foundObject = array.find((obj) => {
+      // console.log("Checking object:", obj);
+      return obj[key] === value; // Ensure the callback returns the condition
+    });
+
+    console.log("foundobj", foundObject);
+
+    return foundObject ? foundObject.terms : undefined;
+  }
+  useEffect(() => {
+    if (acid) {
+      fetchFeeTypes(acid);
+    }
+  }, [acid]);
+  useEffect(() => {
+    // Update feeDetails with default concession and calculated finalAmount
+    const updatedFees = formData.feeDetails.map((fee) => {
+      const concession = fee.concession || 0; // Default to 0 if concession is not set
+      const finalAmount =
+        concession === 0
+          ? fee.amount
+          : fee.amount - (fee.amount * concession) / 100;
+
+      return {
+        ...fee,
+        concession, // Ensure concession is set
+        finalAmount, // Calculate or set default finalAmount
+        terms: findObjectByKey(feeTypes, "type", fee.name), // Update terms
+      };
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      feeDetails: updatedFees, // Update feeDetails with the new values
+    }));
+  }, [formData.section.id]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formdata is", formData);
+    console.log("formdata is edit ", formData);
 
     // Validate required fields
     if (!formData.name || formData.name.trim() === "") {
@@ -1305,11 +1370,12 @@ const StudentEdit = () => {
                   required
                 >
                   <option value="">Select Bus</option>
-                  {buses.map((bus) => (
-                    <option key={bus._id} value={bus._id}>
-                      {bus.busNo}
-                    </option>
-                  ))}
+                  {buses &&
+                    buses.map((bus) => (
+                      <option key={bus._id} value={bus._id}>
+                        {bus.busNo}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -1328,6 +1394,19 @@ const StudentEdit = () => {
                     </option>
                   ))}
                 </select>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Number of Terms
+                  </label>
+                  <input
+                    type="text"
+                    name="transportDetails.terms"
+                    value={formData.transportDetails.terms || ""}
+                    onChange={handleChange}
+                    className="input-field"
+                    required
+                  />
+                </div>
               </div>
               <div className="col-span-3">
                 <button
@@ -1404,6 +1483,9 @@ const StudentEdit = () => {
                   Amount
                 </th>
                 <th className="px-6 py-3 text-left text-sm font-bold text-black">
+                  Terms
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-bold text-black">
                   Concession (%)
                 </th>
                 <th className="px-6 py-3 text-left text-sm font-bold text-black">
@@ -1420,6 +1502,11 @@ const StudentEdit = () => {
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {fee.amount}
                   </td>
+                  <td className="py-2 px-4 border-b">
+                    {findObjectByKey(feeTypes, "type", fee.name)
+                      ? findObjectByKey(feeTypes, "type", fee.name)
+                      : fee.terms}
+                  </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     <input
                       type="number"
@@ -1429,20 +1516,24 @@ const StudentEdit = () => {
                       max="100"
                       onChange={(e) => {
                         const concession = parseFloat(e.target.value) || 0;
-                        const finalAmount =
-                          fee.amount - (fee.amount * concession) / 100;
+                        const finalAmount = parseFloat(
+                          (
+                            fee.amount -
+                            (fee.amount * concession) / 100
+                          ).toFixed(2)
+                        );
                         const updatedFees = [...formData.feeDetails];
                         updatedFees[index] = {
                           ...fee,
                           concession,
                           finalAmount,
                         };
-                        setFormData({ ...formData, feeDetails: updatedFees });
+                        +setFormData({ ...formData, feeDetails: updatedFees });
                       }}
                     />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {fee.finalAmount ? fee.finalAmount.toFixed(2) : fee.amount}
+                    {fee.finalAmount ? fee.finalAmount : fee.amount}
                   </td>
                 </tr>
               ))}

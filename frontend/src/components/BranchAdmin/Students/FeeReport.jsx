@@ -1,4 +1,486 @@
- 
+// import React, { useState, useEffect } from "react";
+// import { toast } from "react-toastify";
+// import { useParams } from "react-router-dom";
+// import Allapi from "../../../common"; // Adjust according to your API utility file
+
+// const FeeReport = () => {
+//   const [student, setStudent] = useState(null);
+//   const { sid } = useParams();
+//   const [selectedTerm, setSelectedTerm] = useState(null);
+//   const [studentDataForm, setStudentDataForm] = useState({
+//     padiFee: [],
+//   });
+
+//   useEffect(() => {
+//     if (sid) fetchStudentById(sid);
+//   }, [sid]);
+
+//   const fetchStudentById = async (sid) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       const response = await fetch(Allapi.getstudentbyId.url(sid), {
+//         method: Allapi.getstudentbyId.method,
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       const result = await response.json();
+//       if (result.success) {
+//         const initialPaidFee = result.data.feeDetails.map((fee) => {
+//           const finalAmount = fee.concession ? fee.finalAmount : fee.amount;
+//           return {
+//             name: fee.name,
+//             finalAmount,
+//             extractedAmount: finalAmount / fee.terms,
+//             paidAmount: 0,
+//             due: 0,
+//             enteredAmount: 0,
+//           };
+//         });
+
+//         setStudentDataForm((prev) => ({
+//           ...prev,
+//           padiFee: initialPaidFee,
+//         }));
+
+//         setStudent(result.data);
+//       } else {
+//         toast.error(result.message || "Failed to fetch student data.");
+//       }
+//     } catch (error) {
+//       console.error("Error fetching student data:", error);
+//       toast.error("An error occurred while fetching student data.");
+//     }
+//   };
+
+//   const handleTermChange = (term) => {
+//     setSelectedTerm(term);
+//     setStudentDataForm((prev) => {
+//       const updatedPadiFee = prev.padiFee.map((fee) => {
+//         const termValue = parseInt(term.split("-")[1], 10);
+//         const dueAmount = fee.extractedAmount * termValue;
+//         return {
+//           ...fee,
+//           paidAmount: fee.paidAmount, // Retain already paid amount
+//           due: dueAmount > fee.finalAmount ? fee.finalAmount : dueAmount,
+//           enteredAmount: 0, // Reset entered amount on term change
+//         };
+//       });
+//       return {
+//         ...prev,
+//         padiFee: updatedPadiFee,
+//       };
+//     });
+//   };
+
+//   const handleEnteredAmountChange = (feeName, value) => {
+//     setStudentDataForm((prev) => {
+//       const updatedPadiFee = prev.padiFee.map((fee) => {
+//         if (fee.name === feeName) {
+//           return {
+//             ...fee,
+//             enteredAmount: value,
+//           };
+//         }
+//         return fee;
+//       });
+//       return {
+//         ...prev,
+//         padiFee: updatedPadiFee,
+//       };
+//     });
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log("Payment Details Submitted:", studentDataForm);
+//     toast.success("Fee Paid Successfully!");
+//   };
+
+//   return (
+//     <div className="bg-gray-50 min-h-screen p-6 flex justify-center">
+//       <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl">
+//         {/* Header */}
+//         <div className="bg-gradient-to-r from-green-400 to-blue-500 p-5 text-white rounded-t-lg flex justify-between">
+//           <h2 className="text-2xl font-bold">Fee Payment</h2>
+//           <span>Student Details & Fees</span>
+//         </div>
+
+//         {/* Student Details */}
+//         {student && (
+//           <div className="p-5 border-b">
+//             <h3 className="text-xl font-bold mb-3 text-gray-700">
+//               Student Details
+//             </h3>
+//             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-600">
+//               <p>
+//                 <span className="font-semibold">ID:</span> {student.idNo}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Name:</span> {student.name}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Class:</span>{" "}
+//                 {student.id ? student.id.name : "N/A"}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Section:</span>{" "}
+//                 {student.section ? student.section.name : "N/A"}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Admission No:</span>{" "}
+//                 {student.admissionNo}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Aadhar No:</span>{" "}
+//                 {student.aadharNo}
+//               </p>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Select Term */}
+//         <div className="p-5 border-b">
+//           <label className="block text-gray-700 mb-2 text-lg font-semibold">
+//             Select Term
+//           </label>
+//           <select
+//             className="border p-2 rounded w-full"
+//             value={selectedTerm || ""}
+//             onChange={(e) => handleTermChange(e.target.value)}
+//           >
+//             <option value="">Select Term</option>
+//             {Array.from({ length: 4 }, (_, i) => `Term-${i + 1}`).map(
+//               (term) => (
+//                 <option key={term} value={term}>
+//                   {term}
+//                 </option>
+//               )
+//             )}
+//           </select>
+//         </div>
+
+//         {/* Fee Form */}
+//         <form onSubmit={handleSubmit} className="p-5">
+//           <div className="mb-5">
+//             <h3 className="text-lg font-semibold text-gray-700 mb-2">
+//               Fee Details
+//             </h3>
+//             <table className="w-full border-collapse border text-left">
+//               <thead>
+//                 <tr className="bg-gray-100">
+//                   <th className="p-2 border">Fee Type</th>
+//                   <th className="p-2 border">Final Amount</th>
+//                   <th className="p-2 border">Paid Amount</th>
+//                   <th className="p-2 border">Due</th>
+//                   <th className="p-2 border">Enter Amount</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {studentDataForm.padiFee.map((fee) => (
+//                   <tr key={fee.name}>
+//                     <td className="p-2 border">{fee.name}</td>
+//                     <td className="p-2 border">{fee.finalAmount}</td>
+//                     <td className="p-2 border">{fee.paidAmount}</td>
+//                     <td className="p-2 border">{fee.due}</td>
+//                     <td className="p-2 border">
+//                       <input
+//                         type="number"
+//                         className="border p-1 rounded w-full"
+//                         value={fee.enteredAmount || ""}
+//                         onChange={(e) =>
+//                           handleEnteredAmountChange(
+//                             fee.name,
+//                             parseFloat(e.target.value) || 0
+//                           )
+//                         }
+//                       />
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+
+//           {/* Payment Type */}
+//           <div className="mb-5">
+//             <label className="block text-gray-700 mb-1">Payment Type</label>
+//             <select
+//               name="paymentType"
+//               value={studentDataForm.paymentType || ""}
+//               onChange={(e) =>
+//                 setStudentDataForm({
+//                   ...studentDataForm,
+//                   paymentType: e.target.value,
+//                 })
+//               }
+//               className="border p-2 rounded w-full"
+//             >
+//               <option value="Cash">Cash</option>
+//               <option value="Online">Online Payment</option>
+//             </select>
+//           </div>
+
+//           {/* Submit */}
+//           <button
+//             type="submit"
+//             className="w-full bg-green-500 hover:bg-green-600 text-white p-2 rounded text-lg font-semibold"
+//           >
+//             Submit Payment
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FeeReport;
+
+// import React, { useState, useEffect } from "react";
+// import { toast } from "react-toastify";
+// import { useParams } from "react-router-dom";
+// import Allapi from "../../../common"; // Adjust according to your API utility file
+
+// const FeeReport = () => {
+//   const [student, setStudent] = useState(null);
+//   const { sid } = useParams();
+//   const [selectedTerm, setSelectedTerm] = useState(null);
+//   const [studentDataForm, setStudentDataForm] = useState({
+//     padiFee: [],
+//   });
+
+//   useEffect(() => {
+//     if (sid) fetchStudentById(sid);
+//   }, [sid]);
+
+//   const fetchStudentById = async (sid) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       const response = await fetch(Allapi.getstudentbyId.url(sid), {
+//         method: Allapi.getstudentbyId.method,
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       const result = await response.json();
+//       if (result.success) {
+//         const initialPaidFee = result.data.feeDetails.map((fee) => {
+//           const finalAmount = fee.concession ? fee.finalAmount : fee.amount;
+//           return {
+//             name: fee.name,
+//             finalAmount,
+//             terms: fee.terms, // No. of terms added
+//             extractedAmount: finalAmount / fee.terms,
+//             paidAmount: 0,
+//             due: 0,
+//             enteredAmount: 0,
+//           };
+//         });
+
+//         setStudentDataForm((prev) => ({
+//           ...prev,
+//           padiFee: initialPaidFee,
+//         }));
+
+//         setStudent(result.data);
+//       } else {
+//         toast.error(result.message || "Failed to fetch student data.");
+//       }
+//     } catch (error) {
+//       console.error("Error fetching student data:", error);
+//       toast.error("An error occurred while fetching student data.");
+//     }
+//   };
+
+//   const handleTermChange = (term) => {
+//     setSelectedTerm(term);
+//     setStudentDataForm((prev) => {
+//       const updatedPadiFee = prev.padiFee.map((fee) => {
+//         const termValue = parseInt(term.split("-")[1], 10);
+//         const dueAmount = fee.extractedAmount * termValue;
+//         return {
+//           ...fee,
+//           paidAmount: fee.paidAmount,
+//           due: dueAmount > fee.finalAmount ? fee.finalAmount : dueAmount,
+//           enteredAmount: 0,
+//         };
+//       });
+//       return {
+//         ...prev,
+//         padiFee: updatedPadiFee,
+//       };
+//     });
+//   };
+
+//   const handleEnteredAmountChange = (feeName, value) => {
+//     setStudentDataForm((prev) => {
+//       const updatedPadiFee = prev.padiFee.map((fee) => {
+//         if (fee.name === feeName) {
+//           return {
+//             ...fee,
+//             enteredAmount: value,
+//           };
+//         }
+//         return fee;
+//       });
+//       return {
+//         ...prev,
+//         padiFee: updatedPadiFee,
+//       };
+//     });
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log("Payment Details Submitted:", studentDataForm);
+//     toast.success("Fee Paid Successfully!");
+//   };
+
+//   return (
+//     <div className="bg-gray-50 min-h-screen p-6 flex justify-center">
+//       <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl">
+//         {/* Header */}
+//         <div className="bg-gradient-to-r from-green-400 to-blue-500 p-5 text-white rounded-t-lg flex justify-between">
+//           <h2 className="text-2xl font-bold">Fee Payment</h2>
+//           <span>Student Details & Fees</span>
+//         </div>
+
+//         {/* Student Details */}
+//         {student && (
+//           <div className="p-5 border-b">
+//             <h3 className="text-xl font-bold mb-3 text-gray-700">
+//               Student Details
+//             </h3>
+//             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-600">
+//               <p>
+//                 <span className="font-semibold">ID:</span> {student.idNo}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Name:</span> {student.name}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Class:</span>{" "}
+//                 {student.id ? student.id.name : "N/A"}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Section:</span>{" "}
+//                 {student.section ? student.section.name : "N/A"}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Admission No:</span>{" "}
+//                 {student.admissionNo}
+//               </p>
+//               <p>
+//                 <span className="font-semibold">Aadhar No:</span>{" "}
+//                 {student.aadharNo}
+//               </p>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Select Term */}
+//         <div className="p-5 border-b">
+//           <label className="block text-gray-700 mb-2 text-lg font-semibold">
+//             Select Term
+//           </label>
+//           <select
+//             className="border p-2 rounded w-full"
+//             value={selectedTerm || ""}
+//             onChange={(e) => handleTermChange(e.target.value)}
+//           >
+//             <option value="">Select Term</option>
+//             {Array.from({ length: 4 }, (_, i) => `Term-${i + 1}`).map(
+//               (term) => (
+//                 <option key={term} value={term}>
+//                   {term}
+//                 </option>
+//               )
+//             )}
+//           </select>
+//         </div>
+
+//         {/* Fee Form */}
+//         <form onSubmit={handleSubmit} className="p-5">
+//           <div className="mb-5">
+//             <h3 className="text-lg font-semibold text-gray-700 mb-2">
+//               Fee Details
+//             </h3>
+//             <table className="w-full border-collapse border text-left">
+//               <thead>
+//                 <tr className="bg-gray-100">
+//                   <th className="p-2 border">Fee Type</th>
+//                   <th className="p-2 border">Final Amount</th>
+//                   <th className="p-2 border">No. of Terms</th>
+//                   <th className="p-2 border">Paid Amount</th>
+//                   <th className="p-2 border">Due</th>
+//                   <th className="p-2 border">Enter Amount</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {studentDataForm.padiFee.map((fee) => (
+//                   <tr key={fee.name}>
+//                     <td className="p-2 border">{fee.name}</td>
+//                     <td className="p-2 border">{fee.finalAmount}</td>
+//                     <td className="p-2 border">{fee.terms}</td>
+//                     <td className="p-2 border">{fee.paidAmount}</td>
+//                     <td className="p-2 border">{fee.due}</td>
+//                     <td className="p-2 border">
+//                       <input
+//                         type="number"
+//                         className="border p-1 rounded w-full"
+//                         value={fee.enteredAmount || ""}
+//                         onChange={(e) =>
+//                           handleEnteredAmountChange(
+//                             fee.name,
+//                             parseFloat(e.target.value) || 0
+//                           )
+//                         }
+//                       />
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+
+//           {/* Payment Type */}
+//           <div className="mb-5">
+//             <label className="block text-gray-700 mb-1">Payment Type</label>
+//             <select
+//               name="paymentType"
+//               value={studentDataForm.paymentType || ""}
+//               onChange={(e) =>
+//                 setStudentDataForm({
+//                   ...studentDataForm,
+//                   paymentType: e.target.value,
+//                 })
+//               }
+//               className="border p-2 rounded w-full"
+//             >
+//               <option value="Cash">Cash</option>
+//               <option value="Online">Online Payment</option>
+//             </select>
+//           </div>
+
+//           {/* Submit */}
+//           <button
+//             type="submit"
+//             className="w-full bg-green-500 hover:bg-green-600 text-white p-2 rounded text-lg font-semibold"
+//           >
+//             Submit Payment
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FeeReport;
+
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
@@ -7,9 +489,10 @@ import Allapi from "../../../common"; // Adjust according to your API utility fi
 const FeeReport = () => {
   const [student, setStudent] = useState(null);
   const { sid } = useParams();
-  const [term, setterm] = useState(null);
+  const [selectedTerm, setSelectedTerm] = useState(null);
   const [studentDataForm, setStudentDataForm] = useState({
-    padiFee: [], // Store payment information here
+    padiFee: [],
+    paymentType: "",
   });
 
   useEffect(() => {
@@ -29,35 +512,25 @@ const FeeReport = () => {
 
       const result = await response.json();
       if (result.success) {
-        // Initialize padiFee with empty data or payment data if applicable
         const initialPaidFee = result.data.feeDetails.map((fee) => {
           const finalAmount = fee.concession ? fee.finalAmount : fee.amount;
-          const terms = Array.from({ length: fee.terms }, (_, termIndex) => {
-            const termName = `Term-${termIndex + 1}`;
-            return {
-              [termName]: [
-                {
-                  amountPaid: 0, // Initially, no amount paid
-                  dueAmount: finalAmount / fee.terms, // Due amount for each term
-                  date: new Date().toISOString(), // Today's date
-                },
-              ],
-            };
-          });
-
           return {
             name: fee.name,
-            finalAmount: finalAmount, // Final amount after concession
-            terms, // Terms with amountPaid, dueAmount, and date
+            finalAmount,
+            terms: fee.terms,
+            extractedAmount: finalAmount / fee.terms,
+            paidAmount: 0,
+            due: finalAmount,
+            enteredAmount: 0,
           };
         });
 
         setStudentDataForm((prev) => ({
           ...prev,
-          padiFee: initialPaidFee, // Store the payment information in padiFee
+          padiFee: initialPaidFee,
         }));
 
-        setStudent(result.data); // Update student data
+        setStudent(result.data);
       } else {
         toast.error(result.message || "Failed to fetch student data.");
       }
@@ -66,38 +539,97 @@ const FeeReport = () => {
       toast.error("An error occurred while fetching student data.");
     }
   };
-  useEffect(() => {
-    console.log("rk", studentDataForm);
-  }, [studentDataForm]);
 
-  const handlePaymentChange = (feeName, term, value) => {
+  const handleTermChange = (term) => {
+    setSelectedTerm(term);
     setStudentDataForm((prev) => {
-      if (!prev.padiFee || prev.padiFee.length === 0) {
-        console.error("padiFee is not initialized yet.");
-        return prev; // Do nothing if padiFee is empty
-      }
-      // Find the fee entry in paidFee by its name
-      const feeEntry = prev.padiFee.find((fee) => fee.name === feeName);
-      console.log("feename", feeEntry);
+      const updatedPadiFee = prev.padiFee.map((fee) => {
+        const termValue = parseInt(term.split("-")[1], 10);
+        const dueAmount = fee.extractedAmount * termValue;
+        return {
+          ...fee,
+          due:
+            dueAmount > fee.finalAmount
+              ? fee.finalAmount
+              : dueAmount - fee.paidAmount,
+        };
+      });
+      return {
+        ...prev,
+        padiFee: updatedPadiFee,
+      };
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleEnteredAmountChange = (feeName, value) => {
+    setStudentDataForm((prev) => {
+      const updatedPadiFee = prev.padiFee.map((fee) => {
+        if (fee.name === feeName) {
+          const enteredAmount = parseFloat(value) || 0;
+          if (enteredAmount > fee.due) {
+            toast.error(`Entered amount for ${fee.name} exceeds due amount.`);
+            return fee;
+          }
+          return {
+            ...fee,
+            enteredAmount,
+          };
+        }
+        return fee;
+      });
+      return {
+        ...prev,
+        padiFee: updatedPadiFee,
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Payment Details Submitted:", studentDataForm);
-    toast.success("Fee Paid Successfully!");
+    const paymentDetails = studentDataForm.padiFee.filter(
+      (fee) => fee.enteredAmount > 0
+    );
+    if (paymentDetails.length === 0 || !studentDataForm.paymentType) {
+      toast.error("Please enter payment details and select a payment type.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(Allapi.payFee.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          sid,
+          paymentDetails,
+          paymentType: studentDataForm.paymentType,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Fee Paid Successfully!");
+        fetchStudentById(sid); // Refresh data
+      } else {
+        toast.error(result.message || "Payment submission failed.");
+      }
+    } catch (error) {
+      console.error("Error submitting payment:", error);
+      toast.error("An error occurred during payment submission.");
+    }
   };
 
   return (
     <div className="bg-gray-50 min-h-screen p-6 flex justify-center">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl">
-        {/* Header */}
         <div className="bg-gradient-to-r from-green-400 to-blue-500 p-5 text-white rounded-t-lg flex justify-between">
           <h2 className="text-2xl font-bold">Fee Payment</h2>
           <span>Student Details & Fees</span>
         </div>
 
-        {/* Student Details */}
         {student && (
           <div className="p-5 border-b">
             <h3 className="text-xl font-bold mb-3 text-gray-700">
@@ -112,11 +644,11 @@ const FeeReport = () => {
               </p>
               <p>
                 <span className="font-semibold">Class:</span>{" "}
-                {student.id ? student.id.name : "N/A"}
+                {student.class?.name || "N/A"}
               </p>
               <p>
                 <span className="font-semibold">Section:</span>{" "}
-                {student.section ? student.section.name : "N/A"}
+                {student.section?.name || "N/A"}
               </p>
               <p>
                 <span className="font-semibold">Admission No:</span>{" "}
@@ -130,7 +662,26 @@ const FeeReport = () => {
           </div>
         )}
 
-        {/* Fee Form */}
+        <div className="p-5 border-b">
+          <label className="block text-gray-700 mb-2 text-lg font-semibold">
+            Select Term
+          </label>
+          <select
+            className="border p-2 rounded w-full"
+            value={selectedTerm || ""}
+            onChange={(e) => handleTermChange(e.target.value)}
+          >
+            <option value="">Select Term</option>
+            {Array.from({ length: 4 }, (_, i) => `Term-${i + 1}`).map(
+              (term) => (
+                <option key={term} value={term}>
+                  {term}
+                </option>
+              )
+            )}
+          </select>
+        </div>
+
         <form onSubmit={handleSubmit} className="p-5">
           <div className="mb-5">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
@@ -141,109 +692,41 @@ const FeeReport = () => {
                 <tr className="bg-gray-100">
                   <th className="p-2 border">Fee Type</th>
                   <th className="p-2 border">Final Amount</th>
-                  <th className="p-2 border">Term</th>
-                  <th className="p-2 border">Term Amount</th>
-                  <th className="p-2 border">Term Due</th>
-                  <th className="p-2 border">Total Due</th>
-                  <th className="p-2 border">Amount Paid</th>
+                  <th className="p-2 border">No. of Terms</th>
+                  <th className="p-2 border">Paid Amount</th>
+                  <th className="p-2 border">Due</th>
+                  <th className="p-2 border">Enter Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {student &&
-                  student.feeDetails.map((fee) => {
-                    const payment =
-                      studentDataForm.padiFee.find(
-                        (feeItem) => feeItem.name === fee.name
-                      ) || {};
-
-                    return (
-                      <tr key={fee.name}>
-                        <td className="p-2 border">{payment.name}</td>
-                        <td className="p-2 border">{payment.finalAmount}</td>
-
-                        <td className="p-2 border">
-                          <select
-                            className="border p-1 rounded w-full"
-                            value={term ? term : ""}
-                            onChange={(e) => {
-                              const selectedTerm = e.target.value;
-                              setterm(selectedTerm);
-                              const num =
-                                selectedTerm[selectedTerm.length - 1] - 1;
-                              console.log("corres term is", num);
-                              console.log(
-                                "due",
-                                payment.terms[num][selectedTerm][
-                                  payment.terms[num][selectedTerm].length - 1
-                                ].dueAmount
-                              );
-                              console.log("term", selectedTerm == "Term-2");
-                              payment.dueAmount =
-                                payment.terms[num][selectedTerm][
-                                  payment.terms[num][selectedTerm].length - 1
-                                ].dueAmount;
-                              payment.totalDue = 0;
-
-                              for (let i = 0; i <= num; i++) {
-                                // console.log(
-                                //   "res",
-                                //   payment.terms[i][selectedTerm][
-                                //     payment.terms[i][selectedTerm].length - 1
-                                //   ].dueAmount
-                                // );
-                                console.log("corres term is", num);
-
-                                // console.log(
-                                //   "payment ",
-                                //   payment.terms[i],
-                                //   "num is",
-                                //   num
-                                // );
-                                payment.totalDue +=
-                                  payment.terms[i][`Term-${i + 1}`][
-                                    payment.terms[i][`Term-${i + 1}`].length - 1
-                                  ].dueAmount;
-                              }
-                            }}
-                          >
-                            <option value="">Select Term</option>
-                            {Array.from(
-                              { length: fee.terms },
-                              (_, i) => `Term-${i + 1}`
-                            ).map((term) => (
-                              <option key={term} value={term}>
-                                {term}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                        <td className="p-2 border">
-                          {payment.finalAmount / fee.terms}
-                        </td>
-                        <td className="p-2 border">{payment.dueAmount}</td>
-                        <td className="p-2 border">{payment.totalDue}</td>
-                        <td className="p-2 border">
-                          <input
-                            type="number"
-                            className="border p-1 rounded w-full"
-                            placeholder="Enter Payment"
-                            max={payment.totalDue}
-                            onChange={(e) => {}}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
+                {studentDataForm.padiFee.map((fee) => (
+                  <tr key={fee.name}>
+                    <td className="p-2 border">{fee.name}</td>
+                    <td className="p-2 border">{fee.finalAmount}</td>
+                    <td className="p-2 border">{fee.terms}</td>
+                    <td className="p-2 border">{fee.paidAmount}</td>
+                    <td className="p-2 border">{fee.due}</td>
+                    <td className="p-2 border">
+                      <input
+                        type="number"
+                        className="border p-1 rounded w-full"
+                        value={fee.enteredAmount || ""}
+                        onChange={(e) =>
+                          handleEnteredAmountChange(fee.name, e.target.value)
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
 
-          {/* Payment Type */}
           <div className="mb-5">
             <label className="block text-gray-700 mb-1">Payment Type</label>
             <select
               name="paymentType"
-              value={studentDataForm.paymentType}
+              value={studentDataForm.paymentType || ""}
               onChange={(e) =>
                 setStudentDataForm({
                   ...studentDataForm,
@@ -252,15 +735,16 @@ const FeeReport = () => {
               }
               className="border p-2 rounded w-full"
             >
+              <option value="">Select Payment Type</option>
               <option value="Cash">Cash</option>
-              <option value="Online">Online Payment</option>
+              <option value="Card">Card</option>
+              <option value="Online">Online</option>
             </select>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-600 text-white p-2 rounded text-lg font-semibold"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
           >
             Submit Payment
           </button>
