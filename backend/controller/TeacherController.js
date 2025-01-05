@@ -179,6 +179,7 @@ exports.addTeacher = async (req, res) => {
         // Create teacher record (excluding auth details)
         const teacherData = {
             name,
+            username,
             phone: req.body.phone,
             address: req.body.address,
             qualification: req.body.qualification,

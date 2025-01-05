@@ -2,7 +2,7 @@ const User = require("../models/users");
 const Branch = require("../models/Branches");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const Teacher = require("../models/Teachers")
 // Register Main Admin
 exports.registerMainAdmin = async (req, res) => {
   try {
@@ -24,33 +24,86 @@ exports.registerMainAdmin = async (req, res) => {
 };
 
 // Login
+// exports.login = async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+//     const user = await User.findOne({ username });
+//     if (!user)
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "user not exist" });
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch)
+//       return res
+//         .status(400)
+//         .json({ success: false, error: true, message: "password mismatch" });
+
+//     const token = jwt.sign(
+//       {
+//         id: user._id,
+//         role: user.role,
+//         name: user.name,
+//         branch: user.branch ? user.branch : null,
+//       },
+//       process.env.JWT_SECRET,
+//       { expiresIn: "2h" }
+//     );
+//     res.json({
+//       data: user,
+//       success: true,
+//       message: "Logged in successfully",
+//       token,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    if (!user)
+
+    if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "user not exist" });
+        .json({ success: false, message: "User does not exist" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res
         .status(400)
-        .json({ success: false, error: true, message: "password mismatch" });
+        .json({ success: false, error: true, message: "Password mismatch" });
+    }
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-        name: user.name,
-        branch: user.branch ? user.branch : null,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "2h" }
-    );
+    let teacherData = null;
+
+    // Fetch teacher data if the user's role is Teacher
+    if (user.role === "Teacher") {
+      teacherData = await Teacher.findOne({ username:username }).select(
+        "-password"
+      ); // Exclude sensitive fields like `password`
+    }
+
+    // Generate JWT token with teacher data if applicable
+    const tokenPayload = {
+      id: user._id,
+      role: user.role,
+      name: user.name,
+      branch: user.branch ? user.branch : null,
+      ...(teacherData && { teacherData }), // Include teacher data if present
+    };
+    console.log("token payload: ",tokenPayload)
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+      expiresIn: "2h",
+    });
+
     res.json({
       data: user,
+      teacherData, // Include teacher data in the response
       success: true,
       message: "Logged in successfully",
       token,
@@ -59,6 +112,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Delete Branch Admin
 exports.deleteBranchAdmin = async (req, res) => {

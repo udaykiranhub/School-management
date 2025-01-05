@@ -22,6 +22,7 @@ const teacherRoutes = require("./routers/TeacherRoutes");
 const teacherAssignRoutes = require("./routers/TeacherAssignRoutes.js");
 const workingdays = require("./routers/WorkingDaysRoutes.js")
 const attendanceRoutes = require("./routers/AttendanceRoutes.js")
+const homeworkroutes = require("./routers/HomeWorkRoutes.js")
 
 app.use(cors());
 app.use(cookieParser());
@@ -44,6 +45,8 @@ app.use("/api/teachers", protect.authMiddleware, teacherRoutes);
 app.use("/api/teachersassingn", protect.authMiddleware, teacherAssignRoutes);
 app.use("/api/workingdays",protect.authMiddleware,workingdays);
 app.use("/api/attendance",protect.authMiddleware,attendanceRoutes);
+app.use("/api/homework",protect.authMiddleware,homeworkroutes);
+
 
 
 database().then(
