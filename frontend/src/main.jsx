@@ -61,6 +61,17 @@ import AddAttendance from "./components/BranchAdmin/Attendance/AddAttendance.jsx
 import ViewAttendance from "./components/BranchAdmin/Attendance/ViewAttendance.jsx";
 import ProgressReport from "./components/BranchAdmin/ProgressReport/ProgressReport.jsx";
 
+
+
+
+
+import TeacherLayout from "./components/Teacher/TeacherLayout.jsx";
+import TeacherDashboard from "./components/Teacher/Dashboard/TeacherDashboard.jsx";
+import ClassSchedule from "./components/Teacher/Classes/ClassSchedule.jsx";
+import CreateHomeWork from "./components/Teacher/Homework/CreateHomeWork.jsx";
+
+
+
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -90,6 +101,43 @@ const Router = createBrowserRouter([
         path: "/login",
         element: <Login />,
       },
+
+
+
+
+
+
+
+
+      {
+        path: "/teacher",
+        element: <TeacherLayout />,
+        children: [
+          {
+            path: "",
+            element: <TeacherDashboard />,
+          },
+          {
+            path: "classes/schedule",
+            element: <ClassSchedule />,
+          },
+          {
+            path:"homework",
+            element: <CreateHomeWork/>
+          }
+          // Add more teacher routes here
+        ],
+      },
+
+
+
+
+
+
+
+
+
+      
       {
         path: "/admin",
         element: <Adminlayout />,

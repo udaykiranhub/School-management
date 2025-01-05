@@ -1,12 +1,22 @@
 
 const WorkingDays = require("../models/WorkingDays");
 
-// Create new working days
+
 exports.createWorkingDays = async (req, res) => {
   try {
     const { branchId, academicId, months } = req.body;
+
+    // Check if working days already exist for the given branchId and academicId
+    const existingWorkingDays = await WorkingDays.findOne({ branchId, academicId });
+
+    if (existingWorkingDays) {
+      return res.status(400).json({ message: "Working days with this branchId and academicId already exist." });
+    }
+
+    // Create a new working days entry if it doesn't exist
     const newWorkingDays = new WorkingDays({ branchId, academicId, months });
     const savedWorkingDays = await newWorkingDays.save();
+
     res.status(201).json(savedWorkingDays);
   } catch (err) {
     res.status(500).json({ error: err.message });

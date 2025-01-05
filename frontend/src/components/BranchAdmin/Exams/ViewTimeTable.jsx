@@ -140,8 +140,108 @@ const ViewTimeTable = () => {
   };
 
   const handlePrint = () => {
-    window.print();
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    const selectedExamData = exams.find(exam => exam._id === selectedExam);
+    
+    if (printWindow && selectedExamData) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>${selectedExamData.examName} - Timetable</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                color: #333;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 20px;
+              }
+              .exam-title {
+                font-size: 24px;
+                color: #4338ca;
+                margin-bottom: 8px;
+              }
+              .exam-info {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 20px;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+              }
+              th, td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+              }
+              th {
+                background-color: #f8fafc;
+                font-weight: bold;
+              }
+              tr:nth-child(even) {
+                background-color: #f9fafb;
+              }
+              @media print {
+                body {
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div class="exam-title">${selectedExamData.examName}</div>
+              <div class="exam-info">
+                Class: ${selectedExamData.classId.name} | 
+                Section: ${selectedExamData.sectionId.name} | 
+                Academic Year: ${selectedExamData.academicId.year}
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Total Marks</th>
+                  <th>Pass Marks</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${getSortedSubjects(selectedExamData.subjects).map(subject => `
+                  <tr>
+                    <td>${subject.name}</td>
+                    <td>${subject.marks}</td>
+                    <td>${subject.passMarks}</td>
+                    <td>${new Date(subject.date).toLocaleDateString()}</td>
+                    <td>${subject.time}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </body>
+        </html>
+      `);
+      
+      printWindow.document.close();
+      printWindow.focus();
+      
+      // Wait for content to load before printing
+      printWindow.onload = function() {
+        printWindow.print();
+        printWindow.onafterprint = function() {
+          printWindow.close();
+        };
+      };
+    }
   };
+
 
   useEffect(() => {
     if (branchdet?._id) {

@@ -1,15 +1,14 @@
-
-
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Allapi from "../../../common/index";
 import { mycon } from "../../../store/Mycontext";
+import { toast, ToastContainer } from 'react-toastify';
 
 const ViewAttendance = () => {
   const { acid } = useParams();
   const { branchdet } = useContext(mycon);
   const [viewType, setViewType] = useState("daily"); // 'daily' or 'monthly'
-  const [classes, setClasses] = useState([]);
+  const [classes, setClasses] = useState([]); 
   const [sections, setSections] = useState([]);
   const [students, setStudents] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
@@ -20,6 +19,11 @@ const ViewAttendance = () => {
   const [absentees, setAbsentees] = useState([]);
   const [monthlyAbsents, setMonthlyAbsents] = useState({});
   const [hasAttendanceData, setHasAttendanceData] = useState(false);
+
+
+  //new
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedAbsentees, setSelectedAbsentees] = useState([]);
 
   // Fetch Classes
   useEffect(() => {
@@ -217,9 +221,62 @@ const ViewAttendance = () => {
     setHasAttendanceData(false);
   };
 
+  const handleUpdateAttendance = async () => {
+    if (!selectedClass || !selectedSection || !selectedDate) return;
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(Allapi.updateAbsentees.url, {
+        method: Allapi.updateAbsentees.method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          branchId: branchdet._id,
+          academicId: acid,
+          classId: selectedClass,
+          sectionId: selectedSection,
+          date: selectedDate,
+          absentees: selectedAbsentees
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setIsEditing(false);
+        fetchDailyAttendance(); // Refresh the attendance data
+        toast.success("Attendance updated successfully!");
+      } else {
+        toast.error("Failed to update attendance: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error updating attendance:", error);
+      toast.error("Error updating attendance");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedAbsentees(absentees.map(student => student._id));
+  }, [absentees]);
+
+  const handleCheckboxChange = (studentId) => {
+    setSelectedAbsentees(prev => {
+      if (prev.includes(studentId)) {
+        return prev.filter(id => id !== studentId);
+      } else {
+        return [...prev, studentId];
+      }
+    });
+  };
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">View Attendance</h1>
+    <div className="min-h-screen p-6 bg-gray-100">
+    <ToastContainer/>
+      <h1 className="mb-6 text-2xl font-bold text-black">View Attendance</h1>
 
       {/* View Type Selection */}
       <div className="mb-6">
@@ -245,10 +302,10 @@ const ViewAttendance = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
         {/* Date/Month Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             {viewType === "daily" ? "Select Date" : "Select Month"}
           </label>
           <input
@@ -265,7 +322,7 @@ const ViewAttendance = () => {
 
         {/* Class Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             Select Class
           </label>
           <select
@@ -284,7 +341,7 @@ const ViewAttendance = () => {
 
         {/* Section Selection */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block mb-2 font-medium text-gray-700">
             Select Section
           </label>
           <select
@@ -307,44 +364,83 @@ const ViewAttendance = () => {
         <div className="text-center">Loading...</div>
       ) : students.length > 0 ? (
         hasAttendanceData ? (
-          <div className="overflow-x-auto text-black">
-            <table className="min-w-full bg-white shadow-md rounded">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="px-4 py-2 text-left">S.No</th>
-                  <th className="px-4 py-2 text-left">ID No</th>
-                  <th className="px-4 py-2 text-left">Name</th>
-                  {viewType === "daily" ? (
-                    <th className="px-4 py-2 text-center">Absent</th>
-                  ) : (
-                    <th className="px-4 py-2 text-center">Absent Days</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student, index) => (
-                  <tr key={student._id} className="border-b hover:bg-gray-50">
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{student.idNo}</td>
-                    <td className="px-4 py-2">{`${student.name} ${student.surname || ""
-                      }`}</td>
+          <div>
+            <div className="overflow-x-auto text-black">
+              <table className="min-w-full bg-white rounded shadow-md">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-4 py-2 text-left">S.No</th>
+                    <th className="px-4 py-2 text-left">ID No</th>
+                    <th className="px-4 py-2 text-left">Name</th>
                     {viewType === "daily" ? (
-                      <td className="px-4 py-2 text-center">
-                        {absentees.some((a) => a._id === student._id) ? "Yes" : "No"}
-                      </td>
+                      <th className="px-4 py-2 text-center">Absent</th>
                     ) : (
-                      <td className="px-4 py-2 text-center">
-                        {monthlyAbsents[student._id] || 0}
-                      </td>
+                      <th className="px-4 py-2 text-center">Absent Days</th>
                     )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {students.map((student, index) => (
+                    <tr key={student._id} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{student.idNo}</td>
+                      <td className="px-4 py-2">{`${student.name} ${student.surname || ""}`}</td>
+                      {viewType === "daily" ? (
+                        <td className="px-4 py-2 text-center">
+                          {isEditing ? (
+                            <input
+                              type="checkbox"
+                              checked={selectedAbsentees.includes(student._id)}
+                              onChange={() => handleCheckboxChange(student._id)}
+                              className="w-4 h-4"
+                            />
+                          ) : (
+                            absentees.some((a) => a._id === student._id) ? "Yes" : "No"
+                          )}
+                        </td>
+                      ) : (
+                        <td className="px-4 py-2 text-center">
+                          {monthlyAbsents[student._id] || 0}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {viewType === "daily" && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => {
+                    if (isEditing) {
+                      handleUpdateAttendance();
+                    } else {
+                      setIsEditing(true);
+                    }
+                  }}
+                  className={`px-6 py-2 rounded ${
+                    isEditing ? "bg-green-500" : "bg-blue-500"
+                  } text-white`}
+                >
+                  {isEditing ? "Save Changes" : "Edit Attendance"}
+                </button>
+                {isEditing && (
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setSelectedAbsentees(absentees.map(student => student._id));
+                    }}
+                    className="px-6 py-2 ml-4 text-white bg-gray-500 rounded"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         ) : (
-          <div className="text-center p-8 bg-white rounded-lg shadow">
-            <p className="text-gray-600 text-lg">
+          <div className="p-8 text-center bg-white rounded-lg shadow">
+            <p className="text-lg text-gray-600">
               No attendance data found for the selected {viewType === "daily" ? "date" : "month"}
             </p>
           </div>

@@ -12,6 +12,8 @@ const AddTeacher = () => {
 
     const [formData, setFormData] = useState({
         name: '',
+        username: '',
+        password: '',
         phone: '',
         address: {
             doorNo: '',
@@ -25,7 +27,8 @@ const AddTeacher = () => {
         joiningDate: '',
         aadharNumber: '',
         academic_id: '',
-        role: 'Teacher'
+        role: 'Teacher',
+        branchId:branchdet._id
     });
 
     useEffect(() => {
@@ -51,7 +54,6 @@ const AddTeacher = () => {
             const result = await response.json();
             if (result.success) {
                 setClasses(result.data);
-                // Create a Set to store unique lowercase subjects
                 const subjectsSet = new Set();
                 result.data.forEach(cls => {
                     if (cls.subjects) {
@@ -63,7 +65,6 @@ const AddTeacher = () => {
                         );
                     }
                 });
-                // Convert Set to sorted array
                 const sortedSubjects = Array.from(subjectsSet).sort();
                 setAvailableSubjects(sortedSubjects);
             }
@@ -123,6 +124,11 @@ const AddTeacher = () => {
             toast.error('Name is required');
             return false;
         }
+        if (!formData.username.trim()) {
+            toast.error('Username is required');
+            return false;
+        }
+
         if (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone)) {
             toast.error('Please enter a valid 10-digit phone number');
             return false;
@@ -132,6 +138,7 @@ const AddTeacher = () => {
             return false;
         }
         if (!formData.aadharNumber.trim() || !/^\d{12}$/.test(formData.aadharNumber)) {
+            console.log("aadhar num: ",formData.aadharNumber)
             toast.error('Please enter a valid 12-digit Aadhar number');
             return false;
         }
@@ -151,20 +158,13 @@ const AddTeacher = () => {
         if (!validateForm()) return;
 
         try {
-            const dataToSend = {
-                ...formData,
-                teachingSubjects: formData.teachingSubjects.map(subject => ({
-                    name: subject.name.toLowerCase() // Ensure subjects are stored in lowercase
-                }))
-            };
-
             const response = await fetch(Allapi.addTeacher.url, {
                 method: Allapi.addTeacher.method,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dataToSend)
+                body: JSON.stringify(formData)
             });
 
             const result = await response.json();
@@ -173,6 +173,8 @@ const AddTeacher = () => {
                 toast.success('Teacher added successfully!');
                 setFormData({
                     name: '',
+                    username: '',
+                    password: '',
                     phone: '',
                     address: {
                         doorNo: '',
@@ -186,7 +188,8 @@ const AddTeacher = () => {
                     joiningDate: '',
                     aadharNumber: '',
                     academic_id: branchdet.academicYears[0],
-                    role: 'Teacher'
+                    role: 'Teacher',
+                    branchId: branchdet._id
                 });
                 setSelectedSubject('');
             } else {
@@ -200,8 +203,8 @@ const AddTeacher = () => {
 
     if (!branchdet?.academicYears?.[0]) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="flex items-center justify-center min-h-screen bg-gray-100">
+                <div className="p-6 bg-white rounded-lg shadow-md">
                     <p className="text-gray-700">Loading academic year information...</p>
                 </div>
             </div>
@@ -209,15 +212,15 @@ const AddTeacher = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-8 px-4">
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Teacher</h2>
+        <div className="min-h-screen px-4 py-8 bg-gray-100">
+            <div className="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
+                <h2 className="mb-6 text-2xl font-bold text-gray-800">Add Teacher</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Personal Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
                                 Name
                             </label>
                             <input
@@ -231,7 +234,36 @@ const AddTeacher = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
+                                Username
+                            </label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter username"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
+                                Aadhar Number
+                            </label>
+                            <input
+                                type="text"
+                                name="aadharNumber"
+                                value={formData.aadharNumber}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter aadhar"
+                                maxLength={12}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
                                 Phone Number
                             </label>
                             <input
@@ -244,6 +276,8 @@ const AddTeacher = () => {
                                 maxLength={10}
                             />
                         </div>
+
+                        
                     </div>
 
                     {/* Address Fields */}
@@ -251,7 +285,7 @@ const AddTeacher = () => {
                         <label className="block text-sm font-medium text-gray-700">
                             Address
                         </label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <input
                                 type="text"
                                 name="address.doorNo"
@@ -289,9 +323,9 @@ const AddTeacher = () => {
                     </div>
 
                     {/* Professional Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
                                 Qualification
                             </label>
                             <input
@@ -305,7 +339,7 @@ const AddTeacher = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
                                 Experience (years)
                             </label>
                             <input
@@ -320,7 +354,7 @@ const AddTeacher = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block mb-1 text-sm font-medium text-gray-700">
                                 Joining Date
                             </label>
                             <input
@@ -331,26 +365,11 @@ const AddTeacher = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Aadhar Number
-                            </label>
-                            <input
-                                type="text"
-                                name="aadharNumber"
-                                value={formData.aadharNumber}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="12-digit Aadhar number"
-                                maxLength={12}
-                            />
-                        </div>
                     </div>
 
                     {/* Teaching Subjects */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
                             Teaching Subjects
                         </label>
                         <div className="flex gap-2">
@@ -367,18 +386,18 @@ const AddTeacher = () => {
                             <button
                                 type="button"
                                 onClick={handleAddSubject}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 Add Subject
                             </button>
                         </div>
 
                         {/* Subject Tags */}
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 mt-3">
                             {formData.teachingSubjects.map((subject, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center gap-1 bg-blue-100 px-3 py-1 rounded-full"
+                                    className="flex items-center gap-1 px-3 py-1 bg-blue-100 rounded-full"
                                 >
                                     <span className="text-blue-800">{subject.name}</span>
                                     <button
@@ -396,7 +415,7 @@ const AddTeacher = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         Add Teacher
                     </button>

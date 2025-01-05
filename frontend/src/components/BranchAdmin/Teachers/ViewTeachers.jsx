@@ -13,7 +13,8 @@ const ViewTeachers = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [teacherAssignments, setTeacherAssignments] = useState({});
     const [editFormData, setEditFormData] = useState({
-        name: '',
+        username: '',
+        password: '',
         phone: '',
         address: {
             doorNo: '',
@@ -24,11 +25,9 @@ const ViewTeachers = () => {
         qualification: '',
         experience: '',
         teachingSubjects: [],
-        joiningDate: '',
-        aadharNumber: ''
+        joiningDate: ''
     });
 
-    // Helper function to normalize subjects (convert to lowercase and remove duplicates)
     const normalizeSubjects = (subjectList) => {
         const uniqueSubjects = new Set(
             subjectList.map(subject => subject.toLowerCase())
@@ -97,16 +96,12 @@ const ViewTeachers = () => {
             const result = await response.json();
             if (result.success) {
                 setTeachers(result.data);
-
-                // Extract and normalize subjects
                 const allSubjects = [];
                 result.data.forEach(teacher => {
                     teacher.teachingSubjects.forEach(subject => {
                         allSubjects.push(subject.name);
                     });
                 });
-
-                // Normalize subjects to lowercase and remove duplicates
                 const normalizedSubjects = normalizeSubjects(allSubjects);
                 setAvailableSubjects(normalizedSubjects);
             }
@@ -208,14 +203,14 @@ const ViewTeachers = () => {
     const handleEdit = (teacher) => {
         setEditingTeacher(teacher);
         setEditFormData({
-            name: teacher.name,
+            username: teacher.username || '',
+            password: '',
             phone: teacher.phone,
             address: { ...teacher.address },
             qualification: teacher.qualification,
             experience: teacher.experience,
             teachingSubjects: [...teacher.teachingSubjects],
-            joiningDate: teacher.joiningDate ? teacher.joiningDate.split('T')[0] : '',
-            aadharNumber: teacher.aadharNumber
+            joiningDate: teacher.joiningDate ? teacher.joiningDate.split('T')[0] : ''
         });
         setIsEditModalOpen(true);
     };
@@ -223,12 +218,25 @@ const ViewTeachers = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updatedData = {
+            const updateData = {
                 ...editFormData,
-                phone: editingTeacher.phone,
-                aadharNumber: editingTeacher.aadharNumber,
-                academic_id: branchdet.academicYears[0]
+                academic_id: branchdet.academicYears[0],
+                teachingSubjects: editingTeacher.teachingSubjects
             };
+
+            // Remove empty fields
+            if (!updateData.password) {
+                delete updateData.password;
+            }
+            if (!updateData.username) {
+                delete updateData.username;
+            }
+
+            // Ensure all required fields are present
+            if (!updateData.qualification || !updateData.experience) {
+                toast.error('Please fill in all required fields');
+                return;
+            }
 
             const response = await fetch(
                 Allapi.updateTeacher.url(editingTeacher._id),
@@ -238,7 +246,7 @@ const ViewTeachers = () => {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(updatedData)
+                    body: JSON.stringify(updateData)
                 }
             );
 
@@ -251,16 +259,13 @@ const ViewTeachers = () => {
                 toast.error(result.message || 'Failed to update teacher');
             }
         } catch (error) {
-            toast.error('Error updating teacher');
+            console.error('Update error:', error);
+            toast.error('Error updating teacher. Please try again.');
         }
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'phone' || name === 'aadharNumber') {
-            return;
-        }
-
         if (name.startsWith('address.')) {
             const addressField = name.split('.')[1];
             setEditFormData(prev => ({
@@ -359,20 +364,41 @@ const ViewTeachers = () => {
                                 <form onSubmit={handleUpdate} className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Name (Non-editable)</label>
                                             <input
                                                 type="text"
-                                                name="name"
-                                                value={editFormData.name}
+                                                value={editingTeacher?.name || ''}
+                                                disabled
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                            <input
+                                                type="text"
+                                                name="username"
+                                                value={editFormData.username}
                                                 onChange={handleInputChange}
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                New Password (leave blank to keep current)
+                                            </label>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                value={editFormData.password}
+                                                onChange={handleInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                                placeholder="Enter new password"
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Phone (Non-editable)</label>
                                             <input
                                                 type="text"
-                                                name="phone"
                                                 value={editFormData.phone}
                                                 disabled
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
