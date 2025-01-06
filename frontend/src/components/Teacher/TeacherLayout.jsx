@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import TeacherSidebar from './TeacherSideBar';
 
 const TeacherLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen w-full ">
       <TeacherSidebar 
         isSidebarOpen={isSidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
       />
-      <main className={`flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 transition-all duration-300 ${
-        isSidebarOpen ? 'ml-64' : 'ml-0'
-      }`}>
-        <div className="container px-6 py-8 mx-auto">
+      <main 
+        className={`flex-1 transition-all duration-300 ${
+          isSidebarOpen ? 'ml-64' : 'ml-0'
+        }`}
+      >
+        <div className="h-full min-h-screen w-full p-8">
           <Outlet />
         </div>
       </main>
