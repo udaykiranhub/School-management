@@ -16,7 +16,7 @@ const ViewHomeWorks = () => {
     sectionName: '',
     date: ''
   });
-  
+
   const decoded = jwtDecode(token);
 
   // Fetch classes when component mounts
@@ -38,7 +38,7 @@ const ViewHomeWorks = () => {
         toast.error("Error loading classes");
       }
     };
-    
+
     if (token) {
       fetchClasses();
     }
@@ -68,7 +68,7 @@ const ViewHomeWorks = () => {
         }
       });
       const result = await response.json();
-      
+
       if (result.success) {
         const currentTeacherAssignment = result.data.find(
           (assignment) => assignment.teacherId === teacherId
@@ -85,7 +85,7 @@ const ViewHomeWorks = () => {
   useEffect(() => {
     const fetchSections = async () => {
       if (!filters.className) return;
-      
+
       const selectedClass = classes.find(c => c.name === filters.className);
       if (!selectedClass) return;
 
@@ -111,9 +111,9 @@ const ViewHomeWorks = () => {
 
   const getAvailableClassSections = () => {
     if (!teacherAssignment || !filters.subject) return [];
-    
+
     const classSections = [];
-    
+
     teacherAssignment.classAssignments.forEach(classAssignment => {
       classAssignment.sections.forEach(section => {
         if (section.subject.toLowerCase() === filters.subject.toLowerCase()) {
@@ -194,7 +194,7 @@ const ViewHomeWorks = () => {
       <div className="max-w-6xl px-4 mx-auto">
         <div className="p-6 bg-white rounded-lg shadow-sm">
           <h1 className="mb-6 text-2xl font-bold text-gray-900">View Homeworks</h1>
-          
+
           <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-4">
             {/* Subject Selection */}
             <div>
@@ -236,8 +236,8 @@ const ViewHomeWorks = () => {
                 >
                   <option value="">Select Class & Section</option>
                   {getAvailableClassSections().map((cs, index) => (
-                    <option 
-                      key={index} 
+                    <option
+                      key={index}
                       value={`${cs.className}-${cs.sectionName}`}
                     >
                       {cs.className} - {cs.sectionName}
@@ -294,10 +294,10 @@ const ViewHomeWorks = () => {
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">{homework.homeWork}</div>
                           {homework.fileLink && (
-                            <a 
-                              href={homework.fileLink} 
+                            <a
+                              href={homework.fileLink}
                               className="text-sm text-blue-600 hover:text-blue-800"
-                              target="_blank" 
+                              target="_blank"
                               rel="noopener noreferrer"
                             >
                               View Attachment
@@ -319,7 +319,7 @@ const ViewHomeWorks = () => {
               </div>
             ) : (
               <div className="p-4 text-center text-gray-500">
-                {filters.subject && filters.className && filters.sectionName 
+                {filters.subject && filters.className && filters.sectionName
                   ? "No homeworks found for the selected criteria"
                   : "Select subject, class, and section to view homeworks"}
               </div>

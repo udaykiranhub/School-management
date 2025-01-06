@@ -31,7 +31,7 @@ const TeacherSidebar = ({ isSidebarOpen, setSidebarOpen }) => {
       label: "Dashboard"
     },
     {
-      path: "/teacher/portfolio",
+      path: "/teacher/edit-portfolio",
       icon: UserCircle,
       label: "Edit Portfolio"
     },
@@ -58,9 +58,8 @@ const TeacherSidebar = ({ isSidebarOpen, setSidebarOpen }) => {
   ];
 
   return (
-    <aside className={`fixed left-0 top-0 z-40 h-screen w-64 bg-gradient-to-b from-blue-950 to-blue-900 text-white shadow-xl transition-transform duration-300 ease-in-out ${
-      isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-    }`}>
+    <aside className={`fixed left-0 top-0 z-40 h-screen w-64 bg-gradient-to-b from-blue-950 to-blue-900 text-white shadow-xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
       <div className="flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-blue-800">
@@ -70,7 +69,7 @@ const TeacherSidebar = ({ isSidebarOpen, setSidebarOpen }) => {
             </div>
             <span className="text-xl font-bold tracking-wider">Teacher Panel</span>
           </div>
-          <button 
+          <button
             onClick={() => setSidebarOpen(!isSidebarOpen)}
             className="p-2 transition-colors rounded-lg hover:bg-blue-800"
           >
@@ -85,9 +84,8 @@ const TeacherSidebar = ({ isSidebarOpen, setSidebarOpen }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-blue-800 ${
-                  location.pathname === item.path ? 'bg-blue-800' : ''
-                }`}
+                className={`flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-blue-800 ${location.pathname === item.path ? 'bg-blue-800' : ''
+                  }`}
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 <span>{item.label}</span>
