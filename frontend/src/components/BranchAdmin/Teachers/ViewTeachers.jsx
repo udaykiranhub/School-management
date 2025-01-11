@@ -57,7 +57,9 @@ const ViewTeachers = () => {
 
     const fetchTeacherAssignments = async () => {
         try {
+            console.log("branch-id", branchdet.academicYears[0]);
             const response = await fetch(
+
                 Allapi.getTeacherAssignments.url(branchdet.academicYears[0]),
                 {
                     method: Allapi.getTeacherAssignments.method,
