@@ -339,63 +339,6 @@ const UpdateMarks = () => {
     return true;
   };
 
-  // const handleUpdate = async () => {
-  //   try {
-  //     if (!validateMarks()) return;
-  
-  //     const updatePromises = Object.entries(marksData)
-  //       .map(async ([studentId, subjects]) => {
-  //         const marksId = marksIds[studentId]; // Get the marks document ID
-  //         if (!marksId) {
-  //           return { studentId, status: 'error', message: 'Marks record not found' };
-  //         }
-  
-  //         const submission = {
-  //           examId: selectedExam._id,
-  //           academicId: acid,
-  //           classId: selectedClass,
-  //           sectionId: selectedSection,
-  //           studentId,
-  //           subjectMarks: Object.entries(subjects)
-  //             .map(([subjectName, mark]) => ({
-  //               subjectId: selectedExam.subjects.find(s => s.name === subjectName)?._id,
-  //               marksObtained: parseFloat(mark)
-  //             }))
-  //         };
-  
-  //         try {
-  //           const response = await fetch(Allapi.updateMarks.url(marksId,branchdet._id), {
-  //             method: Allapi.updateMarks.method,
-  //             headers: {
-  //               Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //               'Content-Type': 'application/json',
-  //             },
-  //             body: JSON.stringify(submission)
-  //           });
-  
-  //           const result = await response.json();
-  //           return { studentId, status: response.ok ? 'success' : 'error', message: result.message };
-  //         } catch (error) {
-  //           return { studentId, status: 'error', message: error.message };
-  //         }
-  //       });
-  
-  //     const results = await Promise.all(updatePromises);
-  //     const successful = results.filter(r => r.status === 'success').length;
-  //     const errors = results.filter(r => r.status === 'error').length;
-  
-  //     if (successful > 0) {
-  //       toast.success(`Successfully updated marks for ${successful} students`);
-  //       await fetchExistingMarks(selectedExam._id, selectedClass, selectedSection);
-  //     }
-  
-  //     if (errors > 0) {
-  //       toast.error(`Failed to update marks for ${errors} students`);
-  //     }
-  //   } catch (error) {
-  //     toast.error("An unexpected error occurred while updating marks");
-  //   }
-  // };
   const handleUpdate = async () => {
     try {
       if (!validateMarks()) return;
