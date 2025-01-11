@@ -72,6 +72,10 @@ import CreateHomeWork from "./components/Teacher/Homework/CreateHomeWork.jsx";
 import ViewHomeWorks from "./components/Teacher/Homework/ViewHomeWork.jsx";
 
 
+import EditPortfolio from "./components/Teacher/Portfolio/EditPortfolio.jsx";
+import TeacherAttendance from "./components/Teacher/attendance/TeacherAttendance.jsx";
+
+
 
 const Router = createBrowserRouter([
   {
@@ -117,6 +121,14 @@ const Router = createBrowserRouter([
           {
             path: "",
             element: <TeacherDashboard />,
+          },
+          {
+            path: "portfolio",
+            element: <EditPortfolio />,
+          },
+          {
+            path: "attendance",
+            element: <TeacherAttendance/>,
           },
           {
             path: "classes/schedule",
