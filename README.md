@@ -88,14 +88,36 @@ This is a comprehensive **School Management System** built with React.js, React 
 - **React Router**: For routing and navigation.
 - **Bootstrap**: For responsive design and styling.
 - **React Toastify**: For notifications and alerts.
+- **Express.js**: Back-end framework for building APIs.
+- **MongoDB**: NoSQL database for storing data.
+- **Node.js**: JavaScript runtime for the server-side application.
 
 ---
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Make your changes and commit them:
+   ```bash
+   git commit -m "Description of changes"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature-name
+   ```
+5. Submit a pull request.
+
+---
+
 ## License
 This project is licensed under the MIT License.
 
 ---
 
 ## Contact
-For questions or suggestions, please contact uday kiran at peddaudaykiran1@gmail.com.
-
+For questions or suggestions, please contact uday kiran pedda at peddaudaykiran1@gmail.com.
 
