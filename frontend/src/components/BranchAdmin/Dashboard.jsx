@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Allapi from "../../common";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import logo from "../../assets/logo.png";
 
 const BranchAdminDashboard = () => {
   const [branchdet, setBranchdet] = useState(null);
@@ -13,9 +14,7 @@ const BranchAdminDashboard = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("Decoded token:", decoded);
         setc_user(decoded);
-        // Set decoded user only once
         fetchBranchById(decoded?.branch);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -34,11 +33,8 @@ const BranchAdminDashboard = () => {
       });
 
       const res = await response.json();
-      console.log("response is", res);
       if (res.success) {
         setBranchdet(res.data);
-        console.log("branchdet is", branchdet);
-        // console.log("Branch data fetched successfully:", res.data);
       } else {
         toast.error("Failed to fetch branch details");
       }
@@ -49,117 +45,110 @@ const BranchAdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="flex flex-col flex-1">
-        {/* Header */}
-        <header className="flex items-center justify-between bg-white p-4 shadow">
-          <div className="flex items-center">
-            <FaSearch className="text-gray-600 mr-4" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border rounded p-2 outline-none"
-            />
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex-1" />
+            <div className="flex items-center space-x-4">
+              <img
+                src={logo}
+                alt="Profile"
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            </div>
           </div>
-          <div className="flex items-center">
-            <FaBell className="text-gray-600 mr-6" />
-            <img
-              src="/path-to-profile-picture.jpg"
-              alt="Profile"
-              className="h-10 w-10 rounded-full"
-            />
-          </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Main Dashboard Content */}
-        <main className="flex-1 p-6">
+      {/* Main Content */}
+      <main className="flex-1 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           {/* Welcome Section */}
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-2xl font-semibold text-blue-800">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-2xl font-semibold text-blue-800 mb-2">
               Welcome, {c_user?.name} Sir!
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               Here's an overview of your branch's activities and statistics.
             </p>
 
-            {/* Branch Details */}
             {branchdet && (
-              <div className="mt-4">
-                <h3 className="text-xl font-semibold text-gray-900">
+              <div className="border-t pt-4">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Branch Details
                 </h3>
-                <p className="text-gray-800">
-                  <strong>Branch Name:</strong> {branchdet.name}
-                </p>
-                <p className="text-gray-800">
-                  <strong>Phone:</strong> {branchdet.phone}
-                </p>
-                <p className="text-gray-800">
-                  <strong>Address:</strong>{" "}
-                  {`${branchdet.street}, ${branchdet.colony}, ${branchdet.villageTown}`}
-                </p>
+                <div className="grid gap-2 text-gray-800">
+                  <p><span className="font-medium">Branch Name:</span> {branchdet.name}</p>
+                  <p><span className="font-medium">Phone:</span> {branchdet.phone}</p>
+                  <p><span className="font-medium">Address:</span> {`${branchdet.street}, ${branchdet.colony}, ${branchdet.villageTown}`}</p>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Branch Stats Widgets */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold">Total Students</h3>
-              <p className="text-3xl mt-2">320</p>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-semibold text-gray-900">Total Students</h3>
+              <p className="text-3xl font-bold text-blue-600 mt-2">320</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold">Total Teachers</h3>
-              <p className="text-3xl mt-2">20</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-semibold text-gray-900">Total Teachers</h3>
+              <p className="text-3xl font-bold text-green-600 mt-2">20</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold">Total Classes</h3>
-              <p className="text-3xl mt-2">10</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-semibold text-gray-900">Total Classes</h3>
+              <p className="text-3xl font-bold text-purple-600 mt-2">10</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold">Fees Collected</h3>
-              <p className="text-3xl mt-2">₹ 15,00,000</p>
-            </div>
-          </div>
-
-          {/* Branch Activity & Announcements */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">Class Attendance</h3>
-              <div className="h-64 bg-gray-200 rounded"></div>{" "}
-              {/* Insert Attendance Chart */}
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">
-                Student Grades Overview
-              </h3>
-              <div className="h-64 bg-gray-200 rounded"></div>{" "}
-              {/* Insert Grades Chart */}
+            <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-semibold text-gray-900">Fees Collected</h3>
+              <p className="text-3xl font-bold text-orange-600 mt-2">₹15,00,000</p>
             </div>
           </div>
 
-          {/* Announcements for Branch */}
-          <div className="bg-white p-6 rounded-lg shadow mt-6">
-            <h3 className="text-xl font-semibold mb-4">Announcements</h3>
-            <ul>
-              <li className="mb-3">Upcoming Parent-Teacher Meetings.</li>
-              <li className="mb-3">
-                Branch staff meeting scheduled for Friday.
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Class Attendance</h3>
+              <div className="aspect-[16/9] bg-gray-100 rounded-lg"></div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Student Grades Overview</h3>
+              <div className="aspect-[16/9] bg-gray-100 rounded-lg"></div>
+            </div>
+          </div>
+
+          {/* Announcements */}
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Announcements</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="w-2 h-2 mt-2 rounded-full bg-blue-600 mr-3"></span>
+                <span>Upcoming Parent-Teacher Meetings</span>
               </li>
-              <li className="mb-3">Student field trip scheduled next month.</li>
+              <li className="flex items-start">
+                <span className="w-2 h-2 mt-2 rounded-full bg-blue-600 mr-3"></span>
+                <span>Branch staff meeting scheduled for Friday</span>
+              </li>
+              <li className="flex items-start">
+                <span className="w-2 h-2 mt-2 rounded-full bg-blue-600 mr-3"></span>
+                <span>Student field trip scheduled next month</span>
+              </li>
             </ul>
           </div>
-        </main>
+        </div>
+      </main>
 
-        {/* Footer */}
-        <footer className="bg-white p-4 shadow text-center">
-          <p className="text-gray-600">
-            &copy; 2024 Vidya Nidhi School -{" "}
-            {branchdet ? branchdet.name : "Loading..."} Branch. All rights
-            reserved.
+      {/* Footer */}
+      <footer className="bg-white mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <p className="text-center text-gray-600">
+            &copy; 2024 Vivekanadha School - {branchdet ? branchdet.name : "Loading..."} Branch. All rights reserved.
           </p>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </div>
   );
 };

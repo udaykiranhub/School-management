@@ -1,276 +1,34 @@
-// import React, { useEffect } from "react";
-// import AOS from "aos";
-// import "aos/dist/aos.css";
-
-// const teachers = [
-//   {
-//     name: "Michelle Andrade",
-//     subjects: "ENGLISH, SPANISH",
-//     description:
-//       "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-//     color: "bg-yellow-500",
-//   },
-//   {
-//     name: "John Stamos",
-//     subjects: "ENGLISH, FRENCH, SWEDISH",
-//     description:
-//       "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-//     color: "bg-teal-500",
-//   },
-//   {
-//     name: "Kelly Masterson",
-//     subjects: "FRENCH, ENGLISH, SWEDISH",
-//     description:
-//       "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-//     color: "bg-green-500",
-//   },
-//   {
-//     name: "Michael Wong",
-//     subjects: "ENGLISH, KOREAN, RUSSIAN",
-//     description:
-//       "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-//     color: "bg-blue-500",
-//   },
-// ];
-
-// const Home = () => {
-//   useEffect(() => {
-//     AOS.init({ duration: 1000 }); // Initialize AOS animations
-//   }, []);
-
-//   return (
-//     <div className="home1 w-[100vw] mt-40 absolute left-0 right-0 h-full">
-//       <div className="">
-//         {/* Hero Section */}
-//         <div
-//           className="bg-gradient-to-r from-gray-800 to-teal-500 text-center py-20 px-4"
-//           data-aos="fade-up"
-//         >
-//           <h1 className="text-white text-5xl font-bold mb-6">
-//             Learn With Us.
-//             <br />
-//             Improve With Us.
-//           </h1>
-//           <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-full mb-12 inline-flex items-center">
-//             READ MORE
-//             <i className="fas fa-rocket ml-2"></i>
-//           </button>
-//           <div
-//             className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-6"
-//             data-aos="fade-up"
-//           >
-//             <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full md:w-64">
-//               <h2 className="text-xl font-bold mb-2">EXPERIENCED FACULTY</h2>
-//               <a className="text-yellow-500" href="#">
-//                 Learn More &gt;
-//               </a>
-//             </div>
-//             <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full md:w-64">
-//               <h2 className="text-xl font-bold mb-2">800 PLUS STUDENTS</h2>
-//               <a className="text-yellow-500" href="#">
-//                 Learn More &gt;
-//               </a>
-//             </div>
-//             <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full md:w-64">
-//               <h2 className="text-xl font-bold mb-2">INNOVATIVE KNOWLEDGE</h2>
-//               <a className="text-yellow-500" href="#">
-//                 Learn More &gt;
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* What We Offer Section */}
-//         <div className="p-2">
-//           <div className="container mx-auto px-4">
-//             <header className="py-6" data-aos="fade-down">
-//               <h1 className="text-5xl font-bold text-center">What We Offer</h1>
-//               <p className="text-xl font-semibold mt-6 text-center w-[80vw]">
-//                 At Vidya Nidhi Schools, we are committed to nurturing the
-//                 holistic development of our students through a balanced blend of
-//                 academics, co-curricular activities, and value-based education.
-//               </p>
-//             </header>
-
-//             <main>
-//               <section className="my-10 flex flex-col gap-11">
-//                 <div
-//                   className="sec1 block md:flex justify-around items-center"
-//                   data-aos="fade-right"
-//                 >
-//                   <div>
-//                     <h2 className="text-center text-4xl font-bold mb-6 md:text-left">
-//                       Personalized Attention
-//                     </h2>
-//                     <p className="w-[320px] text-lg md:w-[500px] md:text-xl font-semibold">
-//                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
-//                       Iusto aspernatur provident porro ex optio temporibus
-//                       blanditiis dolorem.
-//                     </p>
-//                   </div>
-//                   <img
-//                     src=""
-//                     width="400px"
-//                     height="300px"
-//                     className="bg-black rounded-[20px]"
-//                     alt=""
-//                     data-aos="zoom-in"
-//                   />
-//                 </div>
-//                 <div
-//                   className="sec1 block md:flex justify-around items-center"
-//                   data-aos="fade-left"
-//                 >
-//                   <img
-//                     src=""
-//                     width="400px"
-//                     height="300px"
-//                     className="bg-black rounded-[20px]"
-//                     alt=""
-//                     data-aos="zoom-in"
-//                   />
-//                   <div>
-//                     <h2 className="text-center text-4xl font-bold mb-6 md:text-left">
-//                       Value-Based Education
-//                     </h2>
-//                     <p className="w-[320px] text-lg md:w-[500px] md:text-xl font-semibold">
-//                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
-//                       Iusto aspernatur provident porro ex optio temporibus
-//                       blanditiis dolorem.
-//                     </p>
-//                   </div>
-//                 </div>
-//                 <div
-//                   className="sec1 block md:flex justify-around items-center"
-//                   data-aos="fade-right"
-//                 >
-//                   <div>
-//                     <h2 className="text-center text-4xl font-bold mb-6 md:text-left">
-//                       Supportive Learning Environment
-//                     </h2>
-//                     <p className="w-[320px] text-lg md:w-[500px] md:text-xl font-semibold">
-//                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
-//                       Iusto aspernatur provident porro ex optio temporibus
-//                       blanditiis dolorem.
-//                     </p>
-//                     <button className="bg-yellow-500 mt-5 text-lg text-white py-2 px-4 rounded mb-2 sm:mb-0 sm:mr-2 md:float-start hover:bg-yellow-600 hover:text-black">
-//                       Get in Touch
-//                     </button>
-//                   </div>
-//                   <img
-//                     src=""
-//                     width="400px"
-//                     height="300px"
-//                     className="bg-black rounded-[20px]"
-//                     alt=""
-//                     data-aos="zoom-in"
-//                   />
-//                 </div>
-//               </section>
-//             </main>
-//           </div>
-//         </div>
-
-//         {/* Teachers Section */}
-//         <div className="sec3 p-2 flex justify-center items-center">
-//           <div className="container mx-auto p-4 sm:p-8">
-//             <h1
-//               className="text-3xl sm:text-4xl font-bold text-center mb-4"
-//               data-aos="fade-up"
-//             >
-//               Our Teachers
-//             </h1>
-//             <p className="text-center mb-8" data-aos="fade-up">
-//               At stet aliquam nec, mei an dicam posidonium instructior.
-//             </p>
-//             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-//               {teachers.map((teacher, index) => (
-//                 <div
-//                   key={index}
-//                   className="border rounded-lg p-6 text-center relative shadow-lg"
-//                   data-aos="flip-left"
-//                   data-aos-delay={index * 100} // Delay animation for each card
-//                 >
-//                   <div
-//                     className={`w-12 h-12 rounded-full absolute -top-6 left-1/2 transform -translate-x-1/2 ${teacher.color}`}
-//                   ></div>
-//                   <div className="w-40 h-40 rounded-full mx-auto mb-4 bg-white">
-//                     <img
-//                       src="https://placehold.co/200x200"
-//                       alt="Teacher"
-//                       className="object-cover w-full h-full rounded-full border-2 border-gray-300"
-//                     />
-//                   </div>
-//                   <h2 className="text-xl font-bold">{teacher.name}</h2>
-//                   <p className="text-sm text-blue-500 mb-4">
-//                     {teacher.subjects}
-//                   </p>
-//                   <p>{teacher.description}</p>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Get Started Section */}
-//         <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-teal-500 h-[30vh]">
-//           <div
-//             className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 md:p-10 rounded-lg flex flex-col md:flex-row items-center justify-between w-11/12 md:w-3/4 gap-6"
-//             data-aos="fade-up"
-//           >
-//             <div className="text-center md:text-left">
-//               <h1 className="text-white text-3xl md:text-4xl font-bold mb-4">
-//                 Get Started Today
-//               </h1>
-//               <p className="text-white text-base md:text-lg">
-//                 At stet aliquam nec, mei an dicam posidonium instructior. Id
-//                 iracundia scriptoem disputando mea, omnes corpora ne sed.
-//               </p>
-//             </div>
-//             <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-600">
-//               START NOW
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { BookOpen, Users, Brain, ChevronRight, Rocket, GraduationCap, Heart, Target } from "lucide-react";
+
 const teachers = [
   {
-    name: "Michelle Andrade",
-    subjects: "ENGLISH, SPANISH",
-    description:
-      "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-    color: "bg-yellow-500",
+    name: "Dr. Michelle Andrade",
+    subjects: "English Literature & Spanish",
+    description: "Ph.D. in Comparative Literature with 15+ years of teaching experience. Specializes in creative writing and cultural studies.",
+    color: "bg-amber-500",
   },
   {
-    name: "John Stamos",
-    subjects: "ENGLISH, FRENCH, SWEDISH",
-    description:
-      "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-    color: "bg-teal-500",
+    name: "Prof. John Stamos",
+    subjects: "Linguistics & Modern Languages",
+    description: "Expert in language acquisition methodologies with research focus on multilingual education approaches.",
+    color: "bg-emerald-500",
   },
   {
-    name: "Kelly Masterson",
-    subjects: "FRENCH, ENGLISH, SWEDISH",
-    description:
-      "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-    color: "bg-green-500",
+    name: "Dr. Kelly Masterson",
+    subjects: "French & Scandinavian Studies",
+    description: "Certified language instructor with expertise in immersive learning techniques and cultural integration.",
+    color: "bg-indigo-500",
   },
   {
-    name: "Michael Wong",
-    subjects: "ENGLISH, KOREAN, RUSSIAN",
-    description:
-      "At stet aliquam nec, mei an dicam posidonium instructior. Id iracundia scriptoem disputando mea, omnes corpora ne sed.",
-    color: "bg-blue-500",
+    name: "Dr. Michael Wong",
+    subjects: "Asian Languages & Literature",
+    description: "Specialist in East Asian linguistics with extensive experience in language technology integration.",
+    color: "bg-violet-500",
   },
 ];
 
@@ -283,127 +41,125 @@ const Home = () => {
     <>
       <Header />
 
-      <div className=" min-w-[85vw] overflow-hidden bg-white  w-full  mt-44">
+      <div className="min-w-[85vw] overflow-hidden bg-white w-full mt-44">
         {/* Hero Section */}
         <div
-          className="bg-gradient-to-r from-gray-800 to-teal-500 text-center py-12 px-6 sm:py-16"
+          className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-center py-16 px-6 sm:py-24"
           data-aos="fade-up"
         >
-          <h1 className="text-white text-3xl sm:text-5xl font-bold mb-6">
-            Learn With Us. <br /> Improve With Us.
+          <h1 className="text-white text-4xl sm:text-6xl font-bold mb-8 leading-tight">
+            Transform Your Future <br /> Through Education
           </h1>
-          <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-full inline-flex items-center">
-            READ MORE
-            <i className="fas fa-rocket ml-2"></i>
+          <button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-3 px-8 rounded-full inline-flex items-center gap-2 hover:from-amber-600 hover:to-amber-700 transition-all">
+            EXPLORE PROGRAMS
+            <Rocket className="w-5 h-5" />
           </button>
+          
           <div
-            className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-6 mt-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-12"
             data-aos="fade-up"
           >
-            <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full sm:w-64">
-              <h2 className="text-xl font-bold mb-2">EXPERIENCED FACULTY</h2>
-              <a className="text-yellow-500" href="#">
-                Learn More &gt;
+            <div className="bg-white/10 backdrop-blur-lg text-white p-8 rounded-2xl shadow-lg hover:transform hover:-translate-y-1 transition-all">
+              <GraduationCap className="w-12 h-12 mb-4 text-amber-400 mx-auto" />
+              <h2 className="text-xl font-bold mb-2">EXPERT FACULTY</h2>
+              <p className="text-gray-200 mb-4">Learn from industry leaders and accomplished academics</p>
+              <a className="text-amber-400 inline-flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                Learn More <ChevronRight className="w-4 h-4" />
               </a>
             </div>
-            <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full sm:w-64">
-              <h2 className="text-xl font-bold mb-2">800 PLUS STUDENTS</h2>
-              <a className="text-yellow-500" href="#">
-                Learn More &gt;
+            
+            <div className="bg-white/10 backdrop-blur-lg text-white p-8 rounded-2xl shadow-lg hover:transform hover:-translate-y-1 transition-all">
+              <Users className="w-12 h-12 mb-4 text-amber-400 mx-auto" />
+              <h2 className="text-xl font-bold mb-2">GLOBAL COMMUNITY</h2>
+              <p className="text-gray-200 mb-4">Join a network of 10,000+ successful alumni worldwide</p>
+              <a className="text-amber-400 inline-flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                Learn More <ChevronRight className="w-4 h-4" />
               </a>
             </div>
-            <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full sm:w-64">
-              <h2 className="text-xl font-bold mb-2">INNOVATIVE KNOWLEDGE</h2>
-              <a className="text-yellow-500" href="#">
-                Learn More &gt;
+            
+            <div className="bg-white/10 backdrop-blur-lg text-white p-8 rounded-2xl shadow-lg hover:transform hover:-translate-y-1 transition-all">
+              <Brain className="w-12 h-12 mb-4 text-amber-400 mx-auto" />
+              <h2 className="text-xl font-bold mb-2">INNOVATIVE LEARNING</h2>
+              <p className="text-gray-200 mb-4">Cutting-edge curriculum and teaching methodologies</p>
+              <a className="text-amber-400 inline-flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                Learn More <ChevronRight className="w-4 h-4" />
               </a>
             </div>
           </div>
         </div>
 
         {/* What We Offer Section */}
-        <div className="py-12 px-6 sm:py-16">
+        <div className="py-20 px-6">
           <div className="container mx-auto px-4">
-            <header className="py-6 text-center" data-aos="fade-down">
-              <h1 className="text-3xl sm:text-5xl font-bold">What We Offer</h1>
-              <p className="text-lg sm:text-xl font-semibold mt-6 w-full md:w-[80vw] mx-auto">
-                At Vidya Nidhi Schools, we are committed to nurturing the
-                holistic development of our students through a balanced blend of
-                academics, co-curricular activities, and value-based education.
+            <header className="text-center max-w-4xl mx-auto" data-aos="fade-down">
+              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                Excellence in Education
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-600 mt-6">
+                At Vivekananda Schools, we foster an environment where academic excellence meets character development. Our comprehensive approach ensures students are prepared for the challenges of tomorrow.
               </p>
             </header>
 
             <main>
-              <section className="my-10 flex flex-col gap-12">
+              <section className="my-16 flex flex-col gap-20">
                 <div
-                  className="flex flex-col md:flex-row justify-around items-center"
+                  className="flex flex-col md:flex-row justify-between items-center gap-12"
                   data-aos="fade-right"
                 >
-                  <div className="md:w-1/2 p-4">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                      Personalized Attention
+                  <div className="md:w-1/2">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-800">
+                      Personalized Learning Journey
                     </h2>
-                    <p className="text-lg md:text-xl font-semibold">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Iusto aspernatur provident porro ex optio temporibus
-                      blanditiis dolorem.
+                    <p className="text-lg text-gray-600">
+                      Our adaptive learning platform tailors the educational experience to each student's unique needs and learning pace. With a student-to-teacher ratio of 15:1, we ensure every student receives the attention they deserve.
                     </p>
                   </div>
                   <img
-                    src=""
-                    width="300px"
-                    height="200px"
-                    className="bg-black rounded-[20px]"
-                    alt="Personalized Attention"
+                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800"
+                    className="rounded-2xl shadow-2xl md:w-[500px] h-[300px] object-cover"
+                    alt="Personalized Learning"
                   />
                 </div>
 
                 <div
-                  className="flex flex-col md:flex-row justify-around items-center"
+                  className="flex flex-col md:flex-row-reverse justify-between items-center gap-12"
                   data-aos="fade-left"
                 >
-                  <img
-                    src=""
-                    width="300px"
-                    height="200px"
-                    className="bg-black rounded-[20px]"
-                    alt="Value-Based Education"
-                  />
-                  <div className="md:w-1/2 p-4">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                      Value-Based Education
+                  <div className="md:w-1/2">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-800">
+                      Character Development
                     </h2>
-                    <p className="text-lg md:text-xl font-semibold">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Iusto aspernatur provident porro ex optio temporibus
-                      blanditiis dolorem.
+                    <p className="text-lg text-gray-600">
+                      Beyond academics, we emphasize values, ethics, and leadership skills. Our holistic approach helps students develop into well-rounded individuals ready to make a positive impact on society.
                     </p>
                   </div>
+                  <img
+                    src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800"
+                    className="rounded-2xl shadow-2xl md:w-[500px] h-[300px] object-cover"
+                    alt="Character Development"
+                  />
                 </div>
 
                 <div
-                  className="flex flex-col md:flex-row justify-around items-center"
+                  className="flex flex-col md:flex-row justify-between items-center gap-12"
                   data-aos="fade-right"
                 >
-                  <div className="md:w-1/2 p-4">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                      Supportive Learning Environment
+                  <div className="md:w-1/2">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-800">
+                      Future-Ready Education
                     </h2>
-                    <p className="text-lg md:text-xl font-semibold">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Iusto aspernatur provident porro ex optio temporibus
-                      blanditiis dolorem.
+                    <p className="text-lg text-gray-600">
+                      Our curriculum integrates technology and real-world applications, preparing students for the digital age. We focus on developing critical thinking, creativity, and problem-solving skills.
                     </p>
-                    <button className="bg-yellow-500 mt-5 text-lg text-white py-2 px-4 rounded hover:bg-yellow-600 hover:text-black">
-                      Get in Touch
+                    <button className="mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all inline-flex items-center gap-2">
+                      Schedule a Visit
+                      <ChevronRight className="w-5 h-5" />
                     </button>
                   </div>
                   <img
-                    src=""
-                    width="300px"
-                    height="200px"
-                    className="bg-black rounded-[20px]"
-                    alt="Supportive Learning Environment"
+                    src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800"
+                    className="rounded-2xl shadow-2xl md:w-[500px] h-[300px] object-cover"
+                    alt="Future-Ready Education"
                   />
                 </div>
               </section>
@@ -412,40 +168,42 @@ const Home = () => {
         </div>
 
         {/* Teachers Section */}
-        <div className="p-4 sm:p-8 flex justify-center items-center bg-white">
+        <div className="p-8 sm:p-16 bg-gray-50">
           <div className="container mx-auto">
             <h1
-              className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4"
+              className="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
               data-aos="fade-up"
             >
-              Our Teachers
+              Meet Our Expert Faculty
             </h1>
-            <p className="text-center mb-8" data-aos="fade-up">
-              At stet aliquam nec, mei an dicam posidonium instructior.
+            <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto" data-aos="fade-up">
+              Our educators bring together decades of experience and a passion for transformative education.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {teachers.map((teacher, index) => (
                 <div
                   key={index}
-                  className="border rounded-lg p-6 text-center relative shadow-lg"
+                  className="bg-white rounded-2xl p-8 text-center relative shadow-lg hover:shadow-xl transition-all"
                   data-aos="flip-left"
                   data-aos-delay={index * 100}
                 >
                   <div
-                    className={`w-12 h-12 rounded-full absolute -top-6 left-1/2 transform -translate-x-1/2 ${teacher.color}`}
-                  ></div>
-                  <div className="w-40 h-40 rounded-full mx-auto mb-4 bg-white">
+                    className={`w-16 h-16 rounded-full absolute -top-8 left-1/2 transform -translate-x-1/2 ${teacher.color} flex items-center justify-center`}
+                  >
+                    <BookOpen className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden">
                     <img
-                      src="https://placehold.co/200x200"
-                      alt="Teacher"
-                      className="object-cover w-full h-full rounded-full border-2 border-gray-300"
+                      src={`https://images.unsplash.com/photo-${1500000000000 + index}?auto=format&fit=crop&w=300`}
+                      alt={teacher.name}
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <h2 className="text-xl font-bold">{teacher.name}</h2>
-                  <p className="text-sm text-blue-500 mb-4">
+                  <h2 className="text-xl font-bold text-gray-800 mb-2">{teacher.name}</h2>
+                  <p className="text-sm font-medium text-indigo-600 mb-4">
                     {teacher.subjects}
                   </p>
-                  <p>{teacher.description}</p>
+                  <p className="text-gray-600 text-sm">{teacher.description}</p>
                 </div>
               ))}
             </div>
@@ -453,22 +211,22 @@ const Home = () => {
         </div>
 
         {/* Get Started Section */}
-        <div className="flex items-center justify-center min-h-[30vh] bg-gradient-to-r from-blue-500 to-teal-500">
+        <div className="flex items-center justify-center min-h-[40vh] bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900">
           <div
-            className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 md:p-10 rounded-lg flex flex-col md:flex-row items-center justify-between w-full md:w-3/4 gap-6"
+            className="bg-white/10 backdrop-blur-lg p-10 rounded-2xl flex flex-col md:flex-row items-center justify-between w-11/12 md:w-3/4 gap-8"
             data-aos="fade-up"
           >
             <div className="text-center md:text-left">
-              <h1 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-                Get Started Today
+              <h1 className="text-white text-3xl md:text-4xl font-bold mb-4">
+                Begin Your Journey Today
               </h1>
-              <p className="text-white text-base sm:text-lg">
-                At stet aliquam nec, mei an dicam posidonium instructior. Id
-                iracundia scriptoem disputando mea, omnes corpora ne sed.
+              <p className="text-gray-200 text-lg">
+                Take the first step towards academic excellence and personal growth. Join our community of lifelong learners.
               </p>
             </div>
-            <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-600">
-              START NOW
+            <button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 px-8 rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all inline-flex items-center gap-2">
+              ENROLL NOW
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>

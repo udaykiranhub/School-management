@@ -34,7 +34,7 @@ const EditAdminModal = ({ isOpen, onClose, admin, onEdit }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-11/12 md:w-1/3">
         <h2 className="text-2xl font-bold mb-6 text-blue-950">Edit  Branch Admin</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{color:"white"}}>
           <div className="mb-4" >
             <label className="block text-gray-700">Name</label>
             <input

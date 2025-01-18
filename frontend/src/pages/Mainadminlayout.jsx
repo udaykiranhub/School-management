@@ -8,7 +8,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Mainadmin/Sidebar";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import {Col,Row} from "react-bootstrap";
 import {
   FaHome,
   FaUserGraduate,
@@ -55,12 +55,17 @@ const Adminlayout = () => {
 
   return (
     <>
+     <Row>
+     <Col lg={6} md={6} sm={6}>
       {c_user ? (
         <>
           {c_user.role == "MainAdmin" ? (
             <>
-              <div className="w-full  bg-slate-700  flex  ">
-                <div className="">
+           
+       
+             
+             <div className="w-full  bg-slate-700  flex  ">
+                <div className="" >
                   <Sidebar />
                 </div>
                 <div>
@@ -69,6 +74,7 @@ const Adminlayout = () => {
                   </main>
                 </div>
               </div>
+           
             </>
           ) : (
             <>
@@ -81,6 +87,8 @@ const Adminlayout = () => {
           <Login />
         </>
       )}
+        </Col>
+        </Row>
     </>
   );
 };

@@ -1,6 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import App from "./App.jsx";
+
 import "./index.css";
 import { ToastContainer } from "react-toastify";
 import React from "react";
@@ -66,10 +69,8 @@ import ClassSchedule from "./components/Teacher/Classes/ClassSchedule.jsx";
 import CreateHomeWork from "./components/Teacher/Homework/CreateHomeWork.jsx";
 import ViewHomeWorks from "./components/Teacher/Homework/ViewHomeWork.jsx";
 
-import EditPortfolio from "./components/Teacher/EditPortfolio/EditPortfolio.jsx";
-import MarksTeacher from "./components/Teacher/Marks/MarksTeacher.jsx";
-
 import EditPortfolio from "./components/Teacher/Portfolio/EditPortfolio.jsx";
+import MarksTeacher from "./components/Teacher/Marks/MarksTeacher.jsx";
 import TeacherAttendance from "./components/Teacher/attendance/TeacherAttendance.jsx";
 
 
@@ -105,12 +106,6 @@ const Router = createBrowserRouter([
       },
 
 
-
-
-
-
-
-
       {
         path: "/teacher",
         element: <TeacherLayout />,
@@ -125,7 +120,7 @@ const Router = createBrowserRouter([
           },
           {
             path: "attendance",
-            element: <TeacherAttendance/>,
+            element: <TeacherAttendance />,
           },
           {
             path: "classes/schedule",

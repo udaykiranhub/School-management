@@ -17,7 +17,7 @@ const Footer = () => {
           <div className="flex flex-wrap justify-between">
             {/* Column 1: Logo and Description */}
             <div className="w-full md:w-1/3 mb-6 md:mb-0">
-              <h2 className="text-2xl font-bold mb-4">Vidya Nidhi Schools</h2>
+              <h2 className="text-2xl font-bold mb-4">Vivekananda school</h2>
               <p className="text-gray-400">
                 Our mission is to nurture students with the values, knowledge,
                 and skills needed for holistic development. Join us on a journey
@@ -57,10 +57,10 @@ const Footer = () => {
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
               <ul className="space-y-2">
                 <li className="text-gray-400">
-                  123 Vidya Nidhi Road, City, Country
+                  100 vivekana Road, City, Country
                 </li>
-                <li className="text-gray-400">Email: info@vidyanidhi.com</li>
-                <li className="text-gray-400">Phone: +123-456-7890</li>
+                <li className="text-gray-400">Email: vivekananda@gmail.com</li>
+                <li className="text-gray-400">Phone:xxxxxxxxxxxxx</li>
               </ul>
               {/* Social Media Icons */}
               <div className="flex justify-center items-center mt-4 space-x-4">
@@ -82,7 +82,7 @@ const Footer = () => {
 
           {/* Footer Bottom */}
           <div className="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-            <p>&copy; 2024 Vidya Nidhi Schools. All Rights Reserved.</p>
+            <p>&copy; 2025 vivekananda Schools. All Rights Reserved.</p>
             <p className="text-sm mt-2">
               <a href="#" className="hover:text-yellow-500">
                 Privacy Policy

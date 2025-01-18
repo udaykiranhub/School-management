@@ -24,7 +24,15 @@ const workingdays = require("./routers/WorkingDaysRoutes.js")
 const attendanceRoutes = require("./routers/AttendanceRoutes.js")
 const homeworkroutes = require("./routers/HomeWorkRoutes.js")
 
-app.use(cors());
+//app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:5173"], 
+  methods: ['GET', 'POST', 'DELETE', 'PUT'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+};
+
+app.use(cors(corsOptions));
+
 app.use(cookieParser());
 app.use(express.json());
 

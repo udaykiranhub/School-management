@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { jwtDecode } from "jwt-decode";
 
+
 import {
   FaHome,
   FaUserGraduate,
@@ -41,20 +42,20 @@ const Dashboard = () => {
         {/* Header */}
         <header className="flex items-center justify-between bg-white p-4 shadow">
           <div className="flex items-center">
-            <FaSearch className="text-gray-600 mr-4" />
-            <input
+            {/* <FaSearch className="text-gray-600 mr-4" /> */}
+            {/* <input
               type="text"
               placeholder="Search..."
               className="border rounded p-2 outline-none"
-            />
+            /> */}
           </div>
           <div className="flex items-center">
-            <FaBell className="text-gray-600 mr-6" />
+            {/* <FaBell className="text-gray-600 mr-6" />
             <img
               src="/path-to-profile-picture.jpg"
               alt="Profile"
               className="h-10 w-10 rounded-full"
-            />
+            /> */}
           </div>
         </header>
 
@@ -74,11 +75,11 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold">Total Students</h3>
-              <p className="text-3xl mt-2">1,200</p>
+              <p className="text-3xl mt-2">1300</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold">Total Teachers</h3>
-              <p className="text-3xl mt-2">75</p>
+              <p className="text-3xl mt-2">80</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold">Total Branches</h3>
@@ -86,7 +87,7 @@ const Dashboard = () => {
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold">Fees Collected</h3>
-              <p className="text-3xl mt-2">₹ 50,00,000</p>
+              <p className="text-3xl mt-2">₹ 60,00,000</p>
             </div>
           </div>
 
@@ -124,7 +125,7 @@ const Dashboard = () => {
         {/* Footer */}
         <footer className="bg-white p-4 shadow text-center">
           <p className="text-gray-600">
-            &copy; 2024 Vidya Nidhi School. All rights reserved.
+            &copy; 2024 vivekananda School. All rights reserved.
           </p>
         </footer>
       </div>

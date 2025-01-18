@@ -8,8 +8,9 @@ exports.registerMainAdmin = async (req, res) => {
   try {
     const { name, username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Main Admin is:",hashedPassword);
     const user = new User({
-      name,
+      name,                                                                                         
       username,
       password: hashedPassword,
       role: "MainAdmin",

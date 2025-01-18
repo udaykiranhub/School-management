@@ -317,7 +317,9 @@ const AddSection = () => {
   }, [classId]);
 
   return (
-    <div className="mt-16 p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-2xl">
+    <div className="mt-16 p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-2xl"
+    style={{color:"white"}}
+    >
       <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
         Add Section to {classDetails?.name || "Class"}
       </h2>

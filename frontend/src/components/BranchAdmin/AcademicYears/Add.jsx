@@ -13,12 +13,16 @@ const AddAcademicYear = () => {
   const { c_branch, branchdet, setc_acad, setBranchdet } = useContext(mycon);
 
   useEffect(() => {
+    console.log("fecthing branch iD;",localStorage.getItem("token"))
     // Trigger the slide-down animation when the component mounts
     setTimeout(() => setIsVisible(true), 100);
+
   }, []);
 
   const fetchBranchById = async (id) => {
+
     try {
+      
       const response = await fetch(Allapi.getBranchById.url(id), {
         method: Allapi.getBranchById.method,
         headers: {
@@ -28,6 +32,7 @@ const AddAcademicYear = () => {
       });
 
       const res = await response.json();
+
       console.log("response is", res);
       if (res.success) {
         setBranchdet(res.data);
@@ -80,26 +85,24 @@ const AddAcademicYear = () => {
 
   return (
     <div
-      className={`relative bg-white p-8 rounded-lg shadow-lg m-6 mx-auto max-w-2xl transition-transform duration-500 ease-in-out ${
+      className={`bg-white p-8 rounded-lg shadow-lg m-6 mx-auto max-w-2xl transition-transform duration-500 ease-in-out ${
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"
       }`}
+style={{padding:"5%"}}
+
+     
     >
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         {branchdet ? `${branchdet.name} Branch` : "Loading..."}
       </h2>
       <ToastContainer />
 
-      <Link
-        to="/branch-admin/academic-year/view"
-        className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all"
-      >
-        View Academic Years
-      </Link>
+    
       <h2 className="text-xl font-semibold mb-4 text-gray-700">
         Add New Academic Year
       </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
+      <form onSubmit={handleSubmit} style={{padding:"3%",color:"white"}}>
+        <div className="mb-4" >
           <label className="block text-gray-600 mb-2">Academic Year</label>
           <input
             type="text"
@@ -137,6 +140,12 @@ const AddAcademicYear = () => {
           Add Academic Year
         </button>
       </form>
+      <Link
+        to="/branch-admin/academic-year/view"
+        className=" top-4 right-4 bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-all"
+      >
+        View Academic Years
+      </Link>
     </div>
   );
 };

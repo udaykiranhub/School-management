@@ -1,577 +1,245 @@
-// import React, { useEffect } from "react";
-// import AOS from "aos";
-// import "aos/dist/aos.css";
-
-// function AboutUs() {
-//   useEffect(() => {
-//     AOS.init({ duration: 1000 }); // Initialize AOS for animations
-//   }, []);
-
-//   return (
-//     <div className="about-us w-[99vw] mt-36 absolute left-0">
-//       <div className="bg-gray-50">
-//         {/* Hero Section */}
-//         <section
-//           className="bg-blue-600 py-12 text-white"
-//           data-aos="fade-up"
-//           data-aos-delay="200"
-//         >
-//           <div className="container mx-auto px-4 text-center">
-//             <h1 className="text-4xl font-bold mb-4">About Our School</h1>
-//             <p className="text-lg">
-//               We are committed to nurturing the next generation of leaders with
-//               quality education and values.
-//             </p>
-//           </div>
-//         </section>
-
-//         {/* Mission & Vision Section */}
-//         <section className="container mx-auto px-4 py-12">
-//           <div className="grid md:grid-cols-2 gap-10">
-//             <div
-//               className="p-8 bg-white shadow-md rounded-lg"
-//               data-aos="fade-right"
-//             >
-//               <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
-//               <p className="text-lg">
-//                 Our mission is to provide a safe, inclusive environment where
-//                 students can develop academically, socially, and emotionally.
-//                 Through dedicated teaching and a strong community, we inspire
-//                 lifelong learners.
-//               </p>
-//             </div>
-//             <div
-//               className="p-8 bg-white shadow-md rounded-lg"
-//               data-aos="fade-left"
-//             >
-//               <h2 className="text-2xl font-bold mb-4">Our Vision</h2>
-//               <p className="text-lg">
-//                 We envision a world where every child has access to quality
-//                 education, empowering them to make informed decisions,
-//                 contribute positively to society, and face challenges
-//                 confidently.
-//               </p>
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* History Section */}
-//         <section
-//           className="bg-gray-100 py-12"
-//           data-aos="fade-up"
-//           data-aos-delay="200"
-//         >
-//           <div className="container mx-auto px-4 text-center">
-//             <h2 className="text-3xl font-bold mb-6">Our History</h2>
-//             <p className="max-w-3xl mx-auto text-lg">
-//               Founded in 1985, our school has been committed to providing
-//               excellent education for over three decades. From humble beginnings
-//               to a state-of-the-art campus, we continue to grow and innovate
-//               while staying true to our core values of integrity, inclusivity,
-//               and perseverance.
-//             </p>
-//           </div>
-//         </section>
-
-//         {/* Core Values Section */}
-//         <section className="container mx-auto px-4 py-12">
-//           <h2
-//             className="text-center text-3xl font-bold mb-10"
-//             data-aos="fade-up"
-//             data-aos-delay="100"
-//           >
-//             Core Values
-//           </h2>
-//           <div className="grid md:grid-cols-3 gap-10 text-center">
-//             <div
-//               className="p-8 bg-white shadow-md rounded-lg"
-//               data-aos="flip-left"
-//             >
-//               <h3 className="text-xl font-bold mb-4">Integrity</h3>
-//               <p>
-//                 We promote honesty and strong moral principles, ensuring our
-//                 students develop a clear sense of right and wrong.
-//               </p>
-//             </div>
-//             <div
-//               className="p-8 bg-white shadow-md rounded-lg"
-//               data-aos="flip-up"
-//             >
-//               <h3 className="text-xl font-bold mb-4">Excellence</h3>
-//               <p>
-//                 We strive for academic and personal excellence, encouraging our
-//                 students to reach their full potential.
-//               </p>
-//             </div>
-//             <div
-//               className="p-8 bg-white shadow-md rounded-lg"
-//               data-aos="flip-right"
-//             >
-//               <h3 className="text-xl font-bold mb-4">Community</h3>
-//               <p>
-//                 We foster a strong sense of community where students, teachers,
-//                 and parents work together for success.
-//               </p>
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* Facilities Section */}
-//         <section
-//           className="bg-gray-100 py-12"
-//           data-aos="fade-up"
-//           data-aos-delay="100"
-//         >
-//           <div className="container mx-auto px-4 text-center">
-//             <h2 className="text-3xl font-bold mb-6">
-//               State-of-the-Art Facilities
-//             </h2>
-//             <p className="text-lg mb-8">
-//               Our campus offers a variety of modern facilities designed to
-//               create a conducive learning environment for students of all ages.
-//             </p>
-//             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-//               {["Library", "Laboratory", "Sports Complex", "Music Room"].map(
-//                 (facility, index) => (
-//                   <div
-//                     key={index}
-//                     className="bg-white p-6 rounded-lg shadow-md"
-//                     data-aos="zoom-in"
-//                     data-aos-delay={index * 200}
-//                   >
-//                     <img
-//                       src={`https://placehold.co/300x200?text=${facility}`}
-//                       alt={facility}
-//                       className="mx-auto rounded-md mb-4"
-//                     />
-//                     <h3 className="text-xl font-bold">{facility}</h3>
-//                     <p className="text-gray-600">
-//                       Our {facility.toLowerCase()} is equipped with the latest
-//                       technology and resources for our students.
-//                     </p>
-//                   </div>
-//                 )
-//               )}
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* Testimonials Section */}
-//         <section className="container mx-auto px-4 py-12">
-//           <h2
-//             className="text-center text-3xl font-bold mb-10"
-//             data-aos="fade-up"
-//             data-aos-delay="200"
-//           >
-//             What Parents & Students Say
-//           </h2>
-//           <div className="grid md:grid-cols-2 gap-10 text-center">
-//             {["Parent", "Student"].map((role, index) => (
-//               <div
-//                 key={index}
-//                 className="p-8 bg-white shadow-md rounded-lg"
-//                 data-aos="fade-up"
-//                 data-aos-delay={index * 300}
-//               >
-//                 <p className="text-lg mb-4">
-//                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//                   Vivamus efficitur ac dolor vel pretium. Etiam et vehicula
-//                   velit."
-//                 </p>
-//                 <h3 className="text-xl font-bold">{role}</h3>
-//                 <p className="text-gray-600">Satisfied {role.toLowerCase()}</p>
-//               </div>
-//             ))}
-//           </div>
-//         </section>
-
-//         {/* Awards & Recognition Section */}
-//         <section
-//           className="bg-blue-600 py-12 text-white"
-//           data-aos="fade-up"
-//           data-aos-delay="100"
-//         >
-//           <div className="container mx-auto px-4 text-center">
-//             <h2 className="text-3xl font-bold mb-6">Awards & Recognition</h2>
-//             <p className="text-lg mb-8">
-//               Our school has been recognized for excellence in education,
-//               earning numerous awards over the years.
-//             </p>
-//             <div className="grid md:grid-cols-3 gap-10">
-//               {[
-//                 "Excellence in Teaching",
-//                 "Community Service",
-//                 "Top School Award",
-//               ].map((award, index) => (
-//                 <div
-//                   key={index}
-//                   className="bg-white text-blue-600 p-6 rounded-lg shadow-md"
-//                   data-aos="flip-up"
-//                   data-aos-delay={index * 200}
-//                 >
-//                   <h3 className="text-xl font-bold">{award}</h3>
-//                   <p className="text-gray-600">
-//                     Awarded for our dedication to {award.toLowerCase()}.
-//                   </p>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* Meet Our Team Section */}
-//         <section className="bg-blue-50 py-12">
-//           <div className="container mx-auto px-4 text-center">
-//             <h2
-//               className="text-3xl font-bold mb-6"
-//               data-aos="fade-up"
-//               data-aos-delay="200"
-//             >
-//               Meet Our Team
-//             </h2>
-//             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-//               {[
-//                 "Principal",
-//                 "Vice Principal",
-//                 "Senior Teacher",
-//                 "Counselor",
-//               ].map((role, index) => (
-//                 <div
-//                   key={index}
-//                   className="bg-white p-6 rounded-lg shadow-md"
-//                   data-aos="zoom-in"
-//                   data-aos-delay={index * 200}
-//                 >
-//                   <img
-//                     src={`https://placehold.co/150x150?text=${role}`}
-//                     alt={role}
-//                     className="mx-auto rounded-full mb-4"
-//                   />
-//                   <h3 className="text-xl font-bold">{role}</h3>
-//                   <p className="text-gray-600">
-//                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//                   </p>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </section>
-
-//         {/* Call to Action */}
-//         <section
-//           className="bg-blue-600 py-12 text-center text-white"
-//           data-aos="fade-up"
-//           data-aos-delay="100"
-//         >
-//           <div className="container mx-auto px-4">
-//             <h2 className="text-3xl font-bold mb-6">Join Us Today</h2>
-//             <p className="text-lg mb-8">
-//               Ready to be part of a vibrant learning community? Enroll your
-//               child today and start their journey with us.
-//             </p>
-//             <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-600">
-//               ENROLL NOW
-//             </button>
-//           </div>
-//         </section>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AboutUs;
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { 
+  BookOpen, 
+  Target, 
+  Heart, 
+  Users, 
+  Trophy, 
+  GraduationCap,
+  Library,
+  Microscope,
+  Music,
+  Dumbbell,
+  Star,
+  ChevronRight,
+  Building2,
+  History,
+  Award,
+  School
+} from "lucide-react";
 
 function AboutUs() {
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS for animations
+    AOS.init({ duration: 1000 });
   }, []);
 
   return (
     <>
       <Header />
-      <div className="bg-white w-full max-w-[90vw]  overflow-hidden mt-44  sm:min-w-[90vw]">
-        <div className=" w-full ">
-          {/* Hero Section */}
-          <section
-            className="bg-blue-600 py-12 text-white"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
-            <div className="container mx-auto px-4 text-center">
-              <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-                About Our School
-              </h1>
-              <p className="text-lg sm:text-xl">
-                We are committed to nurturing the next generation of leaders
-                with quality education and values.
-              </p>
-            </div>
-          </section>
+      <div className="bg-white w-full overflow-hidden mt-44">
+        {/* Hero Section */}
+        <section
+          className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 py-20 text-white"
+          data-aos="fade-up"
+        >
+          <div className="container mx-auto px-6 text-center">
+            <h1 className="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
+              Shaping Tomorrow's Leaders
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-200 max-w-3xl mx-auto">
+              For over three decades, we've been nurturing minds and building character through excellence in education.
+            </p>
+          </div>
+        </section>
 
-          {/* Mission & Vision Section */}
-          <section className="container mx-auto px-4 py-12">
-            <div className="grid gap-10 md:grid-cols-2">
-              <div
-                className="p-8 bg-white shadow-md rounded-lg"
-                data-aos="fade-right"
-              >
-                <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
-                <p className="text-lg">
-                  Our mission is to provide a safe, inclusive environment where
-                  students can develop academically, socially, and emotionally.
-                  Through dedicated teaching and a strong community, we inspire
-                  lifelong learners.
-                </p>
-              </div>
-              <div
-                className="p-8 bg-white shadow-md rounded-lg"
-                data-aos="fade-left"
-              >
-                <h2 className="text-2xl font-bold mb-4">Our Vision</h2>
-                <p className="text-lg">
-                  We envision a world where every child has access to quality
-                  education, empowering them to make informed decisions,
-                  contribute positively to society, and face challenges
-                  confidently.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* History Section */}
-          <section
-            className="bg-gray-100 py-12"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-                Our History
-              </h2>
-              <p className="max-w-3xl mx-auto text-lg sm:text-xl">
-                Founded in 1985, our school has been committed to providing
-                excellent education for over three decades. From humble
-                beginnings to a state-of-the-art campus, we continue to grow and
-                innovate while staying true to our core values of integrity,
-                inclusivity, and perseverance.
-              </p>
-            </div>
-          </section>
-
-          {/* Core Values Section */}
-          <section className="container mx-auto px-4 py-12">
-            <h2
-              className="text-center text-2xl sm:text-3xl font-bold mb-10"
-              data-aos="fade-up"
-              data-aos-delay="100"
+        {/* Mission & Vision Section */}
+        <section className="container mx-auto px-6 py-20">
+          <div className="grid gap-12 md:grid-cols-2">
+            <div
+              className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all"
+              data-aos="fade-right"
             >
-              Core Values
-            </h2>
-            <div className="grid gap-10 text-center md:grid-cols-3">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-purple-100 p-4 rounded-xl">
+                  <Target className="w-8 h-8 text-purple-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800">Our Mission</h2>
+              </div>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                To create an inspiring environment where students thrive academically and personally, fostering critical thinking, creativity, and character development through innovative teaching methods and personalized attention.
+              </p>
+            </div>
+            <div
+              className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all"
+              data-aos="fade-left"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-indigo-100 p-4 rounded-xl">
+                  <Heart className="w-8 h-8 text-indigo-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800">Our Vision</h2>
+              </div>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                To be a leading educational institution that empowers students to become global citizens, innovative thinkers, and compassionate leaders who make meaningful contributions to society.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* History Section */}
+        <section className="bg-gray-50 py-20" data-aos="fade-up">
+          <div className="container mx-auto px-6">
+            <div className="flex items-center justify-center gap-4 mb-12">
+              <History className="w-10 h-10 text-purple-600" />
+              <h2 className="text-4xl font-bold text-gray-800">Our Journey</h2>
+            </div>
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Founded in 1985, our institution has evolved from a small local school to a renowned center of educational excellence. Our commitment to innovation, coupled with traditional values, has shaped thousands of successful careers and lives over the past 38 years.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Core Values Section */}
+        <section className="container mx-auto px-6 py-20">
+          <h2 className="text-4xl font-bold text-center mb-16" data-aos="fade-up">
+            Our Core Values
+          </h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                icon: <GraduationCap className="w-8 h-8 text-amber-500" />,
+                title: "Academic Excellence",
+                description: "Pursuing the highest standards of academic achievement through innovative teaching and continuous learning."
+              },
+              {
+                icon: <Users className="w-8 h-8 text-emerald-500" />,
+                title: "Inclusive Community",
+                description: "Creating a welcoming environment that celebrates diversity and promotes collaboration among students and faculty."
+              },
+              {
+                icon: <Star className="w-8 h-8 text-purple-500" />,
+                title: "Character Development",
+                description: "Building strong moral foundations and leadership skills that last a lifetime."
+              }
+            ].map((value, index) => (
               <div
-                className="p-8 bg-white shadow-md rounded-lg"
+                key={index}
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all"
                 data-aos="flip-left"
+                data-aos-delay={index * 100}
               >
-                <h3 className="text-xl font-bold mb-4">Integrity</h3>
-                <p>
-                  We promote honesty and strong moral principles, ensuring our
-                  students develop a clear sense of right and wrong.
-                </p>
+                <div className="bg-gray-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                  {value.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">{value.title}</h3>
+                <p className="text-gray-600">{value.description}</p>
               </div>
-              <div
-                className="p-8 bg-white shadow-md rounded-lg"
-                data-aos="flip-up"
-              >
-                <h3 className="text-xl font-bold mb-4">Excellence</h3>
-                <p>
-                  We strive for academic and personal excellence, encouraging
-                  our students to reach their full potential.
-                </p>
-              </div>
-              <div
-                className="p-8 bg-white shadow-md rounded-lg"
-                data-aos="flip-right"
-              >
-                <h3 className="text-xl font-bold mb-4">Community</h3>
-                <p>
-                  We foster a strong sense of community where students,
-                  teachers, and parents work together for success.
-                </p>
-              </div>
-            </div>
-          </section>
+            ))}
+          </div>
+        </section>
 
-          {/* Facilities Section */}
-          <section
-            className="bg-gray-100 py-12"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-                State-of-the-Art Facilities
-              </h2>
-              <p className="text-lg mb-8 sm:text-xl">
-                Our campus offers a variety of modern facilities designed to
-                create a conducive learning environment for students of all
-                ages.
-              </p>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {["Library", "Laboratory", "Sports Complex", "Music Room"].map(
-                  (facility, index) => (
-                    <div
-                      key={index}
-                      className="bg-white p-6 rounded-lg shadow-md"
-                      data-aos="zoom-in"
-                      data-aos-delay={index * 200}
-                    >
-                      <img
-                        src={`https://placehold.co/300x200?text=${facility}`}
-                        alt={facility}
-                        className="mx-auto rounded-md mb-4"
-                      />
-                      <h3 className="text-xl font-bold">{facility}</h3>
-                      <p className="text-gray-600">
-                        Our {facility.toLowerCase()} is equipped with the latest
-                        technology and resources for our students.
-                      </p>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* Testimonials Section */}
-          <section className="container mx-auto px-4 py-12">
-            <h2
-              className="text-center text-2xl sm:text-3xl font-bold mb-10"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              What Parents & Students Say
+        {/* Facilities Section */}
+        <section className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 py-20 text-white">
+          <div className="container mx-auto px-6">
+            <h2 className="text-4xl font-bold text-center mb-16" data-aos="fade-up">
+              World-Class Facilities
             </h2>
-            <div className="grid gap-10 md:grid-cols-2 text-center">
-              {["Parent", "Student"].map((role, index) => (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  icon: <Library className="w-8 h-8" />,
+                  name: "Modern Library",
+                  description: "Extensive collection of books, digital resources, and quiet study spaces"
+                },
+                {
+                  icon: <Microscope className="w-8 h-8" />,
+                  name: "Science Labs",
+                  description: "State-of-the-art laboratories for hands-on learning and research"
+                },
+                {
+                  icon: <Dumbbell className="w-8 h-8" />,
+                  name: "Sports Complex",
+                  description: "Professional facilities for various sports and physical education"
+                },
+                {
+                  icon: <Music className="w-8 h-8" />,
+                  name: "Arts Center",
+                  description: "Dedicated spaces for music, drama, and visual arts"
+                }
+              ].map((facility, index) => (
                 <div
                   key={index}
-                  className="p-8 bg-white shadow-md rounded-lg"
-                  data-aos="fade-up"
-                  data-aos-delay={index * 300}
+                  className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl"
+                  data-aos="zoom-in"
+                  data-aos-delay={index * 100}
                 >
-                  <p className="text-lg sm:text-xl mb-4">
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Vivamus efficitur ac dolor vel pretium. Etiam et vehicula
-                    velit."
-                  </p>
-                  <h3 className="text-xl font-bold">{role}</h3>
-                  <p className="text-gray-600">
-                    Satisfied {role.toLowerCase()}
-                  </p>
+                  <div className="bg-white/20 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                    {facility.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-4">{facility.name}</h3>
+                  <p className="text-gray-300">{facility.description}</p>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Awards & Recognition Section */}
-          <section
-            className="bg-blue-600 py-12 text-white"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-                Awards & Recognition
-              </h2>
-              <p className="text-lg sm:text-xl mb-8">
-                Our school has been recognized for excellence in education,
-                earning numerous awards over the years.
-              </p>
-              <div className="grid gap-10 md:grid-cols-3">
-                {[
-                  "Excellence in Teaching",
-                  "Community Service",
-                  "Top School Award",
-                ].map((award, index) => (
-                  <div
-                    key={index}
-                    className="bg-white text-blue-600 p-6 rounded-lg shadow-md"
-                    data-aos="flip-up"
-                    data-aos-delay={index * 200}
-                  >
-                    <h3 className="text-xl font-bold">{award}</h3>
-                    <p className="text-gray-600">
-                      Awarded for our dedication to {award.toLowerCase()}.
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Meet Our Team Section */}
-          <section className="bg-blue-50 py-12">
-            <div className="container mx-auto px-4 text-center">
-              <h2
-                className="text-2xl sm:text-3xl font-bold mb-6"
+        {/* Achievements Section */}
+        <section className="container mx-auto px-6 py-20">
+          <div className="flex items-center justify-center gap-4 mb-16">
+            <Trophy className="w-10 h-10 text-amber-500" />
+            <h2 className="text-4xl font-bold text-gray-800">Our Achievements</h2>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "National Excellence Award",
+                year: "2023",
+                description: "Recognized for outstanding academic performance and innovative teaching methods"
+              },
+              {
+                title: "Best STEM Program",
+                year: "2022",
+                description: "Awarded for exceptional science and technology education initiatives"
+              },
+              {
+                title: "Community Impact",
+                year: "2023",
+                description: "Honored for significant contributions to local community development"
+              }
+            ].map((achievement, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-amber-50 to-amber-100 p-8 rounded-2xl"
                 data-aos="fade-up"
-                data-aos-delay="200"
+                data-aos-delay={index * 100}
               >
-                Meet Our Team
-              </h2>
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                {[
-                  "Principal",
-                  "Vice Principal",
-                  "Senior Teacher",
-                  "Counselor",
-                ].map((role, index) => (
-                  <div
-                    key={index}
-                    className="bg-white p-6 rounded-lg shadow-md"
-                    data-aos="zoom-in"
-                    data-aos-delay={index * 200}
-                  >
-                    <img
-                      src={`https://placehold.co/150x150?text=${role}`}
-                      alt={role}
-                      className="mx-auto rounded-full mb-4"
-                    />
-                    <h3 className="text-xl font-bold">{role}</h3>
-                    <p className="text-gray-600">
-                      {" "}
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
-                    </p>{" "}
-                  </div>
-                ))}
+                <Award className="w-12 h-12 text-amber-500 mb-6" />
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">{achievement.title}</h3>
+                <p className="text-amber-600 font-semibold mb-4">{achievement.year}</p>
+                <p className="text-gray-600">{achievement.description}</p>
               </div>
-            </div>
-          </section>
-          {/* Call to Action */}
-          <section
-            className="bg-blue-600 py-12 text-center text-white"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            <div className="container mx-auto px-4">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-                Join Us Today
+            ))}
+          </div>
+        </section>
+
+        {/* Call to Action */}
+        <section className="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900 py-20">
+          <div className="container mx-auto px-6 text-center">
+            <div
+              className="bg-white/10 backdrop-blur-lg p-12 rounded-2xl max-w-4xl mx-auto"
+              data-aos="fade-up"
+            >
+              <School className="w-16 h-16 text-white mx-auto mb-6" />
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Begin Your Journey With Us
               </h2>
-              <p className="text-lg mb-8">
-                Ready to be part of a vibrant learning community? Enroll your
-                child today and start their journey with us.
+              <p className="text-xl text-gray-200 mb-8">
+                Join our vibrant community and give your child the gift of exceptional education.
               </p>
-              <button className="bg-yellow-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-600">
-                ENROLL NOW
+              <button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 px-8 rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all inline-flex items-center gap-2">
+                Schedule a Visit
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
       <Footer />
     </>

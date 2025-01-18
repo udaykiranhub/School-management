@@ -402,13 +402,15 @@ function Header() {
           aria-label="Global"
           className="flex justify-between items-center py-4 md:py-6 bg-white px-10"
         >
-          <div className="flex lg:flex-1">
+          <div className="flex lg:flex-1" >
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 alt="logo"
                 src={Logo}
-                className="w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] lg:w-[100px] lg:h-[100px]"
+                width="100px"
+                className=""
+           
               />
             </a>
           </div>
@@ -483,6 +485,7 @@ function Header() {
               <button
                 onClick={handleLogout}
                 className="text-md md:text-xl font-semibold leading-6 text-gray-900"
+                style={{backgroundColor:"white"}}
               >
                 Logout <span aria-hidden="true">&rarr;</span>
               </button>
@@ -490,6 +493,7 @@ function Header() {
               <Link
                 to="/login"
                 className="text-md md:text-xl font-semibold leading-6 text-gray-900"
+                style={{backgroundColor:"white"}}
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </Link>

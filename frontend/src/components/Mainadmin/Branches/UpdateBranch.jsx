@@ -58,7 +58,10 @@ const UpdateBranch = ({ data, onclose }) => {
   };
 
   return (
-    <div className="absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center h-screen bg-slate-500 bg-opacity-35">
+    <div className="absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center h-screen bg-slate-500 bg-opacity-35"
+    
+    style={{color:"white"}}
+    >
       <div className="relative bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
         <h2 className="text-3xl font-semibold text-blue-700 mb-6 text-center">
           Edit Branch

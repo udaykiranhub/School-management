@@ -103,7 +103,9 @@ const AddClassForm = () => {
   };
 
   return (
-    <div className="hidden md:block mt-16 form-container zoom-in-animation p-8 max-w-2xl mx-auto bg-white shadow-lg rounded-2xl">
+    <div className="hidden md:block mt-16 form-container zoom-in-animation p-8 max-w-2xl mx-auto bg-white shadow-lg rounded-2xl"
+    style={{color:"white"}}
+    >
       <div className="flex justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">
           {branchdet ? branchdet.name : "loading"} Branch

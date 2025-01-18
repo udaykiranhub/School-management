@@ -92,16 +92,20 @@ const Login = () => {
   return (
     <>
       <Header />
-      <div className="login_page min-w-[100vw] mt-12 md:min-w-[90vw]">
+      <div className="login_page min-w-[100vw] mt-12 md:min-w-[90vw]" style={{padding:"8%"
+
+      }}>
         <div className="bg-black rounded-md text-white flex min-w-screen min-h-screen flex-col items-center p-16 sm:justify-center sm:pt-0">
           {/* Logo Section */}
           <Link to="/" className="mb-8">
             <div className="text-foreground font-semibold text-2xl tracking-tighter mx-auto flex items-center gap-2">
               <div className="text-center">
-                <div className="bg-white rounded-full w-[120px] h-[120px]">
-                  <img src={logo} alt="Vidya Nidhi Logo" />
+                <div className="bg-white rounded-full w-[120px] h-[120px]" 
+                style={{textAlign:"center"}}>
+               <center>   <img src={logo} alt="Vivekananda Logo" width="100px" height="100px"
+                   style={{borderRadius:"50%"}} /></center>
                 </div>
-                <div className="mt-2">Vidya Nidhi</div>
+                <div className="mt-2">vivekananda</div>
               </div>
             </div>
           </Link>
@@ -121,7 +125,7 @@ const Login = () => {
               </div>
 
               {/* Login Form */}
-              <div className="p-6 pt-0">
+              <div className="p-6 pt-0" style={{padding:"5%"}}>
                 <form onSubmit={handleSubmit}>
                   {/* Username Field */}
                   <div>

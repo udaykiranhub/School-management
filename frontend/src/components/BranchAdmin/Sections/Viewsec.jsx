@@ -229,13 +229,14 @@ const ViewSections = () => {
 
   return (
     <div className="mt-16 p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-2xl text-gray-700">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center"  >
         View Sections
       </h2>
       <select
         value={selectedClass}
         onChange={handleClassChange}
         className="p-2 border rounded-md w-full mb-6"
+        style={{color:'white'}}
       >
         <option value="">Select a class</option>
         {classes.map((cls) => (
@@ -284,10 +285,10 @@ const ViewSections = () => {
             <h2 className="text-xl font-bold mb-4 text-gray-700">
               Add Fee for {selectedSection?.name}
             </h2>
-            <form onSubmit={handleSubmit} className="text-gray-700">
+            <form onSubmit={handleSubmit} className="text-gray-700" style={{color:'white'}}>
               {fees.map((fee, index) => (
                 <div key={index} className="flex mb-4">
-                  <div className="w-1/2 mr-2">
+                  <div className="w-1/2 mr-2" style={{color:"white"}}>
                     <label className="block mb-1">Fee Type:</label>
                     <select
                       value={fee.feeType}
@@ -295,6 +296,7 @@ const ViewSections = () => {
                         handleFeeChange(index, "feeType", e.target.value)
                       }
                       className="p-2 border rounded-md w-full"
+                      style={{color:"white"}}
                     >
                       <option value="">Select Fee Type</option>
                       {feeTypes.map((feeType) => (

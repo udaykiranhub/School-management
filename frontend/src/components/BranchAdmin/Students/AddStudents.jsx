@@ -881,8 +881,9 @@ const AddStudents = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-6  text-balck rounded-lg shadow-md max-w-4xl mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="bg-gray-100 p-6  text-balck rounded-lg shadow-md max-w-4xl mx-auto " 
+    style={{backgroundColor:"white",padding:"5%",marginTop:'1%'}} >
+      <form onSubmit={handleSubmit} className="space-y-6" style={{color:"black",backgroundColor:""}}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium">ID No:</label>

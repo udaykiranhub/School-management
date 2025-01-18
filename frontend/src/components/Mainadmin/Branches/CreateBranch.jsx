@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Container } from "react-bootstrap";
 import Allapi from "../../../common/index";
 import { Link } from "react-router-dom";
 
@@ -44,13 +45,11 @@ const CreateBranch = () => {
       });
 
       if (response.ok) {
-        // Reset form fields
         setName("");
         setStreet("");
         setColony("");
         setVillageTown("");
         setPhone("");
-
         toast.success("Branch created successfully!");
       } else {
         const errorData = await response.json();
@@ -64,65 +63,70 @@ const CreateBranch = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <Container
+      fluid
+      className="min-h-screen flex items-center justify-center bg-gray-100"
+    >
       <ToastContainer />
-
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-6 text-center">
+      <div
+        className="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl"
+        style={{ boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)" }}
+      >
+        <h2 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-6">
           Create Branch
         </h2>
 
-        {/* Form Layout */}
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
-            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Branch Name"
+            style={{ backgroundColor: "#f5f7fa" }}
           />
-
           <input
-            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
             type="text"
             value={street}
             onChange={(e) => setStreet(e.target.value)}
             placeholder="Street"
+            style={{ backgroundColor: "#f5f7fa" }}
           />
-
           <input
-            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
             type="text"
             value={colony}
             onChange={(e) => setColony(e.target.value)}
             placeholder="Colony"
+            style={{ backgroundColor: "#f5f7fa" }}
           />
-
           <input
-            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
             type="text"
             value={villageTown}
             onChange={(e) => setVillageTown(e.target.value)}
             placeholder="Village/Town"
+            style={{ backgroundColor: "#f5f7fa" }}
           />
-
           <input
-            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition duration-200"
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Phone Number"
+            style={{ backgroundColor: "#f5f7fa" }}
           />
           <Link
-            to={"/admin/branch/view"}
-            className="bg-blue-500 text-white p-4 rounded hover:bg-blue-700 hover:text-white"
+            to="/admin/branch/view"
+            className="text-center bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition"
           >
-            view all Branches
+            View All Branches
           </Link>
         </div>
 
         <button
-          className="mt-6 w-full bg-blue-950 hover:bg-blue-900 text-white font-semibold p-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out flex items-center justify-center"
+          className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition flex items-center justify-center"
           onClick={handleCreate}
           disabled={loading}
         >
@@ -152,7 +156,7 @@ const CreateBranch = () => {
           )}
         </button>
       </div>
-    </div>
+    </Container>
   );
 };
 

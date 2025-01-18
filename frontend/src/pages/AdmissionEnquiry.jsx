@@ -54,7 +54,9 @@ function AdmissionEnquiry() {
   return (
     <>
       <Header />
-      <div className="min-w-[85vw]  overflow-hidden mt-44 p-5 rounded-[15px] bg-slate-200 sm:w-full sm:min-w-[90vw]">
+      <div className="min-w-[85vw]  overflow-hidden mt-44 p-5 rounded-[15px] bg-slate-200 sm:w-full sm:min-w-[90vw]"
+      
+      >
         <div className=" mx-auto p-4 ">
           <h1
             className="text-3xl font-bold text-center mb-6"
@@ -88,6 +90,7 @@ function AdmissionEnquiry() {
             className="space-y-4 max-w-[65vw] mx-auto"
             onSubmit={handleSubmit}
             data-aos="fade-up"
+            style={{color:"white"}}
           >
             <div>
               <label className="block text-md font-medium text-gray-700">

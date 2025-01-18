@@ -5,6 +5,19 @@ import emailjs from "emailjs-com";
 import { toast } from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Send,
+  MessageSquare,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  HelpCircle
+} from "lucide-react";
 
 const ContactUs = () => {
   useEffect(() => {
@@ -23,12 +36,11 @@ const ContactUs = () => {
       )
       .then(
         (result) => {
-          alert("sent succesufully");
-          // toast.success("message sent successfully");
+          toast.success("Message sent successfully!");
           console.log(result.text);
         },
         (error) => {
-          alert("Error sending message.");
+          toast.error("Error sending message. Please try again.");
           console.log(error.text);
         }
       );
@@ -39,197 +51,206 @@ const ContactUs = () => {
   return (
     <>
       <Header />
-      <div className="bg-white w-full max-w-[90vw] overflow-hidden mt-44  sm:min-w-[90vw]">
-        <section className="text-center my-10">
-          <h1 className="text-4xl font-bold mb-4" data-aos="fade-up">
-            Contact Us
-          </h1>
-          <p
-            className="text-lg text-gray-600"
-            data-aos="fade-up"
-            data-aos-delay="100"
-          >
-            We would love to hear from you! Fill out the form below or reach out
-            to us through the contact details provided.
-          </p>
-        </section>
-
-        {/* Contact Information */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-          <div
-            className="p-6 bg-gray-100 rounded-lg shadow-md"
-            data-aos="fade-right"
-          >
-            <h2 className="text-2xl font-bold mb-4">Our Address</h2>
-            <p className="text-gray-700 mb-4">
-              123 Vidya Nidhi Road, City, Country
+      <div className="bg-white w-full overflow-hidden mt-44">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 py-20 text-white">
+          <div className="container mx-auto px-6 text-center" data-aos="fade-up">
+            <h1 className="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
+              Get in Touch
+            </h1>
+            <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+              We're here to help and answer any questions you might have. We look forward to hearing from you.
             </p>
-            <h2 className="text-2xl font-bold mb-4">Contact Details</h2>
-            <p className="text-gray-700 mb-4">Email: info@vidyanidhi.com</p>
-            <p className="text-gray-700">Phone: +123-456-7890</p>
-          </div>
-
-          {/* Google Maps Embed */}
-          <div
-            className="relative overflow-hidden rounded-lg shadow-md"
-            data-aos="fade-left"
-          >
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.5127888539487!2d-122.41941868468106!3d37.77492927975893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808f4f4c77b5%3A0x87629a57c4b3e7b4!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1603896581274!5m2!1sen!2sus"
-              width="100%"
-              height="300"
-              style={{ border: 0 }}
-              allowFullScreen
-              aria-hidden="false"
-              tabIndex="0"
-              title="Google Maps"
-            ></iframe>
           </div>
         </section>
 
-        {/* Contact Form */}
-        <section>
-          <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">
-            Get In Touch
-          </h2>
-          <form
-            className="bg-gray-100 p-8 rounded-lg shadow-md "
-            onSubmit={sendEmail}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="flex flex-col">
-                <label className="mb-2 font-semibold" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="from_name"
-                  className="p-3 border border-gray-300 rounded-lg"
-                  placeholder="Your Name"
-                  required
-                />
+        <div className="container mx-auto px-6 py-20">
+          {/* Contact Information Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+            {[
+              {
+                icon: <MapPin className="w-6 h-6" />,
+                title: "Visit Us",
+                content: "Andhra Pradesh, Vizianagaram",
+                color: "bg-purple-100 text-purple-600"
+              },
+              {
+                icon: <Mail className="w-6 h-6" />,
+                title: "Email Us",
+                content: "info@vivekananda.com",
+                color: "bg-indigo-100 text-indigo-600"
+              },
+              {
+                icon: <Phone className="w-6 h-6" />,
+                title: "Call Us",
+                content: "+91 XXXXXXXX",
+                color: "bg-blue-100 text-blue-600"
+              },
+              {
+                icon: <Clock className="w-6 h-6" />,
+                title: "Working Hours",
+                content: "Mon - Fri: 8:00 - 17:00",
+                color: "bg-emerald-100 text-emerald-600"
+              }
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
+                <div className={`${item.color} w-12 h-12 rounded-xl flex items-center justify-center mb-4`}>
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.content}</p>
               </div>
-              <div className="flex flex-col">
-                <label className="mb-2 font-semibold" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="from_email"
-                  className="p-3 border border-gray-300 rounded-lg"
-                  placeholder="Your Email"
-                  required
-                />
+            ))}
+          </div>
+
+          {/* Contact Form and Map Section */}
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div className="bg-white p-8 rounded-2xl shadow-xl" data-aos="fade-right">
+              <div className="flex items-center gap-3 mb-8">
+                <MessageSquare className="w-8 h-8 text-purple-600" />
+                <h2 className="text-3xl font-bold text-gray-800">Send Message</h2>
+              </div>
+              <form onSubmit={sendEmail} className="space-y-6" style={{color:"white"}}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2" htmlFor="name">
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="from_name"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      placeholder="John Doe"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2" htmlFor="email">
+                      Your Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="from_email"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                      placeholder="john@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2" htmlFor="message">
+                    Your Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="6"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    placeholder="How can we help you?"
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all inline-flex items-center gap-2"
+                >
+                  Send Message
+                  <Send className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+
+            {/* Map */}
+            <div className="bg-white p-8 rounded-2xl shadow-xl" data-aos="fade-left">
+              <div className="flex items-center gap-3 mb-8">
+                <MapPin className="w-8 h-8 text-purple-600" />
+                <h2 className="text-3xl font-bold text-gray-800">Find Us</h2>
+              </div>
+              <div className="rounded-xl overflow-hidden shadow-lg h-[400px]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.5127888539487!2d-122.41941868468106!3d37.77492927975893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808f4f4c77b5%3A0x87629a57c4b3e7b4!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1603896581274!5m2!1sen!2sus"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Location Map"
+                ></iframe>
               </div>
             </div>
-            <div className="flex flex-col mb-6">
-              <label className="mb-2 font-semibold" htmlFor="message">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows="6"
-                className="p-3 border border-gray-300 rounded-lg"
-                placeholder="Your Message"
-                required
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="bg-yellow-500 text-white py-3 px-6 rounded-lg hover:bg-yellow-600"
-            >
-              Send Message
-            </button>
-          </form>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="mt-12">
-          <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            <div
-              className="bg-gray-100 p-6 rounded-lg shadow-md"
-              data-aos="fade-right"
-            >
-              <h3 className="text-xl font-semibold mb-2">
-                What is the school’s admission process?
-              </h3>
-              <p>
-                Our admission process involves filling out an application form,
-                attending an interview, and providing the necessary documents.
-                For more details, please visit our Admissions page.
-              </p>
-            </div>
-            <div
-              className="bg-gray-100 p-6 rounded-lg shadow-md"
-              data-aos="fade-left"
-            >
-              <h3 className="text-xl font-semibold mb-2">
-                What are the school’s working hours?
-              </h3>
-              <p>
-                Our school operates from 8:00 AM to 3:00 PM, Monday to Friday.
-                For any changes or special schedules, please check our website
-                or contact us directly.
-              </p>
-            </div>
-            <div
-              className="bg-gray-100 p-6 rounded-lg shadow-md"
-              data-aos="fade-right"
-            >
-              <h3 className="text-xl font-semibold mb-2">
-                How can I reach the school administration?
-              </h3>
-              <p>
-                You can reach the school administration by calling us at
-                +123-456-7890 or sending an email to info@vidyanidhi.com. We are
-                here to assist you with any queries or concerns.
-              </p>
-            </div>
           </div>
-        </section>
 
-        {/* Follow Us Section */}
-        <section className="mt-12 text-center">
-          <h2 className="text-3xl font-bold mb-6" data-aos="fade-up">
-            Follow Us
-          </h2>
-          <div className="flex justify-center space-x-4">
-            <a
-              href="#"
-              className="text-gray-600 hover:text-yellow-500"
-              aria-label="Facebook"
-            >
-              <i className="fab fa-facebook fa-2x"></i>
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-yellow-500"
-              aria-label="Twitter"
-            >
-              <i className="fab fa-twitter fa-2x"></i>
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-yellow-500"
-              aria-label="Instagram"
-            >
-              <i className="fab fa-instagram fa-2x"></i>
-            </a>
-            <a
-              href="#"
-              className="text-gray-600 hover:text-yellow-500"
-              aria-label="LinkedIn"
-            >
-              <i className="fab fa-linkedin fa-2x"></i>
-            </a>
-          </div>
-        </section>
+          {/* FAQ Section */}
+          <section className="mt-20">
+            <div className="flex items-center justify-center gap-3 mb-12">
+              <HelpCircle className="w-8 h-8 text-purple-600" />
+              <h2 className="text-3xl font-bold text-gray-800">Frequently Asked Questions</h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  question: "What is the school's admission process?",
+                  answer: "Our admission process involves filling out an application form, attending an interview, and providing necessary documents. For more details, please visit our Admissions page."
+                },
+                {
+                  question: "What are the school's working hours?",
+                  answer: "Our school operates from 8:00 AM to 3:00 PM, Monday to Friday. For any changes or special schedules, please check our website or contact us directly."
+                },
+                {
+                  question: "How can I reach the school administration?",
+                  answer: "You can reach the school administration through our contact form above, by calling us, or sending an email. We aim to respond to all queries within 24 hours."
+                },
+                {
+                  question: "Are there transportation services available?",
+                  answer: "Yes, we provide safe and reliable transportation services covering major areas of the city. Contact us for route information and scheduling."
+                }
+              ].map((faq, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <h3 className="text-xl font-bold text-gray-800 mb-4">{faq.question}</h3>
+                  <p className="text-gray-600">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Social Media Section */}
+          <section className="mt-20 text-center">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8" data-aos="fade-up">
+              Connect With Us
+            </h2>
+            <div className="flex justify-center gap-6" data-aos="fade-up">
+              {[
+                { icon: <Facebook className="w-6 h-6" />, color: "hover:text-blue-600" },
+                { icon: <Twitter className="w-6 h-6" />, color: "hover:text-blue-400" },
+                { icon: <Instagram className="w-6 h-6" />, color: "hover:text-pink-600" },
+                { icon: <Linkedin className="w-6 h-6" />, color: "hover:text-blue-700" }
+              ].map((social, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className={`text-gray-400 ${social.color} transition-colors duration-300`}
+                  aria-label={`Follow us on ${social.name}`}
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
       <Footer />
     </>
